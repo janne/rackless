@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react"
+import logo from "./logo.svg"
+import Tone from "tone"
+import "./App.css"
 
 class App extends Component {
+  state = { synth: new Tone.DuoSynth().toMaster() }
+
+  playTone = () => {
+    this.state.synth.triggerAttackRelease("C4", "8n")
+  }
+
   render() {
     return (
-      <div className="App">
+      <div className="App" onMouseDown={this.playTone}>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -21,8 +28,8 @@ class App extends Component {
           </a>
         </header>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
