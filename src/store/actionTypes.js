@@ -1,0 +1,1 @@
+export const CHANGE_TRIMPOT = "CHANGE_TRIMPOT"
