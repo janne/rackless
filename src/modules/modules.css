@@ -1,5 +1,7 @@
 .module {
-  height: 400px;
   position: absolute;
-  top: 25px;
+}
+
+.background {
+  height: 400px;
 }

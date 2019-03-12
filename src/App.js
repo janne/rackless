@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Tone from "tone"
-import Audio from "./modules/audio"
-import VCO from "./modules/vco"
+import Audio from "./modules/Audio"
+import VCO from "./modules/VCO"
 import "./App.css"
 
 const App = () => {
@@ -9,8 +9,8 @@ const App = () => {
 
   return (
     <div className="content">
-      <Audio left={600} />
-      <VCO left={200} />
+      <Audio x={600} y={25} />
+      <VCO x={200} y={25} />
     </div>
   )
 }
