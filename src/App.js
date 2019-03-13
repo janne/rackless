@@ -1,7 +1,6 @@
 import React from "react"
 import Audio from "./modules/Audio"
 import VCO from "./modules/VCO"
-import "./App.css"
 
 const App = () => {
   return (
