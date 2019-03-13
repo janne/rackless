@@ -11,17 +11,25 @@ const styles = {
   background: { height: 400 }
 }
 
-const VCO = ({ x, y, id, createOscillator, oscillator, frequency = 0 }) => {
+const VCO = ({
+  x,
+  y,
+  id,
+  createOscillator,
+  oscillator,
+  frequency = 0,
+  fine = 0
+}) => {
   useEffect(() => {
     createOscillator(id)
   }, [])
 
-  if (oscillator) oscillator.frequency.value = 440 + frequency
+  if (oscillator) oscillator.frequency.value = 440 + frequency * 10 + fine
 
   return (
     <div style={{ ...styles.content, left: x, top: y }}>
       <img src={background} style={styles.background} alt="VCO" />
-      <Trimpot x={54} y={60} width={50} mod={id} pot="freq" />
+      <Trimpot x={54} y={60} width={50} mod={id} pot="freqency" />
       <Trimpot x={28} y={150} mod={id} pot="fine" />
       <Trimpot x={103} y={150} mod={id} pot="pulseWidth" />
       <Trimpot x={28} y={220} mod={id} pot="fmCv" />
@@ -40,7 +48,8 @@ const VCO = ({ x, y, id, createOscillator, oscillator, frequency = 0 }) => {
 
 const mapStateToProps = (state, ownProps) => ({
   oscillator: R.path([ownProps.id, "oscillator"], state),
-  frequency: R.path([ownProps.id, "freq", "value"], state)
+  frequency: R.path([ownProps.id, "freqency", "value"], state),
+  fine: R.path([ownProps.id, "fine", "value"], state)
 })
 
 const mapDispatchToProps = { createOscillator }
