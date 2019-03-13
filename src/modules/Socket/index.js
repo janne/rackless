@@ -8,6 +8,11 @@ const styles = {
 
 export default ({ x, y }) => (
   <div style={{ ...styles.content, left: x, top: y }}>
-    <img src={background} style={styles.background} alt="Socket" />
+    <img
+      draggable={false}
+      src={background}
+      style={styles.background}
+      alt="Socket"
+    />
   </div>
 )

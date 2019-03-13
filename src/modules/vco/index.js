@@ -28,7 +28,12 @@ const VCO = ({
 
   return (
     <div style={{ ...styles.content, left: x, top: y }}>
-      <img src={background} style={styles.background} alt="VCO" />
+      <img
+        draggable={false}
+        src={background}
+        style={styles.background}
+        alt="VCO"
+      />
       <Trimpot x={54} y={60} width={50} mod={id} pot="freqency" />
       <Trimpot x={28} y={150} mod={id} pot="fine" />
       <Trimpot x={103} y={150} mod={id} pot="pulseWidth" />
