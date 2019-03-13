@@ -18,7 +18,6 @@ export default ({ x, y }) => (
     <Socket x={50} y={222} />
     <Socket x={87} y={222} />
     <Socket x={122} y={222} />
-
     <Socket x={15} y={290} />
     <Socket x={50} y={290} />
     <Socket x={87} y={290} />
