@@ -23,20 +23,20 @@ const VCO = ({
   if (oscillator) oscillator.frequency.value = 440 + frequency * 10 + fine
 
   return (
-    <Module x={x} y={y} background={background}>
-      <Trimpot x={54} y={60} width={50} mod={id} pot="freqency" />
-      <Trimpot x={28} y={150} mod={id} pot="fine" />
-      <Trimpot x={103} y={150} mod={id} pot="pulseWidth" />
-      <Trimpot x={28} y={220} mod={id} pot="fmCv" />
-      <Trimpot x={103} y={220} mod={id} pot="pwmCv" />
-      <Socket x={15} y={293} mod={id} />
-      <Socket x={50} y={293} mod={id} />
-      <Socket x={87} y={293} mod={id} />
-      <Socket x={122} y={293} mod={id} />
-      <Socket x={15} y={340} mod={id} />
-      <Socket x={50} y={340} mod={id} />
-      <Socket x={87} y={340} mod={id} />
-      <Socket x={122} y={340} mod={id} />
+    <Module x={x} y={y} id={id} background={background}>
+      <Trimpot x={54} y={60} width={50} id={id} pot="freqency" />
+      <Trimpot x={28} y={150} id={id} pot="fine" />
+      <Trimpot x={103} y={150} id={id} pot="pulseWidth" />
+      <Trimpot x={28} y={220} id={id} pot="fmCv" />
+      <Trimpot x={103} y={220} id={id} pot="pwmCv" />
+      <Socket x={15} y={293} id={id} />
+      <Socket x={50} y={293} id={id} />
+      <Socket x={87} y={293} id={id} />
+      <Socket x={122} y={293} id={id} />
+      <Socket x={15} y={340} id={id} />
+      <Socket x={50} y={340} id={id} />
+      <Socket x={87} y={340} id={id} />
+      <Socket x={122} y={340} id={id} />
     </Module>
   )
 }

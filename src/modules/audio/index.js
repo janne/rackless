@@ -3,8 +3,8 @@ import Socket from "../Socket"
 import Module from "../Module"
 import background from "./background.svg"
 
-export default ({ x, y }) => (
-  <Module x={x} y={y} background={background}>
+export default ({ x, y, id }) => (
+  <Module id={id} x={x} y={y} background={background}>
     <Socket x={15} y={175} />
     <Socket x={50} y={175} />
     <Socket x={87} y={175} />
