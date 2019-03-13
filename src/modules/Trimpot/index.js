@@ -10,12 +10,16 @@ const styles = {
 
 const Trimpot = ({ x, y, width = 30, mod, pot, value = 0, changeTrimpot }) => {
   const clickHandler = () => {
-    changeTrimpot(mod, pot, value + 1)
+    changeTrimpot(mod, pot, value + 10)
   }
 
   return (
     <div style={{ ...styles.content, left: x, top: y }} onClick={clickHandler}>
-      <img src={background} style={{ width }} alt="Trimpot" />
+      <img
+        src={background}
+        style={{ width, transform: `rotate(${value}deg)` }}
+        alt="Trimpot"
+      />
     </div>
   )
 }
