@@ -29,6 +29,7 @@ const Trimpot = ({ x, y, id, width = 30, pot, value = 0, changeTrimpot }) => {
         dragPos.value + (e.pageX - dragPos.x + (dragPos.y - e.pageY)) / 10
       if (value !== newValue) changeTrimpot(id, pot, newValue)
     }
+    e.stopPropagation()
   }
 
   const dblClickHandler = e => changeTrimpot(id, pot, 0)

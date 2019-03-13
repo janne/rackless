@@ -5,9 +5,9 @@ import VCO from "./modules/VCO"
 import { moveModule } from "./store/actions"
 
 const App = ({ moveModule }) => {
-  moveModule("vco1", 200, 25)
-  moveModule("vco2", 400, 25)
-  moveModule("audio", 600, 25)
+  moveModule("vco1", 200, 50)
+  moveModule("vco2", 400, 50)
+  moveModule("audio", 600, 50)
   return (
     <div className="content">
       <VCO id="vco1" />
