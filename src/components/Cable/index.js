@@ -6,6 +6,7 @@ import { sockets as socketsVCO } from "../VCO"
 import { sockets as socketsAudio } from "../Audio"
 
 const Cable = ({ x1, y1, x2, y2, color }) => {
+  if (R.any(R.isNil, [x1, y1, x2, y2, color])) return null
   return (
     <div style={{ position: "absolute", pointerEvents: "none" }}>
       <svg
@@ -49,6 +50,7 @@ const getSocketPos = (id, socketId, state) => {
 }
 
 const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
+  if (R.isEmpty(state)) return {}
   const [x1, y1] = getSocketPos(fromId, fromSocket, state)
   const [x2, y2] = getSocketPos(toId, toSocket, state)
   return { x1, y1, x2, y2 }

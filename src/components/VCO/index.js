@@ -44,11 +44,11 @@ const VCO = ({
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
-        <Trimpot {...params} id={id} />
+        <Trimpot {...params} id={id} key={params.name} />
       ))}
 
       {sockets.map(params => (
-        <Socket {...params} id={id} />
+        <Socket {...params} id={id} key={params.name} />
       ))}
     </Module>
   )
