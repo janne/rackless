@@ -17,7 +17,8 @@ const App = ({ moveModule }) => {
       <VCO id="vco1" />
       <VCO id="vco2" />
       <Audio id="audio" />
-      <Cable id="patch1" x1={225} y1={400} x2={625} y2={235} />
+      <Cable id="patch1" x1={225} y1={400} x2={625} y2={235} color="red" />
+      <Cable id="patch2" x1={425} y1={400} x2={660} y2={235} color="green" />
     </div>
   )
 }
