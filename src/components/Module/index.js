@@ -1,19 +1,32 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { moveModule } from "../../store/actions"
 
-const styles = {
-  content: { position: "absolute" },
-  background: { height: 400 }
-}
+const HEIGHT_MM = 128.5
+const HP_MM = 5.08
+const ZOOM = 3
+const HEIGHT_PIX = HEIGHT_MM * ZOOM
+const HP_PIX = HP_MM * ZOOM
 
 const dragImg = new Image(0, 0)
 dragImg.src =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 dragImg.style.display = "none"
 
-const Module = ({ id, x, y, background, children, moveModule }) => {
+const Module = ({ id, col, row, hp, background, children, moveModule }) => {
+  useEffect(() => {
+    moveModule(id, col, row)
+  }, [])
+
+  const styles = {
+    content: { position: "absolute" },
+    background: { height: HEIGHT_PIX, width: HP_MM * hp * ZOOM }
+  }
+
+  const x = col * HP_PIX
+  const y = row * HEIGHT_PIX
+
   const [dragPos, setDragPos] = useState(null)
 
   const dragStartHandler = e => {
@@ -24,10 +37,10 @@ const Module = ({ id, x, y, background, children, moveModule }) => {
   const dragEndHandler = e => setDragPos(null)
 
   const dragHandler = e => {
-    const newX = Math.floor((e.pageX - dragPos.x) / 50) * 50
-    const newY = Math.floor((e.pageY - dragPos.y) / 50) * 50
-    if (e.pageX && e.pageY && (x !== newX || y !== newY)) {
-      moveModule(id, newX, newY)
+    const newCol = Math.floor((e.pageX - dragPos.x) / HP_PIX)
+    const newRow = Math.floor((e.pageY - dragPos.y) / HEIGHT_PIX)
+    if (e.pageX && e.pageY && (col !== newCol || row !== newRow)) {
+      moveModule(id, newCol, newRow)
     }
   }
 
@@ -52,8 +65,8 @@ const Module = ({ id, x, y, background, children, moveModule }) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    x: R.pathOr(0, [ownProps.id, "x"], state),
-    y: R.pathOr(0, [ownProps.id, "y"], state)
+    col: R.pathOr(ownProps.col, [ownProps.id, "col"], state),
+    row: R.pathOr(ownProps.row, [ownProps.id, "row"], state)
   }
 }
 

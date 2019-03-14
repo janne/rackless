@@ -1,31 +1,18 @@
-import React, { useEffect } from "react"
-import { connect } from "react-redux"
-import Audio from "./modules/Audio"
-import VCO from "./modules/VCO"
-import Cable from "./modules/Cable"
-import { moveModule } from "./store/actions"
+import React from "react"
+import Audio from "./components/Audio"
+import VCO from "./components/VCO"
+import Cable from "./components/Cable"
 
-const App = ({ moveModule }) => {
-  useEffect(() => {
-    moveModule("vco1", 200, 50)
-    moveModule("vco2", 400, 50)
-    moveModule("audio", 600, 50)
-  }, [])
-
+const App = () => {
   return (
     <div className="content">
-      <VCO id="vco1" />
-      <VCO id="vco2" />
-      <Audio id="audio" />
+      <VCO id="vco1" col={12} row={0} />
+      <VCO id="vco2" col={0} row={0} />
+      <Audio id="audio" col={24} row={0} />
       <Cable id="patch1" x1={225} y1={400} x2={625} y2={235} color="red" />
       <Cable id="patch2" x1={425} y1={400} x2={660} y2={235} color="green" />
     </div>
   )
 }
 
-const mapDispatchToProps = { moveModule }
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(App)
+export default App

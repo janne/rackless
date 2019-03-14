@@ -10,7 +10,7 @@ export const createOscillator = id => ({
   payload: { id }
 })
 
-export const moveModule = (id, x, y) => ({
+export const moveModule = (id, col, row) => ({
   type: MOVE_MODULE,
-  payload: { id, x, y }
+  payload: { id, col, row }
 })

@@ -16,10 +16,10 @@ export default (state = initialState, action) => {
       return R.set(R.lensPath([id, "oscillator"]), oscillator, state)
     }
     case MOVE_MODULE: {
-      const { id, x, y } = action.payload
+      const { id, col, row } = action.payload
       return R.compose(
-        R.set(R.lensPath([id, "x"]), x),
-        R.set(R.lensPath([id, "y"]), y)
+        R.set(R.lensPath([id, "col"]), col),
+        R.set(R.lensPath([id, "row"]), row)
       )(state)
     }
     default:

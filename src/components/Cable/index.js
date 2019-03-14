@@ -9,7 +9,7 @@ const Cable = ({ x1, y1, x2, y2, color }) => {
           stroke={color}
           strokeWidth={8}
           opacity={0.8}
-          stroke-linecap="round"
+          strokeLinecap="round"
           fill="transparent"
         />
       </svg>

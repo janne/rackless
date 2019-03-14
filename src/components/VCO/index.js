@@ -8,8 +8,8 @@ import Trimpot from "../Trimpot"
 import Socket from "../Socket"
 
 const VCO = ({
-  x,
-  y,
+  col,
+  row,
   id,
   createOscillator,
   oscillator,
@@ -23,7 +23,7 @@ const VCO = ({
   if (oscillator) oscillator.frequency.value = 440 + frequency * 10 + fine
 
   return (
-    <Module x={x} y={y} id={id} background={background}>
+    <Module col={col} row={row} hp={10} id={id} background={background}>
       <Trimpot x={54} y={60} width={50} id={id} pot="freqency" />
       <Trimpot x={28} y={150} id={id} pot="fine" />
       <Trimpot x={103} y={150} id={id} pot="pulseWidth" />
