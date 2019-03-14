@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { moveModule } from "../../store/actions"
-
-const HEIGHT_MM = 128.5
-const HP_MM = 5.08
-const ZOOM = 3
-const HEIGHT_PIX = HEIGHT_MM * ZOOM
-const HP_PIX = HP_MM * ZOOM
+import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
 const dragImg = new Image(0, 0)
 dragImg.src =
@@ -21,7 +16,7 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
 
   const styles = {
     content: { position: "absolute" },
-    background: { height: HEIGHT_PIX, width: HP_MM * hp * ZOOM }
+    background: { height: HEIGHT_PIX, width: HP_PIX * hp }
   }
 
   const x = col * HP_PIX
@@ -37,8 +32,10 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
   const dragEndHandler = e => setDragPos(null)
 
   const dragHandler = e => {
-    const newCol = Math.floor((e.pageX - dragPos.x) / HP_PIX)
-    const newRow = Math.floor((e.pageY - dragPos.y) / HEIGHT_PIX)
+    const newCol = Math.floor((e.pageX - dragPos.x + HP_PIX / 2) / HP_PIX)
+    const newRow = Math.floor(
+      (e.pageY - dragPos.y + HEIGHT_PIX / 2) / HEIGHT_PIX
+    )
     if (e.pageX && e.pageY && (col !== newCol || row !== newRow)) {
       moveModule(id, newCol, newRow)
     }

@@ -7,8 +7,8 @@ const initialState = {}
 export default (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_TRIMPOT: {
-      const { id, pot, value } = action.payload
-      return R.set(R.lensPath([id, pot, "value"]), value, state)
+      const { id, name, value } = action.payload
+      return R.set(R.lensPath([id, name, "value"]), value, state)
     }
     case CREATE_OSCILLATOR: {
       const { id } = action.payload
