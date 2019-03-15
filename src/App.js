@@ -2,10 +2,14 @@ import React from "react"
 import Audio from "./components/Audio"
 import VCO from "./components/VCO"
 import Cable from "./components/Cable"
+import Tone from "tone"
 
 const App = () => {
+  const enableSound = () => {
+    Tone.context.resume()
+  }
   return (
-    <div className="content">
+    <div className="content" onClick={enableSound}>
       <VCO id="vco::1" col={12} row={0} />
       <VCO id="vco::2" col={1} row={0} />
       <Audio id="audio::1" col={23} row={0} />
