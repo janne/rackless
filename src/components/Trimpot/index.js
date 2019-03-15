@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
+import { DraggableCore } from "react-draggable"
 import { changeTrimpot } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
@@ -15,41 +16,30 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
     content: { position: "absolute" }
   }
 
-  const [dragPos, setDragPos] = useState(null)
-
-  const dragStartHandler = e => {
-    setDragPos({ x: e.pageX, y: e.pageY, value })
-    e.dataTransfer.setDragImage(dragImg, 0, 0)
-  }
-
-  const dragEndHandler = e => setDragPos(null)
-
   const dragHandler = e => {
-    if (e.pageX) {
-      const newValue =
-        dragPos.value + (e.pageX - dragPos.x + (dragPos.y - e.pageY)) / 10
-      if (value !== newValue) changeTrimpot(id, name, newValue)
-    }
-    e.stopPropagation()
+    changeTrimpot(id, name, value + (e.movementX - e.movementY) / 3)
+    e.preventDefault()
   }
 
   const dblClickHandler = e => changeTrimpot(id, name, 0)
 
   return (
-    <div style={{ ...styles.content, left: x * ZOOM, top: y * ZOOM }}>
-      <img
-        onDrag={dragHandler}
-        onDragEnd={dragEndHandler}
-        onDragStart={dragStartHandler}
-        onDoubleClick={dblClickHandler}
-        src={background}
-        style={{
-          ...styles.img,
-          width: width * ZOOM,
-          transform: `rotate(${value * 10}deg)`
-        }}
-        alt="Trimpot"
-      />
+    <div
+      style={{ ...styles.content, left: x * ZOOM, top: y * ZOOM }}
+      onDoubleClick={dblClickHandler}
+    >
+      <DraggableCore onDrag={dragHandler}>
+        <img
+          src={background}
+          draggable={false}
+          style={{
+            ...styles.img,
+            width: width * ZOOM,
+            transform: `rotate(${value * 10}deg)`
+          }}
+          alt="Trimpot"
+        />
+      </DraggableCore>
     </div>
   )
 }
