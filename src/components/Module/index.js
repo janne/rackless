@@ -27,7 +27,11 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
   }
 
   return (
-    <Draggable grid={[HP_PIX, HEIGHT_PIX]} onDrag={dragHandler}>
+    <Draggable
+      grid={[HP_PIX, HEIGHT_PIX]}
+      onDrag={dragHandler}
+      cancel=".draggable"
+    >
       <div
         onDrag={dragHandler}
         style={{ ...styles.content, left: col * HP_PIX, top: row * HEIGHT_PIX }}

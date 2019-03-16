@@ -6,11 +6,6 @@ import { changeTrimpot } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
-const dragImg = new Image(0, 0)
-dragImg.src =
-  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-dragImg.style.display = "none"
-
 const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
   const styles = {
     content: { position: "absolute" }
@@ -25,11 +20,13 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
 
   return (
     <div
+      className="draggable"
       style={{ ...styles.content, left: x * ZOOM, top: y * ZOOM }}
       onDoubleClick={dblClickHandler}
     >
       <DraggableCore onDrag={dragHandler}>
         <img
+          draggable={false}
           src={background}
           style={{
             ...styles.img,
