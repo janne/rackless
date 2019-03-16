@@ -31,7 +31,6 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
       <DraggableCore onDrag={dragHandler}>
         <img
           src={background}
-          draggable={false}
           style={{
             ...styles.img,
             width: width * ZOOM,
