@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
-import * as R from "ramda"
 import Draggable from "react-draggable"
 import { moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
-
-const dragImg = new Image(0, 0)
-dragImg.src =
-  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-dragImg.style.display = "none"
 
 const Module = ({ id, col, row, hp, background, children, moveModule }) => {
   useEffect(() => {
