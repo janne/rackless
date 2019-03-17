@@ -5,7 +5,8 @@ import {
   CHANGE_TRIMPOT,
   CREATE_OSCILLATOR,
   MOVE_MODULE,
-  CREATE_CABLE
+  CREATE_CABLE,
+  DESTROY_CABLE
 } from "./actionTypes"
 
 const vco1 = uuidv1()
@@ -73,6 +74,10 @@ export default (state = initialState, action) => {
           { id, fromId, fromSocket, toId, toSocket, color }
         ]
       }
+    }
+    case DESTROY_CABLE: {
+      const { id } = action.payload
+      return { ...state, cables: state.cables.filter(c => c.id !== id) }
     }
     default:
       return state
