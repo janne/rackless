@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
+import Draggable from "react-draggable"
 import background from "./background.svg"
 import { ZOOM } from "../../../constants"
 
@@ -10,15 +11,26 @@ const styles = {
 }
 
 const Connector = ({ x, y }) => {
+  const [pos, setPos] = useState({ x, y })
+  useEffect(() => {
+    setPos({ x, y })
+  }, [x, y])
   return (
-    <div style={{ ...styles.content, left: x, top: y }}>
-      <img
-        draggable={false}
-        src={background}
-        style={styles.background}
-        alt="Connector"
-      />
-    </div>
+    <Draggable
+      position={pos}
+      onStop={(e, data) => {
+        console.log(data.lastX, data.lastY)
+      }}
+    >
+      <div style={{ ...styles.content }}>
+        <img
+          draggable={false}
+          src={background}
+          style={styles.background}
+          alt="Connector"
+        />
+      </div>
+    </Draggable>
   )
 }
 
