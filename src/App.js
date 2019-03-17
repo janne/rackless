@@ -29,6 +29,14 @@ const App = () => {
         toSocket="input2"
         color="green"
       />
+      <Cable
+        id="patch::2"
+        fromId="audio::1"
+        fromSocket="input6"
+        toId="audio::1"
+        toSocket="input4"
+        color="blue"
+      />
     </div>
   )
 }
