@@ -16,7 +16,7 @@ const Cable = ({ x1, y1, x2, y2, color }) => {
       >
         <path
           d={`M${x1} ${y1} C ${x1} ${y1 + 10 * ZOOM}, ${x2} ${y2 +
-            100 * ZOOM}, ${x2} ${y2}`}
+            Math.cbrt(Math.abs(x2 - x1)) * 5 * ZOOM}, ${x2} ${y2}`}
           stroke={color}
           strokeWidth={3 * ZOOM}
           opacity={0.8}
