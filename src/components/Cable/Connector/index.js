@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Draggable from "react-draggable"
 import background from "./background.svg"
 import { ZOOM } from "../../../constants"
@@ -10,28 +10,23 @@ const styles = {
   background: { width: 6.7 * ZOOM }
 }
 
-const Connector = ({ x, y }) => {
-  const [pos, setPos] = useState({ x, y })
-  useEffect(() => {
-    setPos({ x, y })
-  }, [x, y])
-  return (
-    <Draggable
-      position={pos}
-      onStop={(e, data) => {
-        console.log(data.lastX, data.lastY)
-      }}
-    >
-      <div style={{ ...styles.content }}>
-        <img
-          draggable={false}
-          src={background}
-          style={styles.background}
-          alt="Connector"
-        />
-      </div>
-    </Draggable>
-  )
-}
+const Connector = ({ x, y, onDrag = f => f, onStop = f => f }) => (
+  <Draggable
+    position={{ x, y }}
+    onStop={(e, data) => {
+      onStop({ x: data.x, y: data.y })
+    }}
+    onDrag={(e, data) => onDrag({ x: data.x, y: data.y })}
+  >
+    <div style={{ ...styles.content }}>
+      <img
+        draggable={false}
+        src={background}
+        style={styles.background}
+        alt="Connector"
+      />
+    </div>
+  </Draggable>
+)
 
 export default Connector

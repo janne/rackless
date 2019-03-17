@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { HEIGHT_PIX, HP_PIX, ZOOM, MAX_COLS, MAX_ROWS } from "../../constants"
@@ -55,18 +55,27 @@ const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
 
 const CableWithConnector = ({ x1, y1, x2, y2, color }) => {
   if (R.any(R.isNil, [x1, y1, x2, y2, color])) return null
+  const [pos1, setPos1] = useState({ x: x1, y: y1 })
+  const [pos2, setPos2] = useState({ x: x2, y: y2 })
+  useEffect(() => {
+    setPos1({ x: x1, y: y1 })
+  }, [x1, y1])
+  useEffect(() => {
+    setPos2({ x: x2, y: y2 })
+  }, [x2, y2])
+
   const center = 3.3 * ZOOM
   return (
     <Fragment>
+      <Connector x={x1} y={y1} onDrag={setPos1} />
+      <Connector x={x2} y={y2} onDrag={setPos2} />
       <Cable
-        x1={x1 + center}
-        y1={y1 + center}
-        x2={x2 + center}
-        y2={y2 + center}
+        x1={pos1.x + center}
+        y1={pos1.y + center}
+        x2={pos2.x + center}
+        y2={pos2.y + center}
         color={color}
       />
-      <Connector x={x1} y={y1} />
-      <Connector x={x2} y={y2} />
     </Fragment>
   )
 }
