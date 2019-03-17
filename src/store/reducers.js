@@ -1,5 +1,6 @@
 import * as R from "ramda"
 import Tone from "tone"
+import uuidv1 from "uuid/v1"
 import {
   CHANGE_TRIMPOT,
   CREATE_OSCILLATOR,
@@ -7,34 +8,38 @@ import {
   CREATE_CABLE
 } from "./actionTypes"
 
+const vco1 = uuidv1()
+const vco2 = uuidv1()
+const audio = uuidv1()
+
 const initialState = {
   modules: [
-    { type: "VCO", data: { id: "vco::2", col: 1, row: 0 } },
-    { type: "VCO", data: { id: "vco::1", col: 12, row: 0 } },
-    { type: "AUDIO", data: { id: "audio::1", col: 23, row: 0 } }
+    { type: "VCO", data: { id: vco2, col: 1, row: 0 } },
+    { type: "VCO", data: { id: vco1, col: 12, row: 0 } },
+    { type: "AUDIO", data: { id: audio, col: 23, row: 0 } }
   ],
   cables: [
     {
-      id: "patch::1",
-      fromId: "vco::1",
+      id: uuidv1(),
+      fromId: vco1,
       fromSocket: "sin",
-      toId: "audio::1",
+      toId: audio,
       toSocket: "input1",
       color: "red"
     },
     {
-      id: "patch::2",
-      fromId: "vco::2",
+      id: uuidv1(),
+      fromId: vco2,
       fromSocket: "sin",
-      toId: "audio::1",
+      toId: audio,
       toSocket: "input2",
       color: "green"
     },
     {
-      id: "patch::2",
-      fromId: "audio::1",
+      id: uuidv1(),
+      fromId: audio,
       fromSocket: "input6",
-      toId: "audio::1",
+      toId: audio,
       toSocket: "input4",
       color: "blue"
     }

@@ -12,7 +12,7 @@ const styles = {
 
 const Socket = ({ x, y, id, name, createCableFrom }) => {
   const newCable = () => {
-    createCableFrom(`patch::${uuidv1()}`, id, name, "purple")
+    createCableFrom(uuidv1(), id, name, "purple")
   }
   return (
     <div

@@ -36,12 +36,12 @@ const Cable = ({ x1, y1, x2, y2, color }) => {
   )
 }
 
-const getSockets = id => {
-  const [type] = R.split("::", id)
-  switch (type) {
-    case "vco":
+const getSockets = (id, state) => {
+  const module = state.modules.find(m => m.data.id === id)
+  switch (module.type) {
+    case "VCO":
       return socketsVCO
-    case "audio":
+    case "AUDIO":
       return socketsAudio
     default:
       return null
@@ -50,7 +50,7 @@ const getSockets = id => {
 
 const getSocketPos = (id, socketId, state) => {
   const { row, col } = R.pathOr({}, [id], state)
-  const socket = R.find(R.propEq("name", socketId))(getSockets(id))
+  const socket = R.find(R.propEq("name", socketId))(getSockets(id, state))
   return [col * HP_PIX + socket.x * ZOOM, row * HEIGHT_PIX + socket.y * ZOOM]
 }
 
