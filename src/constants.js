@@ -1,3 +1,4 @@
+export const CABLE_SLACK = 5
 export const HEIGHT_MM = 128.5
 export const HP_MM = 5.08
 export const MAX_COLS = 84

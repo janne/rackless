@@ -1,7 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import { HEIGHT_PIX, HP_PIX, ZOOM, MAX_COLS, MAX_ROWS } from "../../constants"
+import {
+  HEIGHT_PIX,
+  HP_PIX,
+  ZOOM,
+  MAX_COLS,
+  MAX_ROWS,
+  CABLE_SLACK
+} from "../../constants"
 import { sockets as socketsVCO } from "../VCO"
 import { sockets as socketsAudio } from "../Audio"
 import Connector from "./Connector"
@@ -16,7 +23,7 @@ const Cable = ({ x1, y1, x2, y2, color }) => {
       >
         <path
           d={`M${x1} ${y1} C ${x1} ${y1 + 10 * ZOOM}, ${x2} ${y2 +
-            Math.cbrt(Math.abs(x2 - x1)) * 5 * ZOOM}, ${x2} ${y2}`}
+            Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK * ZOOM}, ${x2} ${y2}`}
           stroke={color}
           strokeWidth={3 * ZOOM}
           opacity={0.8}
@@ -67,8 +74,18 @@ const CableWithConnector = ({ x1, y1, x2, y2, color }) => {
   const center = 3.3 * ZOOM
   return (
     <Fragment>
-      <Connector x={x1} y={y1} onDrag={setPos1} />
-      <Connector x={x2} y={y2} onDrag={setPos2} />
+      <Connector
+        x={x1}
+        y={y1}
+        onDrag={setPos1}
+        onStop={() => setPos1({ x: x1, y: y1 })}
+      />
+      <Connector
+        x={x2}
+        y={y2}
+        onDrag={setPos2}
+        onStop={() => setPos2({ x: x2, y: y2 })}
+      />
       <Cable
         x1={pos1.x + center}
         y1={pos1.y + center}
