@@ -1,12 +1,12 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { HEIGHT_PIX, HP_PIX, ZOOM, MAX_COLS, MAX_ROWS } from "../../constants"
 import { sockets as socketsVCO } from "../VCO"
 import { sockets as socketsAudio } from "../Audio"
+import Connector from "./Connector"
 
 const Cable = ({ x1, y1, x2, y2, color }) => {
-  if (R.any(R.isNil, [x1, y1, x2, y2, color])) return null
   return (
     <div style={{ position: "absolute", pointerEvents: "none" }}>
       <svg
@@ -43,10 +43,7 @@ const getSockets = id => {
 const getSocketPos = (id, socketId, state) => {
   const { row, col } = R.pathOr({}, [id], state)
   const socket = R.find(R.propEq("name", socketId))(getSockets(id))
-  return [
-    col * HP_PIX + socket.x * ZOOM + 3.3 * ZOOM,
-    row * HEIGHT_PIX + socket.y * ZOOM + 3.3 * ZOOM
-  ]
+  return [col * HP_PIX + socket.x * ZOOM, row * HEIGHT_PIX + socket.y * ZOOM]
 }
 
 const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
@@ -56,4 +53,21 @@ const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
   return { x1, y1, x2, y2 }
 }
 
-export default connect(mapStateToProps)(Cable)
+const CableWithConnector = ({ x1, y1, x2, y2, color }) => {
+  if (R.any(R.isNil, [x1, y1, x2, y2, color])) return null
+  const center = 3.3 * ZOOM
+  return (
+    <Fragment>
+      <Cable
+        x1={x1 + center}
+        y1={y1 + center}
+        x2={x2 + center}
+        y2={y2 + center}
+        color={color}
+      />
+      <Connector x={x1} y={y1} />
+      <Connector x={x2} y={y2} />
+    </Fragment>
+  )
+}
+export default connect(mapStateToProps)(CableWithConnector)
