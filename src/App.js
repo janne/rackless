@@ -23,9 +23,11 @@ const App = ({ modules, cables }) => {
 
   return (
     <div className="content" onClick={enableSound}>
-      {modules.map(mod => renderModule(mod))}
-      {cables.map(props => (
-        <Cable {...props} />
+      {modules.map((mod, index) => (
+        <div key={index}>{renderModule(mod)}</div>
+      ))}
+      {cables.map((props, index) => (
+        <Cable key={index} {...props} />
       ))}
     </div>
   )

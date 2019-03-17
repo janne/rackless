@@ -61,7 +61,7 @@ const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
 }
 
 const CableWithConnector = ({ x1, y1, x2, y2, color }) => {
-  if (R.any(R.isNil, [x1, y1, x2, y2, color])) return null
+  if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
   const [pos1, setPos1] = useState({ x: x1, y: y1 })
   const [pos2, setPos2] = useState({ x: x2, y: y2 })
   useEffect(() => {
