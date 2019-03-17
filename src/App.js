@@ -1,44 +1,39 @@
 import React from "react"
+import { connect } from "react-redux"
 import Audio from "./components/Audio"
 import VCO from "./components/VCO"
 import Cable from "./components/Cable"
 import Tone from "tone"
 
-const App = () => {
+const App = ({ modules, cables }) => {
   const enableSound = () => {
     Tone.context.resume()
   }
+
+  const renderModule = module => {
+    switch (module.type) {
+      case "VCO":
+        return <VCO {...module.data} />
+      case "AUDIO":
+        return <Audio {...module.data} />
+      default:
+        return null
+    }
+  }
+
   return (
     <div className="content" onClick={enableSound}>
-      <VCO id="vco::1" col={12} row={0} />
-      <VCO id="vco::2" col={1} row={0} />
-      <Audio id="audio::1" col={23} row={0} />
-      <Cable
-        id="patch::1"
-        fromId="vco::1"
-        fromSocket="sin"
-        toId="audio::1"
-        toSocket="input1"
-        color="red"
-      />
-      <Cable
-        id="patch::2"
-        fromId="vco::2"
-        fromSocket="sin"
-        toId="audio::1"
-        toSocket="input2"
-        color="green"
-      />
-      <Cable
-        id="patch::2"
-        fromId="audio::1"
-        fromSocket="input6"
-        toId="audio::1"
-        toSocket="input4"
-        color="blue"
-      />
+      {modules.map(mod => renderModule(mod))}
+      {cables.map(props => (
+        <Cable {...props} />
+      ))}
     </div>
   )
 }
 
-export default App
+const mapStateToProps = state => ({
+  cables: state.cables,
+  modules: state.modules
+})
+
+export default connect(mapStateToProps)(App)

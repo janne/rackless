@@ -2,7 +2,39 @@ import * as R from "ramda"
 import Tone from "tone"
 import { CHANGE_TRIMPOT, CREATE_OSCILLATOR, MOVE_MODULE } from "./actionTypes"
 
-const initialState = {}
+const initialState = {
+  modules: [
+    { type: "VCO", data: { id: "vco::2", col: 1, row: 0 } },
+    { type: "VCO", data: { id: "vco::1", col: 12, row: 0 } },
+    { type: "AUDIO", data: { id: "audio::1", col: 23, row: 0 } }
+  ],
+  cables: [
+    {
+      id: "patch::1",
+      fromId: "vco::1",
+      fromSocket: "sin",
+      toId: "audio::1",
+      toSocket: "input1",
+      color: "red"
+    },
+    {
+      id: "patch::2",
+      fromId: "vco::2",
+      fromSocket: "sin",
+      toId: "audio::1",
+      toSocket: "input2",
+      color: "green"
+    },
+    {
+      id: "patch::2",
+      fromId: "audio::1",
+      fromSocket: "input6",
+      toId: "audio::1",
+      toSocket: "input4",
+      color: "blue"
+    }
+  ]
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
