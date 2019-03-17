@@ -14,6 +14,7 @@ import { sockets as socketsAudio } from "../Audio"
 import Connector from "./Connector"
 
 const Cable = ({ x1, y1, x2, y2, color }) => {
+  const hang = Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK
   return (
     <div style={{ position: "absolute", pointerEvents: "none" }}>
       <svg
@@ -22,8 +23,8 @@ const Cable = ({ x1, y1, x2, y2, color }) => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d={`M${x1} ${y1} C ${x1} ${y1 + 10 * ZOOM}, ${x2} ${y2 +
-            Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK * ZOOM}, ${x2} ${y2}`}
+          d={`M${x1} ${y1} C ${x1} ${y1 + hang}, ${x2} ${y2 +
+            hang}, ${x2} ${y2}`}
           stroke={color}
           strokeWidth={3 * ZOOM}
           opacity={0.8}
