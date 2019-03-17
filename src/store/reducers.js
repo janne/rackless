@@ -1,6 +1,11 @@
 import * as R from "ramda"
 import Tone from "tone"
-import { CHANGE_TRIMPOT, CREATE_OSCILLATOR, MOVE_MODULE } from "./actionTypes"
+import {
+  CHANGE_TRIMPOT,
+  CREATE_OSCILLATOR,
+  MOVE_MODULE,
+  CREATE_CABLE
+} from "./actionTypes"
 
 const initialState = {
   modules: [
@@ -53,6 +58,16 @@ export default (state = initialState, action) => {
         R.set(R.lensPath([id, "col"]), col),
         R.set(R.lensPath([id, "row"]), row)
       )(state)
+    }
+    case CREATE_CABLE: {
+      const { id, fromId, fromSocket, toId, toSocket, color } = action.payload
+      return {
+        ...state,
+        cables: [
+          ...state.cables,
+          { id, fromId, fromSocket, toId, toSocket, color }
+        ]
+      }
     }
     default:
       return state

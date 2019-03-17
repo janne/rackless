@@ -26,7 +26,7 @@ const Audio = ({ id, col, row }) => {
   return (
     <Module id={id} col={col} row={row} hp={10} background={background}>
       {sockets.map(params => (
-        <Socket {...params} key={params.name} />
+        <Socket {...params} id={id} key={params.name} />
       ))}
     </Module>
   )
