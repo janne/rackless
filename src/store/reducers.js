@@ -78,17 +78,19 @@ export default (state = initialState, action) => {
     }
     case MOVE_CONNECTOR: {
       const { id, connector, pos } = action.payload
-      const target = socketAtPos(pos, state)
-      if (!target)
-        return { ...state, cables: state.cables.filter(c => c.id !== id) }
-      console.log(
-        target,
-        `Connector ${connector} on cable ${id} moved to ${
-          target.socket
-        } on module id ${target.id}`
+      const [[movedCable], cables] = R.partition(
+        R.propEq("id", id),
+        state.cables
       )
+      const target = socketAtPos(pos, state)
 
-      return state
+      if (!target) return { ...state, cables }
+
+      const updatedCable =
+        connector === 1
+          ? { ...movedCable, fromId: target.id, fromSocket: target.socket }
+          : { ...movedCable, toId: target.id, toSocket: target.socket }
+      return { ...state, cables: [...cables, updatedCable] }
     }
     default:
       return state
