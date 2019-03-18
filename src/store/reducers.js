@@ -32,13 +32,6 @@ const initialState = {
       toId: audio,
       toSocket: "input2",
       color: "green"
-    },
-    [uuidv1()]: {
-      fromId: audio,
-      fromSocket: "input6",
-      toId: audio,
-      toSocket: "input4",
-      color: "blue"
     }
   }
 }
