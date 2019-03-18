@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Audio from "./components/Audio"
@@ -22,11 +22,27 @@ const App = ({ modules, cables }) => {
     }
   }
 
-  const renderModular = () => {
-    // const oscillator = new Tone.Oscillator().start().toMaster()
-    // oscillator.frequency.value = 440 + frequency * 10 + fine
-    return null
-  }
+  const [synth, setSynth] = useState({})
+
+  useEffect(() => {
+    const synthObj = R.mapObjIndexed(({ type, ...props }, id) => {
+      switch (type) {
+        case "VCO":
+          const mod = synth[id] || new Tone.Oscillator().start().toMaster()
+          mod.frequency.value =
+            440 + R.propOr(0, "frequency", props) + R.propOr(0, "fine", props)
+          return mod
+        case "AUDIO":
+          return synth[id] || Tone.Master
+        default:
+          return null
+      }
+    }, modules)
+
+    // R.mapObjIndexed(mod => mod && mod.disconnect(), synth)
+
+    setSynth(synthObj)
+  }, [modules, cables])
 
   return (
     <div className="content" onClick={enableSound}>
