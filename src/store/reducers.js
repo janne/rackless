@@ -47,7 +47,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_TRIMPOT: {
       const { id, name, value } = action.payload
-      return R.set(R.lensPath(["modules", id, name, "value"]), value, state)
+      return R.set(R.lensPath(["modules", id, name]), value, state)
     }
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
