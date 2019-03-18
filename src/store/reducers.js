@@ -1,6 +1,7 @@
 import * as R from "ramda"
 import Tone from "tone"
 import uuidv1 from "uuid/v1"
+import { socketAtPos } from "./selectors"
 import {
   CHANGE_TRIMPOT,
   CREATE_OSCILLATOR,
@@ -77,8 +78,17 @@ export default (state = initialState, action) => {
     }
     case MOVE_CONNECTOR: {
       const { id, connector, pos } = action.payload
-      console.log(pos, connector)
-      return { ...state, cables: state.cables.filter(c => c.id !== id) }
+      const target = socketAtPos(pos, state)
+      if (!target)
+        return { ...state, cables: state.cables.filter(c => c.id !== id) }
+      console.log(
+        target,
+        `Connector ${connector} on cable ${id} moved to ${
+          target.socket
+        } on module id ${target.id}`
+      )
+
+      return state
     }
     default:
       return state

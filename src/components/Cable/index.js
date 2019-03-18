@@ -3,24 +3,11 @@ import { connect } from "react-redux"
 import * as R from "ramda"
 import { HEIGHT_PIX, HP_PIX, ZOOM } from "../../constants"
 import { moveConnector } from "../../store/actions"
-import { sockets as socketsVCO } from "../VCO"
-import { sockets as socketsAudio } from "../Audio"
+import { getSockets } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
 
 const CENTER = 3.3 * ZOOM
-
-const getSockets = (id, state) => {
-  const module = state.modules.find(m => m.data.id === id)
-  switch (module.type) {
-    case "VCO":
-      return socketsVCO
-    case "AUDIO":
-      return socketsAudio
-    default:
-      return null
-  }
-}
 
 const socketToPos = (id, socketId, state) => {
   const { row, col } = R.pathOr({}, [id], state)
