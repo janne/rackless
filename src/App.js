@@ -25,24 +25,33 @@ const App = ({ modules, cables }) => {
   const [synth, setSynth] = useState({})
 
   useEffect(() => {
-    const synthObj = R.mapObjIndexed(({ type, ...props }, id) => {
-      switch (type) {
-        case "VCO":
-          const mod = synth[id] || new Tone.Oscillator().start().toMaster()
-          mod.frequency.value =
-            440 + R.propOr(0, "frequency", props) + R.propOr(0, "fine", props)
-          return mod
-        case "AUDIO":
-          return synth[id] || Tone.Master
-        default:
-          return null
-      }
-    }, modules)
+    setSynth(
+      R.mapObjIndexed(({ type, ...props }, id) => {
+        switch (type) {
+          case "VCO":
+            const mod = synth[id] || new Tone.Oscillator().start()
+            mod.frequency.value =
+              440 + R.propOr(0, "frequency", props) + R.propOr(0, "fine", props)
+            return mod
+          case "AUDIO":
+            return synth[id] || Tone.Master
+          default:
+            return null
+        }
+      }, modules)
+    )
+  }, [modules])
 
-    // R.mapObjIndexed(mod => mod && mod.disconnect(), synth)
-
-    setSynth(synthObj)
-  }, [modules, cables])
+  useEffect(() => {
+    R.map(mod => {
+      if (!mod.isMaster) mod.disconnect()
+    }, synth)
+    R.map(data => {
+      const from = synth[data.fromId]
+      const to = synth[data.toId]
+      if (from && to) from.connect(to)
+    }, cables)
+  }, [cables, synth])
 
   return (
     <div className="content" onClick={enableSound}>
