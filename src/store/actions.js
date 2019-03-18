@@ -3,7 +3,7 @@ import {
   CREATE_OSCILLATOR,
   MOVE_MODULE,
   CREATE_CABLE,
-  DESTROY_CABLE
+  MOVE_CONNECTOR
 } from "./actionTypes"
 
 export const changeTrimpot = (id, name, value) => ({
@@ -26,7 +26,7 @@ export const moveModule = (id, col, row) => ({
   payload: { id, col, row }
 })
 
-export const destroyCable = id => ({
-  type: DESTROY_CABLE,
-  payload: { id }
+export const moveConnector = (id, connector, pos) => ({
+  type: MOVE_CONNECTOR,
+  payload: { id, connector, pos }
 })
