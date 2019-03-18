@@ -10,9 +10,22 @@ const styles = {
   background: { width: 6.7 * ZOOM }
 }
 
+const COLORS = [
+  "red",
+  "green",
+  "blue",
+  "purple",
+  "gray",
+  "brown",
+  "maroon",
+  "navy",
+  "orangered"
+]
+const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
+
 const Socket = ({ x, y, id, name, createCableFrom }) => {
   const newCable = () => {
-    createCableFrom(uuidv1(), id, name, "purple")
+    createCableFrom(uuidv1(), id, name, randomColor())
   }
   return (
     <div
