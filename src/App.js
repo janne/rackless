@@ -21,6 +21,12 @@ const App = ({ modules, cables }) => {
     }
   }
 
+  const renderModular = () => {
+    // const oscillator = new Tone.Oscillator().start().toMaster()
+    // oscillator.frequency.value = 440 + frequency * 10 + fine
+    return null
+  }
+
   return (
     <div className="content" onClick={enableSound}>
       {modules.map((mod, index) => (
@@ -29,6 +35,7 @@ const App = ({ modules, cables }) => {
       {cables.map((props, index) => (
         <Cable key={index} {...props} />
       ))}
+      {renderModular()}
     </div>
   )
 }

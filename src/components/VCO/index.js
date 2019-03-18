@@ -1,7 +1,4 @@
-import React, { useEffect } from "react"
-import { connect } from "react-redux"
-import * as R from "ramda"
-import { createOscillator } from "../../store/actions"
+import React from "react"
 import background from "./background.svg"
 import Module from "../Module"
 import Trimpot from "../Trimpot"
@@ -26,21 +23,7 @@ export const sockets = [
   { x: 39.3, y: 108.3, name: "sqr" }
 ]
 
-const VCO = ({
-  col,
-  row,
-  id,
-  createOscillator,
-  oscillator,
-  frequency = 0,
-  fine = 0
-}) => {
-  useEffect(() => {
-    createOscillator(id)
-  }, [])
-
-  if (oscillator) oscillator.frequency.value = 440 + frequency * 10 + fine
-
+const VCO = ({ col, row, id }) => {
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
@@ -54,15 +37,4 @@ const VCO = ({
   )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  oscillator: R.path([ownProps.id, "oscillator"], state),
-  frequency: R.path([ownProps.id, "frequency", "value"], state),
-  fine: R.path([ownProps.id, "fine", "value"], state)
-})
-
-const mapDispatchToProps = { createOscillator }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(VCO)
+export default VCO

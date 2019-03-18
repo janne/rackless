@@ -1,10 +1,8 @@
 import * as R from "ramda"
-import Tone from "tone"
 import uuidv1 from "uuid/v1"
 import { socketAtPos } from "./selectors"
 import {
   CHANGE_TRIMPOT,
-  CREATE_OSCILLATOR,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR
@@ -53,11 +51,6 @@ export default (state = initialState, action) => {
     case CHANGE_TRIMPOT: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath([id, name, "value"]), value, state)
-    }
-    case CREATE_OSCILLATOR: {
-      const { id } = action.payload
-      const oscillator = new Tone.Oscillator().start().toMaster()
-      return R.set(R.lensPath([id, "oscillator"]), oscillator, state)
     }
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
