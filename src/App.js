@@ -1,5 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
+import * as R from "ramda"
 import Audio from "./components/Audio"
 import VCO from "./components/VCO"
 import Cable from "./components/Cable"
@@ -10,12 +11,12 @@ const App = ({ modules, cables }) => {
     Tone.context.resume()
   }
 
-  const renderModule = module => {
-    switch (module.type) {
+  const renderModule = (id, { type, ...props }) => {
+    switch (type) {
       case "VCO":
-        return <VCO {...module.data} />
+        return <VCO id={id} {...props} />
       case "AUDIO":
-        return <Audio {...module.data} />
+        return <Audio id={id} {...props} />
       default:
         return null
     }
@@ -29,13 +30,18 @@ const App = ({ modules, cables }) => {
 
   return (
     <div className="content" onClick={enableSound}>
-      {modules.map((mod, index) => (
-        <div key={index}>{renderModule(mod)}</div>
-      ))}
-      {cables.map((props, index) => (
-        <Cable key={index} {...props} />
-      ))}
-      {renderModular()}
+      {R.values(
+        R.mapObjIndexed(
+          (data, id) => <div key={id}>{renderModule(id, data)}</div>,
+          modules
+        )
+      )}
+      {R.values(
+        R.mapObjIndexed(
+          (props, id) => <Cable key={id} id={id} {...props} />,
+          cables
+        )
+      )}
     </div>
   )
 }

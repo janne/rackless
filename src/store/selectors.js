@@ -1,3 +1,4 @@
+import * as R from "ramda"
 import { sockets as socketsVCO } from "../components/VCO"
 import { sockets as socketsAudio } from "../components/Audio"
 import { HP_PIX, HEIGHT_PIX, ZOOM } from "../constants"
@@ -5,8 +6,7 @@ import { HP_PIX, HEIGHT_PIX, ZOOM } from "../constants"
 const WIDTH = 3.3 * ZOOM
 
 export const getSockets = (id, state) => {
-  const module = state.modules.find(m => m.data.id === id)
-  switch (module.type) {
+  switch (state.modules[id].type) {
     case "VCO":
       return socketsVCO
     case "AUDIO":
@@ -16,9 +16,21 @@ export const getSockets = (id, state) => {
   }
 }
 
+export const socketToPos = (moduleId, socketName, state) => {
+  const { row, col } = R.pathOr({}, ["modules", moduleId], state)
+  const socket = R.find(
+    R.propEq("name", socketName),
+    getSockets(moduleId, state)
+  )
+  return {
+    x: col * HP_PIX + socket.x * ZOOM,
+    y: row * HEIGHT_PIX + socket.y * ZOOM
+  }
+}
+
 export const socketAtPos = ({ x, y }, state) => {
-  for (let mod of state.modules) {
-    const { col, row, id } = mod.data
+  for (let id of R.keys(state.modules)) {
+    const { col, row } = state.modules[id]
     const socket = getSockets(id, state).find(
       socket =>
         x > col * HP_PIX + socket.x * ZOOM - WIDTH &&

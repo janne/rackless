@@ -41,7 +41,7 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  value: R.path([ownProps.id, ownProps.name, "value"], state)
+  value: R.path(["modules", ownProps.id, ownProps.name, "value"], state)
 })
 
 const mapDispatchToProps = { changeTrimpot }

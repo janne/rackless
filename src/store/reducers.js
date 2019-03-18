@@ -13,68 +13,63 @@ const vco2 = uuidv1()
 const audio = uuidv1()
 
 const initialState = {
-  modules: [
-    { type: "VCO", data: { id: vco2, col: 1, row: 0 } },
-    { type: "VCO", data: { id: vco1, col: 12, row: 0 } },
-    { type: "AUDIO", data: { id: audio, col: 23, row: 0 } }
-  ],
-  cables: [
-    {
-      id: uuidv1(),
+  modules: {
+    [vco1]: { type: "VCO", col: 1, row: 0 },
+    [vco2]: { type: "VCO", col: 12, row: 0 },
+    [audio]: { type: "AUDIO", col: 23, row: 0 }
+  },
+  cables: {
+    [uuidv1()]: {
       fromId: vco1,
       fromSocket: "sin",
       toId: audio,
       toSocket: "input1",
       color: "red"
     },
-    {
-      id: uuidv1(),
+    [uuidv1()]: {
       fromId: vco2,
       fromSocket: "sin",
       toId: audio,
       toSocket: "input2",
       color: "green"
     },
-    {
-      id: uuidv1(),
+    [uuidv1()]: {
       fromId: audio,
       fromSocket: "input6",
       toId: audio,
       toSocket: "input4",
       color: "blue"
     }
-  ]
+  }
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_TRIMPOT: {
       const { id, name, value } = action.payload
-      return R.set(R.lensPath([id, name, "value"]), value, state)
+      return R.set(R.lensPath(["modules", id, name, "value"]), value, state)
     }
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
       return R.compose(
-        R.set(R.lensPath([id, "col"]), col),
-        R.set(R.lensPath([id, "row"]), row)
+        R.set(R.lensPath(["modules", id, "col"]), col),
+        R.set(R.lensPath(["modules", id, "row"]), row)
       )(state)
     }
     case CREATE_CABLE: {
       const { id, fromId, fromSocket, toId, toSocket, color } = action.payload
       return {
         ...state,
-        cables: [
+        cables: {
           ...state.cables,
-          { id, fromId, fromSocket, toId, toSocket, color }
-        ]
+          [id]: { fromId, fromSocket, toId, toSocket, color }
+        }
       }
     }
     case MOVE_CONNECTOR: {
       const { id, connector, pos } = action.payload
-      const [[movedCable], cables] = R.partition(
-        R.propEq("id", id),
-        state.cables
-      )
+      const movedCable = state.cables[id]
+      const cables = R.dissoc(id, state.cables)
       const target = socketAtPos(pos, state)
 
       if (!target) return { ...state, cables }
@@ -83,7 +78,7 @@ export default (state = initialState, action) => {
         connector === 1
           ? { ...movedCable, fromId: target.id, fromSocket: target.socket }
           : { ...movedCable, toId: target.id, toSocket: target.socket }
-      return { ...state, cables: [...cables, updatedCable] }
+      return { ...state, cables: { ...cables, [id]: updatedCable } }
     }
     default:
       return state

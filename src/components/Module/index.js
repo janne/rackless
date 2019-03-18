@@ -1,13 +1,11 @@
-import React, { useEffect } from "react"
+import React, { useState } from "react"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
 import { moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
 const Module = ({ id, col, row, hp, background, children, moveModule }) => {
-  useEffect(() => {
-    moveModule(id, col, row)
-  }, [])
+  const [pos] = useState({ col, row })
 
   const styles = {
     content: { position: "absolute" },
@@ -15,8 +13,8 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
   }
 
   const dragHandler = (e, data) => {
-    const newCol = col + Math.round(data.x / HP_PIX)
-    const newRow = row + Math.round(data.y / HEIGHT_PIX)
+    const newCol = pos.col + Math.round(data.x / HP_PIX)
+    const newRow = pos.row + Math.round(data.y / HEIGHT_PIX)
     moveModule(id, newCol, newRow)
   }
 
@@ -28,7 +26,11 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
     >
       <div
         onDrag={dragHandler}
-        style={{ ...styles.content, left: col * HP_PIX, top: row * HEIGHT_PIX }}
+        style={{
+          ...styles.content,
+          left: pos.col * HP_PIX,
+          top: pos.row * HEIGHT_PIX
+        }}
       >
         <img
           draggable={false}

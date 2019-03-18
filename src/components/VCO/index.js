@@ -7,7 +7,7 @@ import Socket from "../Socket"
 export const pots = [
   { x: 20.5, y: 20, name: "frequency" },
   { x: 9.3, y: 48.3, name: "fine" },
-  { x: 33.3, y: 48.3, name: "pulseWnameth" },
+  { x: 33.3, y: 48.3, name: "pWidth" },
   { x: 9.3, y: 70, name: "fmCv" },
   { x: 33.3, y: 70, name: "pwmCv" }
 ]

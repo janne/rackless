@@ -1,22 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import { HEIGHT_PIX, HP_PIX, ZOOM } from "../../constants"
+import { ZOOM } from "../../constants"
 import { moveConnector } from "../../store/actions"
-import { getSockets } from "../../store/selectors"
+import { socketToPos } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
 
 const CENTER = 3.3 * ZOOM
-
-const socketToPos = (id, socketId, state) => {
-  const { row, col } = R.pathOr({}, [id], state)
-  const socket = R.find(R.propEq("name", socketId))(getSockets(id, state))
-  return {
-    x: col * HP_PIX + socket.x * ZOOM,
-    y: row * HEIGHT_PIX + socket.y * ZOOM
-  }
-}
 
 const Cable = ({ id, x1, y1, x2, y2, color, moveConnector }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
