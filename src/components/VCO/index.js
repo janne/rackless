@@ -37,7 +37,7 @@ const VCO = ({
   fine = 0
 }) => {
   useEffect(() => {
-    setValue(id, "audioNode", new Tone.Oscillator().start().toMaster())
+    setValue(id, "audioNode", new Tone.Oscillator().start())
   }, [])
   useEffect(() => {
     if (audioNode) audioNode.frequency.value = 440 + frequency + fine
