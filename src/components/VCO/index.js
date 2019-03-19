@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import Tone from "tone"
 import { connect } from "react-redux"
 import * as R from "ramda"
+import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import Module from "../Module"
 import Trimpot from "../Trimpot"
@@ -26,10 +27,17 @@ export const sockets = [
   { x: 39.3, y: 108.3, name: "sqr" }
 ]
 
-const VCO = ({ col, row, id, frequency = 0, fine = 0 }) => {
-  const [audioNode, setAudioNode] = useState(null)
+const VCO = ({
+  audioNode,
+  col,
+  row,
+  id,
+  setValue,
+  frequency = 0,
+  fine = 0
+}) => {
   useEffect(() => {
-    setAudioNode(new Tone.Oscillator().start().toMaster())
+    setValue(id, "audioNode", new Tone.Oscillator().start().toMaster())
   }, [])
   useEffect(() => {
     if (audioNode) audioNode.frequency.value = 440 + frequency + fine
@@ -38,18 +46,22 @@ const VCO = ({ col, row, id, frequency = 0, fine = 0 }) => {
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
-        <Trimpot {...params} id={id} key={params.name} />
+        <Trimpot {...params} id={id} name={params.name} key={params.name} />
       ))}
 
       {sockets.map(params => (
-        <Socket {...params} id={id} key={params.name} />
+        <Socket {...params} id={id} name={params.name} key={params.name} />
       ))}
     </Module>
   )
 }
 
-const mapStateToProps = (state, { id }) => ({
-  frequency: R.path(["modules", id, "frequency"], state)
-})
+const mapStateToProps = (state, { id }) =>
+  R.pick(["audioNode", "frequency"], R.path(["modules", id], state))
 
-export default connect(mapStateToProps)(VCO)
+const mapDispatchToProps = { setValue }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(VCO)

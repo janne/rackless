@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
+import { setValue } from "../../store/actions"
 import Socket from "../Socket"
 import Module from "../Module"
 import background from "./background.svg"
@@ -25,9 +26,10 @@ export const sockets = [
   { x: 39.3, y: 109, name: "output8" }
 ]
 
-const Audio = ({ id, col, row, volume = 0 }) => {
-  const [audioNode, setAudioNode] = useState(null)
-  useEffect(() => setAudioNode(Tone.Master), [])
+const Audio = ({ id, col, row, volume = 0, audioNode, setValue }) => {
+  useEffect(() => {
+    setValue(id, "audioNode", new Tone.Oscillator().start().toMaster())
+  }, [])
   useEffect(() => {
     if (audioNode) audioNode.volume.value = volume
   }, [volume])
@@ -41,8 +43,12 @@ const Audio = ({ id, col, row, volume = 0 }) => {
   )
 }
 
-const mapStateToProps = (state, { id }) => ({
-  volume: R.path(["modules", id, "volume"], state)
-})
+const mapStateToProps = (state, { id }) =>
+  R.pick(["audioNode", "volume"], R.path(["modules", id], state))
 
-export default connect(mapStateToProps)(Audio)
+const mapDispatchToProps = { setValue }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Audio)

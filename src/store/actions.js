@@ -1,12 +1,12 @@
 import {
-  CHANGE_TRIMPOT,
+  SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR
 } from "./actionTypes"
 
-export const changeTrimpot = (id, name, value) => ({
-  type: CHANGE_TRIMPOT,
+export const setValue = (id, name, value) => ({
+  type: SET_VALUE,
   payload: { id, name, value }
 })
 

@@ -2,7 +2,7 @@ import * as R from "ramda"
 import uuidv1 from "uuid/v1"
 import { socketAtPos } from "./selectors"
 import {
-  CHANGE_TRIMPOT,
+  SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR
@@ -38,7 +38,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case CHANGE_TRIMPOT: {
+    case SET_VALUE: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath(["modules", id, name]), value, state)
     }

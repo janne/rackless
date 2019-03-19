@@ -2,21 +2,21 @@ import React from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { DraggableCore } from "react-draggable"
-import { changeTrimpot } from "../../store/actions"
+import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
-const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
+const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
   const styles = {
     content: { position: "absolute" }
   }
 
   const dragHandler = e => {
-    changeTrimpot(id, name, value + (e.movementX - e.movementY) / 3)
+    setValue(id, name, value + (e.movementX - e.movementY) / 3)
     e.preventDefault()
   }
 
-  const dblClickHandler = e => changeTrimpot(id, name, 0)
+  const dblClickHandler = e => setValue(id, name, 0)
 
   return (
     <div
@@ -40,11 +40,11 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, changeTrimpot }) => {
   )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  value: R.path(["modules", ownProps.id, ownProps.name], state)
+const mapStateToProps = (state, { id, name }) => ({
+  value: R.path(["modules", id, name], state)
 })
 
-const mapDispatchToProps = { changeTrimpot }
+const mapDispatchToProps = { setValue }
 
 export default connect(
   mapStateToProps,
