@@ -1,4 +1,7 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
+import { connect } from "react-redux"
+import * as R from "ramda"
+import Tone from "tone"
 import Socket from "../Socket"
 import Module from "../Module"
 import background from "./background.svg"
@@ -22,7 +25,13 @@ export const sockets = [
   { x: 39.3, y: 109, name: "output8" }
 ]
 
-const Audio = ({ id, col, row }) => {
+const Audio = ({ id, col, row, volume = 0 }) => {
+  const [audioNode, setAudioNode] = useState(null)
+  useEffect(() => setAudioNode(Tone.Master), [])
+  useEffect(() => {
+    if (audioNode) audioNode.volume.value = volume
+  }, [volume])
+
   return (
     <Module id={id} col={col} row={row} hp={10} background={background}>
       {sockets.map(params => (
@@ -32,4 +41,8 @@ const Audio = ({ id, col, row }) => {
   )
 }
 
-export default Audio
+const mapStateToProps = (state, { id }) => ({
+  volume: R.path(["modules", id, "volume"], state)
+})
+
+export default connect(mapStateToProps)(Audio)

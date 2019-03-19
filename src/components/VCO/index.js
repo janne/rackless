@@ -1,4 +1,7 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
+import Tone from "tone"
+import { connect } from "react-redux"
+import * as R from "ramda"
 import background from "./background.svg"
 import Module from "../Module"
 import Trimpot from "../Trimpot"
@@ -23,7 +26,15 @@ export const sockets = [
   { x: 39.3, y: 108.3, name: "sqr" }
 ]
 
-const VCO = ({ col, row, id }) => {
+const VCO = ({ col, row, id, frequency = 0, fine = 0 }) => {
+  const [audioNode, setAudioNode] = useState(null)
+  useEffect(() => {
+    setAudioNode(new Tone.Oscillator().start().toMaster())
+  }, [])
+  useEffect(() => {
+    if (audioNode) audioNode.frequency.value = 440 + frequency + fine
+  }, [frequency, fine])
+
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
@@ -37,4 +48,8 @@ const VCO = ({ col, row, id }) => {
   )
 }
 
-export default VCO
+const mapStateToProps = (state, { id }) => ({
+  frequency: R.path(["modules", id, "frequency"], state)
+})
+
+export default connect(mapStateToProps)(VCO)
