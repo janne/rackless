@@ -27,9 +27,7 @@ export const sockets = [
 ]
 
 const Audio = ({ id, col, row, volume = 0, audioNode, setValue }) => {
-  useEffect(() => {
-    setValue(id, "audioNode", new Tone.Oscillator().start().toMaster())
-  }, [])
+  useEffect(() => setValue(id, "audioNode", Tone.Master), [])
   useEffect(() => {
     if (audioNode) audioNode.volume.value = volume
   }, [volume])
