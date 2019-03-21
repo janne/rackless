@@ -9,7 +9,18 @@ import Bezier from "./Bezier"
 
 const CENTER = 3.3 * ZOOM
 
-const Cable = ({ id, x1, y1, x2, y2, color, moveConnector, from, to }) => {
+const Cable = ({
+  id,
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+  moveConnector,
+  from,
+  to,
+  fromSocket
+}) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
   const [pos1, setPos1] = useState({ x: x1, y: y1 })
   const [pos2, setPos2] = useState({ x: x2, y: y2 })
@@ -20,8 +31,9 @@ const Cable = ({ id, x1, y1, x2, y2, color, moveConnector, from, to }) => {
   }, [x1, y1, x2, y2])
 
   useEffect(() => {
-    if (from && to && from !== to) from.connect(to)
-    return () => from && from.disconnect()
+    const types = ["sin", "tri", "saw", "sqr"]
+    if (from && to && from !== to) from.connect(to, types.indexOf(fromSocket))
+    return () => from && from.disconnect(types.indexOf(fromSocket))
   })
 
   const handleStop = connector => pos => {
@@ -48,7 +60,7 @@ const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
   const { x: x2, y: y2 } = socketToPos(toId, toSocket, state)
   const from = R.path([fromId, "audioNode"], state.modules)
   const to = R.path([toId, "audioNode"], state.modules)
-  return { x1, y1, x2, y2, from, to }
+  return { x1, y1, x2, y2, from, fromSocket, to, toSocket }
 }
 
 const mapDispatchToProps = { moveConnector }
