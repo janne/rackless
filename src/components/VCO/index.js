@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import Tone from "tone"
+import Instrument from "./Instrument"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { setValue } from "../../store/actions"
@@ -37,7 +37,7 @@ const VCO = ({
   fine = 0
 }) => {
   useEffect(() => {
-    setValue(id, "audioNode", new Tone.Oscillator().start())
+    setValue(id, "audioNode", new Instrument())
   }, [])
   useEffect(() => {
     if (audioNode) audioNode.frequency.value = 440 + frequency + fine
