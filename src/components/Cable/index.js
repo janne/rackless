@@ -19,7 +19,8 @@ const Cable = ({
   moveConnector,
   from,
   to,
-  fromSocket
+  fromSocket,
+  toSocket
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
   const [pos1, setPos1] = useState({ x: x1, y: y1 })
@@ -30,10 +31,35 @@ const Cable = ({
     setPos2({ x: x2, y: y2 })
   }, [x1, y1, x2, y2])
 
+  const connect = (output, outputPort, input, inputPort) => {
+    const outputNum =
+      Number(outputPort) < output.numberOfOutputs ? Number(outputPort) : 0
+    const inputNum =
+      Number(inputPort) < input.numberOfInputs ? Number(inputPort) : 0
+    output.connect(input, outputNum, inputNum)
+    return () => output.disconnect(outputNum)
+  }
+
   useEffect(() => {
-    const types = ["sin", "tri", "saw", "sqr"]
-    if (from && to && from !== to) from.connect(to, types.indexOf(fromSocket))
-    return () => from && from.disconnect(types.indexOf(fromSocket))
+    const [fromDir, fromPort] = fromSocket.split("")
+    const [toDir, toPort] = toSocket.split("")
+
+    if (!from || !to || fromDir === toDir) return
+
+    if (fromDir === "o")
+      return connect(
+        from,
+        fromPort,
+        to,
+        toPort
+      )
+
+    return connect(
+      to,
+      toPort,
+      from,
+      fromPort
+    )
   })
 
   const handleStop = connector => pos => {

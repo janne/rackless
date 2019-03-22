@@ -17,14 +17,14 @@ export const pots = [
 ]
 
 export const sockets = [
-  { x: 4.3, y: 93.3, name: "voct" },
-  { x: 16, y: 93.3, name: "fm" },
-  { x: 27.7, y: 93.3, name: "sync" },
-  { x: 39.3, y: 93.3, name: "pwm" },
-  { x: 4.3, y: 108.3, name: "sin" },
-  { x: 16, y: 108.3, name: "tri" },
-  { x: 27.7, y: 108.3, name: "saw" },
-  { x: 39.3, y: 108.3, name: "sqr" }
+  { x: 4.3, y: 93.3, name: "i0" }, // voct
+  { x: 16, y: 93.3, name: "i1" }, // fm
+  { x: 27.7, y: 93.3, name: "i2" }, // sync
+  { x: 39.3, y: 93.3, name: "i3" }, // pwm
+  { x: 4.3, y: 108.3, name: "o0" }, // sin
+  { x: 16, y: 108.3, name: "o1" }, // tri
+  { x: 27.7, y: 108.3, name: "o2" }, // saw
+  { x: 39.3, y: 108.3, name: "o3" } // sqr
 ]
 
 const VCO = ({
@@ -46,11 +46,11 @@ const VCO = ({
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
-        <Trimpot {...params} id={id} name={params.name} key={params.name} />
+        <Trimpot {...params} id={id} key={params.name} />
       ))}
 
       {sockets.map(params => (
-        <Socket {...params} id={id} name={params.name} key={params.name} />
+        <Socket {...params} id={id} key={params.name} />
       ))}
     </Module>
   )

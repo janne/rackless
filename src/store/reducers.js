@@ -21,16 +21,16 @@ const initialState = {
   cables: {
     [uuidv1()]: {
       fromId: vco1,
-      fromSocket: "sin",
+      fromSocket: "o0",
       toId: audio,
-      toSocket: "input1",
+      toSocket: "i0",
       color: "red"
     },
     [uuidv1()]: {
       fromId: vco2,
-      fromSocket: "sin",
+      fromSocket: "o0",
       toId: audio,
-      toSocket: "input2",
+      toSocket: "i1",
       color: "green"
     }
   }
