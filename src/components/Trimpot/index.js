@@ -12,7 +12,11 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
   }
 
   const dragHandler = e => {
-    setValue(id, name, value + (e.movementX - e.movementY) / 3)
+    setValue(
+      id,
+      name,
+      R.clamp(-1, 1, value + (e.movementX - e.movementY) / 300)
+    )
     e.preventDefault()
   }
 
@@ -31,7 +35,7 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
           style={{
             ...styles.img,
             width: width * ZOOM,
-            transform: `rotate(${value * 10}deg)`
+            transform: `rotate(${value * 150}deg)`
           }}
           alt="Trimpot"
         />

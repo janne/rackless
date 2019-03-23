@@ -8,6 +8,8 @@ import Module from "../Module"
 import Trimpot from "../Trimpot"
 import Socket from "../Socket"
 
+const BASE_FREQ = 440
+
 export const pots = [
   { x: 20.5, y: 20, name: "frequency" },
   { x: 9.3, y: 48.3, name: "fine" },
@@ -37,10 +39,13 @@ const VCO = ({
   fine = 0
 }) => {
   useEffect(() => {
-    setValue(id, "audioNode", new Instrument())
+    setValue(id, "audioNode", new Instrument({ frequency: BASE_FREQ }))
   }, [])
   useEffect(() => {
-    if (audioNode) audioNode.frequency.value = 440 + frequency + fine
+    if (!audioNode) return
+    const freqValue = BASE_FREQ * Math.pow(2, frequency * 4)
+    const fineValue = (freqValue / 2) * fine
+    audioNode.frequency.value = freqValue + fineValue
   }, [frequency, fine])
 
   return (
