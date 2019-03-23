@@ -32,6 +32,7 @@ const Cable = ({
   }, [x1, y1, x2, y2])
 
   const connect = (output, outputPort, input, inputPort) => {
+    if (output.numberOfOutputs === 0 || input.numberOfInputs === 0) return
     const outputNum =
       Number(outputPort) < output.numberOfOutputs ? Number(outputPort) : 0
     const inputNum =
