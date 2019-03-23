@@ -6,7 +6,16 @@ import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
-const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
+const Trimpot = ({
+  x,
+  y,
+  id,
+  width = 10,
+  range = "normal",
+  name,
+  value = 0,
+  setValue
+}) => {
   const styles = {
     content: { position: "absolute" }
   }
@@ -15,7 +24,11 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
     setValue(
       id,
       name,
-      R.clamp(-1, 1, value + (e.movementX - e.movementY) / 300)
+      R.clamp(
+        range === "normal" ? 0 : -1,
+        1,
+        value + (e.movementX - e.movementY) / 300
+      )
     )
     e.preventDefault()
   }
@@ -35,7 +48,9 @@ const Trimpot = ({ x, y, id, width = 10, name, value = 0, setValue }) => {
           style={{
             ...styles.img,
             width: width * ZOOM,
-            transform: `rotate(${value * 150}deg)`
+            transform: `rotate(${
+              range === "normal" ? (value - 0.5) * 300 : value * 150
+            }deg)`
           }}
           alt="Trimpot"
         />

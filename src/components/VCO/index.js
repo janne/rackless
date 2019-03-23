@@ -11,9 +11,9 @@ import Socket from "../Socket"
 const BASE_FREQ = 440
 
 export const pots = [
-  { x: 20.5, y: 20, name: "frequency" },
-  { x: 9.3, y: 48.3, name: "fine" },
-  { x: 33.3, y: 48.3, name: "pWidth" },
+  { x: 20.5, y: 20, name: "frequency", range: "audio" },
+  { x: 9.3, y: 48.3, name: "fine", range: "audio" },
+  { x: 33.3, y: 48.3, name: "pWidth", range: "audio" },
   { x: 9.3, y: 70, name: "fmCv" },
   { x: 33.3, y: 70, name: "pwmCv" }
 ]
