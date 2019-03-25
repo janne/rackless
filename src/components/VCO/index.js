@@ -8,14 +8,12 @@ import Module from "../Module"
 import Trimpot from "../Trimpot"
 import Socket from "../Socket"
 
-const BASE_FREQ = 440
-
 export const pots = [
-  { x: 20.5, y: 20, name: "frequency", range: "audio" },
+  { x: 20.5, y: 20, name: "freq", range: "audio" },
   { x: 9.3, y: 48.3, name: "fine", range: "audio" },
-  { x: 33.3, y: 48.3, name: "pWidth", range: "audio" },
-  { x: 9.3, y: 70, name: "fmCv" },
-  { x: 33.3, y: 70, name: "pwmCv" }
+  { x: 33.3, y: 48.3, name: "pwidth", range: "audio" },
+  { x: 9.3, y: 70, name: "fmcv", range: "normal" },
+  { x: 33.3, y: 70, name: "pwmcv", range: "normal" }
 ]
 
 export const sockets = [
@@ -35,18 +33,24 @@ const VCO = ({
   row,
   id,
   setValue,
-  frequency = 0,
-  fine = 0
+  freq = 0,
+  fine = 0,
+  pwidth = 0,
+  fmcv = 0,
+  pwmcv = 0
 }) => {
   useEffect(() => {
-    setValue(id, "audioNode", new Instrument({ frequency: BASE_FREQ }))
+    setValue(id, "audioNode", new Instrument())
   }, [])
+
   useEffect(() => {
     if (!audioNode) return
-    const freqValue = BASE_FREQ * Math.pow(2, frequency * 4)
-    const fineValue = (freqValue / 2) * fine
-    audioNode.frequency.value = freqValue + fineValue
-  }, [frequency, fine])
+    audioNode.freq.value = freq
+    audioNode.fine.value = fine
+    audioNode.pwidth.value = pwidth
+    audioNode.fmcv.value = fmcv
+    audioNode.pwmcv.value = pwmcv
+  }, [freq, fine, pwidth, fmcv, pwmcv])
 
   return (
     <Module col={col} row={row} hp={10} id={id} background={background}>
@@ -62,7 +66,10 @@ const VCO = ({
 }
 
 const mapStateToProps = (state, { id }) =>
-  R.pick(["audioNode", "frequency"], R.path(["modules", id], state))
+  R.pick(
+    ["audioNode", "type", "freq", "fine", "pwidth", "fmcv", "pwmcv"],
+    R.path(["modules", id], state)
+  )
 
 const mapDispatchToProps = { setValue }
 
