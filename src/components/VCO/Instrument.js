@@ -32,7 +32,15 @@ export default class extends Tone.Instrument {
       this._oscillators.push(osc)
 
       // Pulse width
-      if (type === Square) this.pwidth.connect(osc.width)
+      if (type === Square) {
+        const scaledPwm = new Tone.Gain()
+        this.pwm.connect(scaledPwm)
+        this.pwmcv.connect(scaledPwm.gain)
+        const plusPwidth = new Tone.Add()
+        scaledPwm.connect(plusPwidth)
+        this.pwidth.connect(plusPwidth)
+        plusPwidth.connect(osc.width)
+      }
 
       // Fine
       const scaledFine = new Tone.Multiply(1 / 12)
