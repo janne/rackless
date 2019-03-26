@@ -4,7 +4,7 @@ class AudioToFrequency extends Tone.Signal {
   constructor(baseFreq) {
     super()
     this.input = new Tone.Signal(0, Tone.Type.AudioRange)
-    this.converter = new Tone.WaveShaper(x => baseFreq * Math.pow(2, x * 4))
+    this.converter = new Tone.WaveShaper(x => baseFreq * Math.pow(2, x * 5))
     this.output = new Tone.Signal(0, Tone.Type.Frequency)
     this.input.chain(this.converter, this.output)
   }

@@ -9,8 +9,6 @@ export default class extends Tone.Instrument {
 
     const options = Tone.defaultArg(opts, Tone.Oscillator.defaults)
     this.freq = new Tone.Signal(options.freq, Tone.Type.AudioRange)
-    this.freqHz = new Tone.Signal(options.freq, Tone.Type.Frequency)
-    this.freq.chain(new AudioToFrequency(440), this.freqHz)
     this.fine = new Tone.Signal(options.fine, Tone.Type.AudioRange)
     this.pwidth = new Tone.Signal(options.pwidth, Tone.Type.AudioRange)
     this.fmcv = new Tone.Signal(options.fmcv, Tone.Type.NormalRange)
@@ -27,20 +25,37 @@ export default class extends Tone.Instrument {
     const types = [Sine, Triangle, Sawtooth, Square]
 
     types.forEach((type, idx) => {
-      const osc = (this.output[idx] = new Tone.Oscillator(0, type).start())
+      const osc =
+        type === Square
+          ? new Tone.PulseOscillator()
+          : new Tone.Oscillator(0, type)
       this._oscillators.push(osc)
 
+      // Pulse width
+      if (type === Square) this.pwidth.connect(osc.width)
+
       // Fine
-      const freqWithFine = new Tone.Multiply(1)
-      this.freqHz.connect(freqWithFine, 0, 0)
-      this.fine.connect(freqWithFine, 0, 1)
+      const scaledFine = new Tone.Multiply(1 / 12)
+      this.fine.connect(scaledFine)
+      const plusFine = new Tone.Add()
+      this.freq.connect(plusFine, 0, 0)
+      scaledFine.connect(plusFine, 0, 1)
 
       // Voct
-      const freqWithVoct = new Tone.Multiply(1)
-      freqWithFine.connect(freqWithVoct, 0, 0)
-      this.voct.connect(freqWithVoct, 0, 1)
+      const plusVoct = new Tone.Add()
+      plusFine.connect(plusVoct, 0, 0)
+      this.voct.connect(plusVoct, 0, 1)
 
-      freqWithVoct.connect(osc.frequency)
+      // FM
+      const scaledFm = new Tone.Gain()
+      this.fm.connect(scaledFm)
+      this.fmcv.connect(scaledFm.gain)
+      const plusFm = new Tone.Add()
+      plusVoct.connect(plusFm, 0, 0)
+      scaledFm.connect(plusFm, 0, 1)
+
+      plusFm.chain(new AudioToFrequency(220), osc.frequency)
+      this.output[idx] = osc.start()
     })
   }
 
