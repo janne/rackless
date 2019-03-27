@@ -65,9 +65,15 @@ const Cable = ({
     )
   })
 
+  const setPos = connector => (connector === 1 ? setPos1 : setPos2)
+
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 
-  const handleStop = connector => pos => moveConnector(id, connector, pos)
+  const handleStop = connector => pos => {
+    const initPos = connector === 1 ? { x: x1, y: y1 } : { x: x2, y: y2 }
+    setPos(connector)(initPos)
+    moveConnector(id, connector, pos)
+  }
 
   return (
     <Fragment>
@@ -75,14 +81,14 @@ const Cable = ({
         x={x1}
         y={y1}
         onStart={handleStart(1)}
-        onDrag={setPos1}
+        onDrag={setPos(1)}
         onStop={handleStop(1)}
       />
       <Connector
         x={x2}
         y={y2}
         onStart={handleStart(2)}
-        onDrag={setPos2}
+        onDrag={setPos(2)}
         onStop={handleStop(2)}
       />
       <Bezier
