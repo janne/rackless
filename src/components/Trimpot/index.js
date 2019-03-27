@@ -20,14 +20,14 @@ const Trimpot = ({
     content: { position: "absolute" }
   }
 
-  const dragHandler = e => {
+  const dragHandler = (e, data) => {
     setValue(
       id,
       name,
       R.clamp(
         range === "normal" ? 0 : -1,
         1,
-        value + (e.movementX - e.movementY) / 300
+        value + (data.deltaX - data.deltaY) / 300
       )
     )
     e.preventDefault()
