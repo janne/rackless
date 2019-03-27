@@ -3,7 +3,7 @@ import { sockets as socketsVCO } from "../components/VCO"
 import { sockets as socketsAudio } from "../components/Audio"
 import { HP_PIX, HEIGHT_PIX, ZOOM } from "../constants"
 
-const WIDTH = 3.3 * ZOOM
+const WIDTH = 5 * ZOOM
 
 export const getSockets = (id, state) => {
   switch (state.modules[id].type) {

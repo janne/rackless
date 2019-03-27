@@ -5,7 +5,8 @@ import {
   SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
-  MOVE_CONNECTOR
+  MOVE_CONNECTOR,
+  REMOVE_CONNECTOR
 } from "./actionTypes"
 
 const vco1 = uuidv1()
@@ -37,6 +38,9 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+  const setCableDisabled = value =>
+    R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
+
   switch (action.type) {
     case SET_VALUE: {
       const { id, name, value } = action.payload
@@ -61,6 +65,7 @@ export default (state = initialState, action) => {
     }
     case MOVE_CONNECTOR: {
       const { id, connector, pos } = action.payload
+      const state = setCableDisabled(false)
       const movedCable = state.cables[id]
       const cables = R.dissoc(id, state.cables)
       const target = socketAtPos(pos, state)
@@ -72,6 +77,9 @@ export default (state = initialState, action) => {
           ? { ...movedCable, fromId: target.id, fromSocket: target.socket }
           : { ...movedCable, toId: target.id, toSocket: target.socket }
       return { ...state, cables: { ...cables, [id]: updatedCable } }
+    }
+    case REMOVE_CONNECTOR: {
+      return setCableDisabled(true)
     }
     default:
       return state

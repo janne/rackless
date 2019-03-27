@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { ZOOM } from "../../constants"
-import { moveConnector } from "../../store/actions"
+import { moveConnector, removeConnector } from "../../store/actions"
 import { socketToPos } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
@@ -17,10 +17,12 @@ const Cable = ({
   y2,
   color,
   moveConnector,
+  removeConnector,
   from,
   to,
   fromSocket,
-  toSocket
+  toSocket,
+  disabled
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
   const [pos1, setPos1] = useState({ x: x1, y: y1 })
@@ -45,7 +47,7 @@ const Cable = ({
     const [fromDir, fromPort] = fromSocket.split("")
     const [toDir, toPort] = toSocket.split("")
 
-    if (!from || !to || fromDir === toDir) return
+    if (!from || !to || fromDir === toDir || disabled) return
 
     if (fromDir === "o")
       return connect(
@@ -63,14 +65,26 @@ const Cable = ({
     )
   })
 
-  const handleStop = connector => pos => {
-    moveConnector(id, connector, pos)
-  }
+  const handleStart = connector => pos => removeConnector(id, connector, pos)
+
+  const handleStop = connector => pos => moveConnector(id, connector, pos)
 
   return (
     <Fragment>
-      <Connector x={x1} y={y1} onDrag={setPos1} onStop={handleStop(1)} />
-      <Connector x={x2} y={y2} onDrag={setPos2} onStop={handleStop(2)} />
+      <Connector
+        x={x1}
+        y={y1}
+        onStart={handleStart(1)}
+        onDrag={setPos1}
+        onStop={handleStop(1)}
+      />
+      <Connector
+        x={x2}
+        y={y2}
+        onStart={handleStart(2)}
+        onDrag={setPos2}
+        onStop={handleStop(2)}
+      />
       <Bezier
         x1={pos1.x + CENTER}
         y1={pos1.y + CENTER}
@@ -90,7 +104,7 @@ const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
   return { x1, y1, x2, y2, from, fromSocket, to, toSocket }
 }
 
-const mapDispatchToProps = { moveConnector }
+const mapDispatchToProps = { moveConnector, removeConnector }
 
 export default connect(
   mapStateToProps,

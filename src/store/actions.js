@@ -2,7 +2,8 @@ import {
   SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
-  MOVE_CONNECTOR
+  MOVE_CONNECTOR,
+  REMOVE_CONNECTOR
 } from "./actionTypes"
 
 export const setValue = (id, name, value) => ({
@@ -22,5 +23,10 @@ export const moveModule = (id, col, row) => ({
 
 export const moveConnector = (id, connector, pos) => ({
   type: MOVE_CONNECTOR,
+  payload: { id, connector, pos }
+})
+
+export const removeConnector = (id, connector, pos) => ({
+  type: REMOVE_CONNECTOR,
   payload: { id, connector, pos }
 })
