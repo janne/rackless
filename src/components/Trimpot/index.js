@@ -12,7 +12,7 @@ const Trimpot = ({
   x,
   y,
   id,
-  width = 10,
+  width = 12,
   range = "normal",
   name,
   value = 0,

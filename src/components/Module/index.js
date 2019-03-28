@@ -9,12 +9,15 @@ const Module = ({ id, col, row, hp, background, children, moveModule }) => {
 
   const styles = {
     content: { position: "absolute" },
-    background: { height: HEIGHT_PIX, width: HP_PIX * hp }
+    background: {
+      height: Math.round(HEIGHT_PIX),
+      width: Math.round(HP_PIX * hp)
+    }
   }
 
   const dragHandler = (e, data) => {
-    const newCol = pos.col + Math.round(data.x / HP_PIX)
-    const newRow = pos.row + Math.round(data.y / HEIGHT_PIX)
+    const newCol = pos.col + data.x / HP_PIX
+    const newRow = pos.row + data.y / HEIGHT_PIX
     moveModule(id, newCol, newRow)
   }
 

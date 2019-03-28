@@ -9,22 +9,21 @@ import Trimpot from "../Trimpot"
 import Socket from "../Socket"
 
 export const pots = [
-  { x: 20.5, y: 20, name: "freq", range: "audio" },
-  { x: 9.3, y: 48.3, name: "fine", range: "audio" },
-  { x: 33.3, y: 48.3, name: "pwidth", range: "audio" },
-  { x: 9.3, y: 70, name: "fmcv", range: "normal" },
-  { x: 33.3, y: 70, name: "pwmcv", range: "normal" }
+  { x: 19.33, y: 24.66, name: "freq", range: "audio" },
+  { x: 35.33, y: 24.66, name: "fine", range: "audio" },
+  { x: 19, y: 53.33, name: "fmcv", range: "normal" },
+  { x: 19, y: 79.33, name: "pwmcv", range: "normal" },
+  { x: 35, y: 79.33, name: "pwidth", range: "audio" }
 ]
 
 export const sockets = [
-  { x: 4.3, y: 93.3, name: "i0" }, // voct
-  { x: 16, y: 93.3, name: "i1" }, // fm
-  { x: 27.7, y: 93.3, name: "i2" }, // sync
-  { x: 39.3, y: 93.3, name: "i3" }, // pwm
-  { x: 4.3, y: 108.3, name: "o0" }, // sin
-  { x: 16, y: 108.3, name: "o1" }, // tri
-  { x: 27.7, y: 108.3, name: "o2" }, // saw
-  { x: 39.3, y: 108.3, name: "o3" } // sqr
+  { x: 4.66, y: 27.33, name: "i0" }, // voct
+  { x: 4.66, y: 56, name: "i1" }, // fm
+  { x: 4.66, y: 82, name: "i3" }, // pwm
+  { x: 4.66, y: 107, name: "o0" }, // sin
+  { x: 16, y: 107, name: "o1" }, // tri
+  { x: 27.33, y: 107, name: "o2" }, // saw
+  { x: 38.33, y: 107, name: "o3" } // sqr
 ]
 
 const VCO = ({
