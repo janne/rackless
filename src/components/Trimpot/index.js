@@ -6,6 +6,8 @@ import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
+const POT_DEGREES = 270
+
 const Trimpot = ({
   x,
   y,
@@ -49,7 +51,9 @@ const Trimpot = ({
             ...styles.img,
             width: width * ZOOM,
             transform: `rotate(${
-              range === "normal" ? (value - 0.5) * 300 : value * 150
+              range === "normal"
+                ? (value - 0.5) * POT_DEGREES
+                : value * (POT_DEGREES / 2)
             }deg)`
           }}
           alt="Trimpot"
