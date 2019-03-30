@@ -16,8 +16,7 @@ const output = uuidv1()
 const initialState = {
   modules: {
     [vco1]: { type: "VCO", col: 1, row: 0 },
-    [vco2]: { type: "VCO", col: 12, row: 0 },
-    [output]: { type: "OUTPUT", col: 23, row: 0 }
+    [output]: { type: "OUTPUT", col: 12, row: 0 }
   },
   cables: {
     [uuidv1()]: {
@@ -26,13 +25,6 @@ const initialState = {
       toId: output,
       toSocket: "i1",
       color: "red"
-    },
-    [uuidv1()]: {
-      fromId: vco2,
-      fromSocket: "o0",
-      toId: output,
-      toSocket: "i2",
-      color: "green"
     }
   }
 }
