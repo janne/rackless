@@ -4,7 +4,7 @@ import Draggable from "react-draggable"
 import { moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
-const Module = ({ id, col, row, hp, background, children, moveModule }) => {
+const Plate = ({ id, col, row, hp, background, children, moveModule }) => {
   const [pos] = useState({ col, row })
 
   const styles = {
@@ -52,4 +52,4 @@ const mapDispatchToProps = { moveModule }
 export default connect(
   null,
   mapDispatchToProps
-)(Module)
+)(Plate)

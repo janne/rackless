@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import * as R from "ramda"
 import { setValue } from "../../store/actions"
 import background from "./background.svg"
-import Module from "../Module"
+import Plate from "../Plate"
 import Trimpot from "../Trimpot"
 import Socket from "../Socket"
 
@@ -52,7 +52,7 @@ const VCO = ({
   }, [freq, fine, pwidth, fmcv, pwmcv])
 
   return (
-    <Module col={col} row={row} hp={10} id={id} background={background}>
+    <Plate col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
         <Trimpot {...params} id={id} key={params.name} />
       ))}
@@ -60,7 +60,7 @@ const VCO = ({
       {sockets.map(params => (
         <Socket {...params} id={id} key={params.name} />
       ))}
-    </Module>
+    </Plate>
   )
 }
 

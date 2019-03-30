@@ -4,7 +4,7 @@ import * as R from "ramda"
 import Tone from "tone"
 import { setValue } from "../../store/actions"
 import Socket from "../Socket"
-import Module from "../Module"
+import Plate from "../Plate"
 import background from "./background.svg"
 
 export const sockets = [
@@ -26,7 +26,7 @@ export const sockets = [
   { x: 39.3, y: 109, name: "o7" }
 ]
 
-const Audio = ({ id, col, row, volume = 0, audioNode, setValue }) => {
+const Output = ({ id, col, row, volume = 0, audioNode, setValue }) => {
   useEffect(() => {
     setValue(id, "audioNode", Tone.Master)
   }, [])
@@ -35,11 +35,11 @@ const Audio = ({ id, col, row, volume = 0, audioNode, setValue }) => {
   }, [volume])
 
   return (
-    <Module id={id} col={col} row={row} hp={10} background={background}>
+    <Plate id={id} col={col} row={row} hp={10} background={background}>
       {sockets.map(params => (
         <Socket {...params} id={id} key={params.name} />
       ))}
-    </Module>
+    </Plate>
   )
 }
 
@@ -51,4 +51,4 @@ const mapDispatchToProps = { setValue }
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Audio)
+)(Output)

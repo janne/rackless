@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import Audio from "./components/Audio"
+import Output from "./components/Output"
 import VCO from "./components/VCO"
 import Cable from "./components/Cable"
 import Tone from "tone"
@@ -15,8 +15,8 @@ const App = ({ modules, cables }) => {
     switch (type) {
       case "VCO":
         return <VCO id={id} {...props} />
-      case "AUDIO":
-        return <Audio id={id} {...props} />
+      case "OUTPUT":
+        return <Output id={id} {...props} />
       default:
         return null
     }
