@@ -24,14 +24,14 @@ const initialState = {
       fromId: vco1,
       fromSocket: "o0",
       toId: output,
-      toSocket: "i0",
+      toSocket: "i1",
       color: "red"
     },
     [uuidv1()]: {
       fromId: vco2,
       fromSocket: "o0",
       toId: output,
-      toSocket: "i1",
+      toSocket: "i2",
       color: "green"
     }
   }

@@ -5,25 +5,24 @@ import Tone from "tone"
 import { setValue } from "../../store/actions"
 import Socket from "../Socket"
 import Plate from "../Plate"
+import Trimpot from "../Trimpot"
 import background from "./background.svg"
 
+export const pots = [
+  { x: 19.33, y: 13.66, name: "volume", range: "normal" },
+  { x: 19.33, y: 35.33, name: "level1", range: "normal" },
+  { x: 35.33, y: 35.33, name: "pan1", range: "audio" },
+  { x: 19.33, y: 59, name: "level2", range: "normal" },
+  { x: 35.33, y: 58.66, name: "pan2", range: "audio" },
+  { x: 35.33, y: 89.66, name: "pan3", range: "audio" }
+]
+
 export const sockets = [
-  { x: 4.7, y: 56.7, name: "i0" },
-  { x: 16.3, y: 56.7, name: "i1" },
-  { x: 28, y: 56.7, name: "i2" },
-  { x: 39.3, y: 56.7, name: "i3" },
-  { x: 4.7, y: 70.7, name: "i4" },
-  { x: 16.3, y: 70.7, name: "i5" },
-  { x: 28, y: 70.7, name: "i6" },
-  { x: 39.3, y: 70.7, name: "i7" },
-  { x: 4.7, y: 93.3, name: "o0" },
-  { x: 16.3, y: 93.3, name: "o1" },
-  { x: 28, y: 93.3, name: "o2" },
-  { x: 39.3, y: 93.3, name: "o3" },
-  { x: 4.7, y: 109, name: "o4" },
-  { x: 16.3, y: 109, name: "o5" },
-  { x: 28, y: 109, name: "o6" },
-  { x: 39.3, y: 109, name: "o7" }
+  { x: 4.5, y: 38, name: "i1" },
+  { x: 4.5, y: 61.33, name: "i2" },
+  { x: 4.5, y: 83, name: "i3l" },
+  { x: 4.5, y: 101.33, name: "i3r" },
+  { x: 20.66, y: 92.33, name: "pancv" }
 ]
 
 const Output = ({ id, col, row, volume = 0, audioNode, setValue }) => {
@@ -36,6 +35,10 @@ const Output = ({ id, col, row, volume = 0, audioNode, setValue }) => {
 
   return (
     <Plate id={id} col={col} row={row} hp={10} background={background}>
+      {pots.map(params => (
+        <Trimpot {...params} id={id} key={params.name} />
+      ))}
+
       {sockets.map(params => (
         <Socket {...params} id={id} key={params.name} />
       ))}
