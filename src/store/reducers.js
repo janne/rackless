@@ -10,7 +10,6 @@ import {
 } from "./actionTypes"
 
 const vco1 = uuidv1()
-const vco2 = uuidv1()
 const output = uuidv1()
 
 const initialState = {
