@@ -17,13 +17,13 @@ export const pots = [
 ]
 
 export const sockets = [
-  { x: 4.66, y: 27.33, name: "i0" }, // voct
-  { x: 4.66, y: 56, name: "i1" }, // fm
-  { x: 4.66, y: 82, name: "i3" }, // pwm
-  { x: 4.66, y: 107, name: "o0" }, // sin
-  { x: 16, y: 107, name: "o1" }, // tri
-  { x: 27.33, y: 107, name: "o2" }, // saw
-  { x: 38.33, y: 107, name: "o3" } // sqr
+  { x: 4.33, y: 27.33, name: "i0" }, // voct
+  { x: 4.33, y: 56, name: "i1" }, // fm
+  { x: 4.33, y: 82, name: "i3" }, // pwm
+  { x: 4.33, y: 106.66, name: "o0" }, // sin
+  { x: 15.66, y: 106.66, name: "o1" }, // tri
+  { x: 27, y: 106.66, name: "o2" }, // saw
+  { x: 38, y: 106.66, name: "o3" } // sqr
 ]
 
 const VCO = ({
