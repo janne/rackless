@@ -9,17 +9,17 @@ import {
   REMOVE_CONNECTOR
 } from "./actionTypes"
 
-const vco1 = uuidv1()
+const vco = uuidv1()
 const output = uuidv1()
 
 const initialState = {
   modules: {
-    [vco1]: { type: "VCO", col: 1, row: 0 },
+    [vco]: { type: "VCO", col: 1, row: 0 },
     [output]: { type: "Output", col: 12, row: 0 }
   },
   cables: {
     [uuidv1()]: {
-      fromId: vco1,
+      fromId: vco,
       fromSocket: "o0",
       toId: output,
       toSocket: "i1",

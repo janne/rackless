@@ -1,16 +1,10 @@
 import React from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import Output from "./components/Output"
-import VCO from "./components/VCO"
 import Cable from "./components/Cable"
 import { setValue } from "./store/actions"
 import Tone from "tone"
-
-const moduleTypes = {
-  VCO,
-  Output
-}
+import moduleTypes from "./moduleTypes"
 
 const App = ({ modules, cables, setValue }) => {
   const enableSound = () => {
@@ -18,7 +12,7 @@ const App = ({ modules, cables, setValue }) => {
   }
 
   const renderModule = (id, { type, col, row, ...values }) => {
-    const Module = moduleTypes[type]
+    const Module = R.path([type, "module"], moduleTypes)
     if (!Module) return null
     return (
       <Module id={id} setValue={setValue} col={col} row={row} values={values} />

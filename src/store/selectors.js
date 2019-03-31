@@ -1,19 +1,12 @@
 import * as R from "ramda"
-import { sockets as socketsVCO } from "../components/VCO"
-import { sockets as socketsOutput } from "../components/Output"
 import { HP_PIX, HEIGHT_PIX, ZOOM } from "../constants"
+import moduleTypes from "../moduleTypes"
 
 const WIDTH = 5 * ZOOM
 
 export const getSockets = (id, state) => {
-  switch (state.modules[id].type) {
-    case "VCO":
-      return socketsVCO
-    case "Output":
-      return socketsOutput
-    default:
-      return null
-  }
+  const type = R.path(["modules", id, "type"], state)
+  return R.pathOr(null, [type, "sockets"], moduleTypes)
 }
 
 export const socketToPos = (moduleId, socketName, state) => {

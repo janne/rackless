@@ -23,7 +23,7 @@ export const sockets = [
   { x: 38, y: 106.66, name: "o3" } // sqr
 ]
 
-const VCO = ({ id, setValue, col, row, values }) => {
+export const module = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
     setValue(id, "instrument", new Instrument())
   }, [])
@@ -53,5 +53,3 @@ const VCO = ({ id, setValue, col, row, values }) => {
     </Plate>
   )
 }
-
-export default VCO

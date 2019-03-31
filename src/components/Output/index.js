@@ -22,7 +22,7 @@ export const sockets = [
   { x: 37.5, y: 80.5, name: "i4" }
 ]
 
-const Output = ({ id, setValue, col, row, values }) => {
+export const module = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
     setValue(id, "instrument", new Instrument())
   }, [])
@@ -52,5 +52,3 @@ const Output = ({ id, setValue, col, row, values }) => {
     </Plate>
   )
 }
-
-export default Output
