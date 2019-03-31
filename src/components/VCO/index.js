@@ -14,20 +14,21 @@ export const pots = [
 ]
 
 export const input = [
-  { x: 4.33, y: 27.33, socketId: 0 }, // voct
-  { x: 4.33, y: 56, socketId: 1 }, // fm
-  { x: 4.33, y: 82, socketId: 2 } // pwm
+  { x: 4.33, y: 27.33, name: "voct", socketId: 0, range: "normal" },
+  { x: 4.33, y: 56, name: "fm", socketId: 1, range: "audio" },
+  { x: 4.33, y: 82, name: "pwm", socketId: 2, range: "normal" }
 ]
+
 export const output = [
-  { x: 4.33, y: 106.66, socketId: 0 }, // sin
-  { x: 15.66, y: 106.66, socketId: 1 }, // tri
-  { x: 27, y: 106.66, socketId: 2 }, // saw
-  { x: 38, y: 106.66, socketId: 3 } // sqr
+  { x: 4.33, y: 106.66, name: "sin", socketId: 0, range: "frequency" }, // sin
+  { x: 15.66, y: 106.66, name: "tri", socketId: 1, range: "frequency" }, // tri
+  { x: 27, y: 106.66, name: "saw", socketId: 2, range: "frequency" }, // saw
+  { x: 38, y: 106.66, name: "sqr", socketId: 3, range: "frequency" } // sqr
 ]
 
 export const module = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
-    setValue(id, "instrument", new Instrument())
+    setValue(id, "instrument", new Instrument(pots, input, output))
   }, [])
 
   useEffect(() => {

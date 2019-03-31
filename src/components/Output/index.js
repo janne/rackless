@@ -15,16 +15,16 @@ export const pots = [
 ]
 
 export const input = [
-  { x: 4.5, y: 38, socketId: 0 },
-  { x: 4.5, y: 61.33, socketId: 1 },
-  { x: 4.5, y: 86.33, socketId: 2 },
-  { x: 4.5, y: 104.66, socketId: 3 },
-  { x: 37.5, y: 80.5, socketId: 4 }
+  { x: 4.5, y: 38, name: "i1", socketId: 0, range: "audio" },
+  { x: 4.5, y: 61.33, name: "i2", socketId: 1, range: "audio" },
+  { x: 4.5, y: 86.33, name: "i3l", socketId: 2, range: "audio" },
+  { x: 4.5, y: 104.66, name: "i3r", socketId: 3, range: "audio" },
+  { x: 37.5, y: 80.5, name: "pancv", socketId: 4, range: "audio" }
 ]
 
 export const module = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
-    setValue(id, "instrument", new Instrument())
+    setValue(id, "instrument", new Instrument(pots, input))
   }, [])
 
   useEffect(() => {

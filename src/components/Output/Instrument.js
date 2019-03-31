@@ -1,5 +1,11 @@
 import Tone from "tone"
 
+const ranges = {
+  audio: Tone.Type.AudioRange,
+  normal: Tone.Type.NormalRange,
+  frequency: Tone.Type.Frequency
+}
+
 export default class extends Tone.Instrument {
   defaults = {
     gain: 1
@@ -13,29 +19,23 @@ export default class extends Tone.Instrument {
     return tone
   }
 
-  constructor(opts) {
-    super(opts)
-    this.createInsOuts(5, 0)
+  constructor(pots = [], inputs = [], outputs = []) {
+    super()
+    this.createInsOuts(Object.keys(inputs).length, Object.keys(outputs).length)
 
-    // Sockets
-    this.i1 = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[0] = this.i1
-    this.i2 = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[1] = this.i2
-    this.i3l = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[2] = this.i3l
-    this.i3r = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[3] = this.i3r
-    this.pancv = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[4] = this.pancv
+    pots.forEach(pot => {
+      this[pot.name] = this.makeTone(Tone.Signal, 0, ranges[pot.range])
+    })
 
-    // Pots
-    this.gain = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.level1 = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.pan1 = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.level2 = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.pan2 = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.level3 = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
+    inputs.forEach(i => {
+      this[i.name] = this.makeTone(Tone.Signal, 0, ranges[i.range])
+      this.input[i.socketId] = this[i.name]
+    })
+
+    outputs.forEach(o => {
+      this[o.name] = this.makeTone(Tone.Signal, 0, ranges[o.range])
+      this.output[o.socketId] = this[o.name]
+    })
 
     this.masterGain = this.makeTone(Tone.Gain)
     this.gain.connect(this.masterGain.gain)

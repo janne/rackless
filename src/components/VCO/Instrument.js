@@ -1,6 +1,12 @@
 import Tone from "tone"
 import AudioToFrequency from "./AudioToFrequency"
 
+const ranges = {
+  audio: Tone.Type.AudioRange,
+  normal: Tone.Type.NormalRange,
+  frequency: Tone.Type.Frequency
+}
+
 export default class extends Tone.Instrument {
   tones = []
 
@@ -10,32 +16,23 @@ export default class extends Tone.Instrument {
     return tone
   }
 
-  constructor(opts) {
-    super(opts)
+  constructor(pots = [], inputs = [], outputs = []) {
+    super()
+    this.createInsOuts(Object.keys(inputs).length, Object.keys(outputs).length)
 
-    this.createInsOuts(4, 4)
+    pots.forEach(pot => {
+      this[pot.name] = this.makeTone(Tone.Signal, 0, ranges[pot.range])
+    })
 
-    const options = Tone.defaultArg(opts, Tone.Oscillator.defaults)
-    this.freq = this.makeTone(Tone.Signal, options.freq, Tone.Type.AudioRange)
-    this.fine = this.makeTone(Tone.Signal, options.fine, Tone.Type.AudioRange)
-    this.pwidth = this.makeTone(
-      Tone.Signal,
-      options.pwidth,
-      Tone.Type.AudioRange
-    )
-    this.fmcv = this.makeTone(Tone.Signal, options.fmcv, Tone.Type.NormalRange)
-    this.pwmcv = this.makeTone(
-      Tone.Signal,
-      options.pwmcv,
-      Tone.Type.NormalRange
-    )
+    inputs.forEach(i => {
+      this[i.name] = this.makeTone(Tone.Signal, 0, ranges[i.range])
+      this.input[i.socketId] = this[i.name]
+    })
 
-    this.voct = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.input[0] = this.voct
-    this.fm = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
-    this.input[1] = this.fm
-    this.pwm = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.input[2] = this.pwm
+    outputs.forEach(o => {
+      this[o.name] = this.makeTone(Tone.Signal, 0, ranges[o.range])
+      this.output[o.socketId] = this[o.name]
+    })
 
     const { Sine, Triangle, Sawtooth, Square } = Tone.Oscillator.Type
     const types = [Sine, Triangle, Sawtooth, Square]
@@ -76,7 +73,8 @@ export default class extends Tone.Instrument {
       scaledFm.connect(plusFm, 0, 1)
 
       plusFm.chain(new AudioToFrequency(220), osc.frequency)
-      this.output[idx] = osc.start()
+
+      osc.start().connect(this.output[idx])
     })
   }
 
