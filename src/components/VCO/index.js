@@ -23,35 +23,28 @@ export const sockets = [
   { x: 38, y: 106.66, name: "o3" } // sqr
 ]
 
-const VCO = ({
-  id,
-  setValue,
-  audioNode,
-  col,
-  row,
-  freq = 0,
-  fine = 0,
-  pwidth = 0,
-  fmcv = 0,
-  pwmcv = 0
-}) => {
+const VCO = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
     setValue(id, "audioNode", new Instrument())
   }, [])
 
   useEffect(() => {
-    if (!audioNode) return
-    audioNode.freq.value = freq
-    audioNode.fine.value = fine
-    audioNode.pwidth.value = pwidth
-    audioNode.fmcv.value = fmcv
-    audioNode.pwmcv.value = pwmcv
-  }, [freq, fine, pwidth, fmcv, pwmcv])
+    if (!values.audioNode) return
+    pots.forEach(
+      ({ name }) => (values.audioNode[name].value = values[name] || 0)
+    )
+  }, pots.map(pot => values[pot.name]))
 
   return (
     <Plate col={col} row={row} hp={10} id={id} background={background}>
       {pots.map(params => (
-        <Trimpot {...params} id={id} key={params.name} />
+        <Trimpot
+          {...params}
+          id={id}
+          value={values[params.name]}
+          setValue={setValue}
+          key={params.name}
+        />
       ))}
 
       {sockets.map(params => (

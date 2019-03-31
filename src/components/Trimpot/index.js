@@ -1,8 +1,6 @@
 import React from "react"
-import { connect } from "react-redux"
 import * as R from "ramda"
 import { DraggableCore } from "react-draggable"
-import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
@@ -63,13 +61,4 @@ const Trimpot = ({
   )
 }
 
-const mapStateToProps = (state, { id, name }) => ({
-  value: R.path(["modules", id, name], state)
-})
-
-const mapDispatchToProps = { setValue }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Trimpot)
+export default Trimpot

@@ -12,12 +12,28 @@ const App = ({ modules, cables, setValue }) => {
     Tone.context.resume()
   }
 
-  const renderModule = (id, { type, ...props }) => {
+  const renderModule = (id, { type, col, row, ...values }) => {
     switch (type) {
       case "VCO":
-        return <VCO id={id} setValue={setValue} {...props} />
+        return (
+          <VCO
+            id={id}
+            setValue={setValue}
+            col={col}
+            row={row}
+            values={values}
+          />
+        )
       case "OUTPUT":
-        return <Output id={id} setValue={setValue} {...props} />
+        return (
+          <Output
+            id={id}
+            setValue={setValue}
+            col={col}
+            row={row}
+            values={values}
+          />
+        )
       default:
         return null
     }

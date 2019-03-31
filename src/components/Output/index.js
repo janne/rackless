@@ -22,37 +22,28 @@ export const sockets = [
   { x: 37.5, y: 80.5, name: "i4" }
 ]
 
-const Output = ({
-  id,
-  setValue,
-  audioNode,
-  col,
-  row,
-  gain = 0,
-  level1 = 0,
-  pan1 = 0,
-  level2 = 0,
-  pan2 = 0,
-  level3 = 0
-}) => {
+const Output = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
     setValue(id, "audioNode", new Instrument())
   }, [])
 
   useEffect(() => {
-    if (!audioNode) return
-    audioNode.gain.value = gain
-    audioNode.level1.value = level1
-    audioNode.pan1.value = pan1
-    audioNode.level2.value = level2
-    audioNode.pan2.value = pan2
-    audioNode.level3.value = level3
-  }, [gain, level1, pan1, level2, pan2, level3])
+    if (!values.audioNode) return
+    pots.forEach(
+      ({ name }) => (values.audioNode[name].value = values[name] || 0)
+    )
+  }, pots.map(pot => values[pot.name]))
 
   return (
     <Plate id={id} col={col} row={row} hp={10} background={background}>
       {pots.map(params => (
-        <Trimpot {...params} id={id} key={params.name} />
+        <Trimpot
+          {...params}
+          id={id}
+          value={values[params.name]}
+          setValue={setValue}
+          key={params.name}
+        />
       ))}
 
       {sockets.map(params => (
