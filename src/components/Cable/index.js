@@ -105,8 +105,8 @@ const Cable = ({
 const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
   const { x: x1, y: y1 } = socketToPos(fromId, fromSocket, state)
   const { x: x2, y: y2 } = socketToPos(toId, toSocket, state)
-  const from = R.path([fromId, "audioNode"], state.modules)
-  const to = R.path([toId, "audioNode"], state.modules)
+  const from = R.path([fromId, "instrument"], state.modules)
+  const to = R.path([toId, "instrument"], state.modules)
   return { x1, y1, x2, y2, from, fromSocket, to, toSocket }
 }
 

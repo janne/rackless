@@ -24,13 +24,13 @@ export const sockets = [
 
 const Output = ({ id, setValue, col, row, values }) => {
   useEffect(() => {
-    setValue(id, "audioNode", new Instrument())
+    setValue(id, "instrument", new Instrument())
   }, [])
 
   useEffect(() => {
-    if (!values.audioNode) return
+    if (!values.instrument) return
     pots.forEach(
-      ({ name }) => (values.audioNode[name].value = values[name] || 0)
+      ({ name }) => (values.instrument[name].value = values[name] || 0)
     )
   }, pots.map(pot => values[pot.name]))
 
