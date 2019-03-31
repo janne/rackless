@@ -1,8 +1,5 @@
 import React, { useEffect } from "react"
 import Instrument from "./Instrument"
-import { connect } from "react-redux"
-import * as R from "ramda"
-import { setValue } from "../../store/actions"
 import background from "./background.svg"
 import Plate from "../Plate"
 import Trimpot from "../Trimpot"
@@ -27,11 +24,11 @@ export const sockets = [
 ]
 
 const VCO = ({
+  id,
+  setValue,
   audioNode,
   col,
   row,
-  id,
-  setValue,
   freq = 0,
   fine = 0,
   pwidth = 0,
@@ -64,15 +61,4 @@ const VCO = ({
   )
 }
 
-const mapStateToProps = (state, { id }) =>
-  R.pick(
-    ["audioNode", "type", "freq", "fine", "pwidth", "fmcv", "pwmcv"],
-    R.path(["modules", id], state)
-  )
-
-const mapDispatchToProps = { setValue }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(VCO)
+export default VCO

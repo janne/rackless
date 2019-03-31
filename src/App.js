@@ -4,9 +4,10 @@ import * as R from "ramda"
 import Output from "./components/Output"
 import VCO from "./components/VCO"
 import Cable from "./components/Cable"
+import { setValue } from "./store/actions"
 import Tone from "tone"
 
-const App = ({ modules, cables }) => {
+const App = ({ modules, cables, setValue }) => {
   const enableSound = () => {
     Tone.context.resume()
   }
@@ -14,9 +15,9 @@ const App = ({ modules, cables }) => {
   const renderModule = (id, { type, ...props }) => {
     switch (type) {
       case "VCO":
-        return <VCO id={id} {...props} />
+        return <VCO id={id} setValue={setValue} {...props} />
       case "OUTPUT":
-        return <Output id={id} {...props} />
+        return <Output id={id} setValue={setValue} {...props} />
       default:
         return null
     }
@@ -45,4 +46,9 @@ const mapStateToProps = state => ({
   modules: state.modules
 })
 
-export default connect(mapStateToProps)(App)
+const mapDispatchToProps = { setValue }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

@@ -1,8 +1,5 @@
 import React, { useEffect } from "react"
-import { connect } from "react-redux"
-import * as R from "ramda"
 import Instrument from "./Instrument"
-import { setValue } from "../../store/actions"
 import Socket from "../Socket"
 import Plate from "../Plate"
 import Trimpot from "../Trimpot"
@@ -27,6 +24,8 @@ export const sockets = [
 
 const Output = ({
   id,
+  setValue,
+  audioNode,
   col,
   row,
   gain = 0,
@@ -34,9 +33,7 @@ const Output = ({
   pan1 = 0,
   level2 = 0,
   pan2 = 0,
-  level3 = 0,
-  audioNode,
-  setValue
+  level3 = 0
 }) => {
   useEffect(() => {
     setValue(id, "audioNode", new Instrument())
@@ -65,15 +62,4 @@ const Output = ({
   )
 }
 
-const mapStateToProps = (state, { id }) =>
-  R.pick(
-    ["audioNode", "gain", "level1", "pan1", "level2", "pan2", "level3"],
-    R.path(["modules", id], state)
-  )
-
-const mapDispatchToProps = { setValue }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Output)
+export default Output
