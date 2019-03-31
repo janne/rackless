@@ -11,9 +11,14 @@ export const setValue = (id, name, value) => ({
   payload: { id, name, value }
 })
 
-export const createCableFrom = (id, fromId, fromSocket, color) => ({
+export const createCable = (id, moduleId, socketId, color) => ({
   type: CREATE_CABLE,
-  payload: { id, fromId, fromSocket, toId: fromId, toSocket: fromSocket, color }
+  payload: {
+    id,
+    outputModule: moduleId,
+    outputSocket: socketId,
+    color
+  }
 })
 
 export const moveModule = (id, col, row) => ({

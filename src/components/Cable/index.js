@@ -20,8 +20,8 @@ const Cable = ({
   removeConnector,
   from,
   to,
-  fromSocket,
-  toSocket,
+  outputSocket,
+  inputSocket,
   disabled
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
@@ -44,33 +44,22 @@ const Cable = ({
   }
 
   useEffect(() => {
-    const [fromDir, fromPort] = fromSocket.split("")
-    const [toDir, toPort] = toSocket.split("")
-
-    if (!from || !to || fromDir === toDir || disabled) return
-
-    if (fromDir === "o")
-      return connect(
-        from,
-        fromPort,
-        to,
-        toPort
-      )
+    if (disabled || !from || !to) return
 
     return connect(
-      to,
-      toPort,
       from,
-      fromPort
+      outputSocket,
+      to,
+      inputSocket
     )
   })
 
-  const setPos = connector => (connector === 1 ? setPos1 : setPos2)
+  const setPos = connector => (connector === "output" ? setPos1 : setPos2)
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 
   const handleStop = connector => pos => {
-    const initPos = connector === 1 ? { x: x1, y: y1 } : { x: x2, y: y2 }
+    const initPos = connector === "output" ? { x: x1, y: y1 } : { x: x2, y: y2 }
     setPos(connector)(initPos)
     moveConnector(id, connector, pos)
   }
@@ -80,16 +69,16 @@ const Cable = ({
       <Connector
         x={x1}
         y={y1}
-        onStart={handleStart(1)}
-        onDrag={setPos(1)}
-        onStop={handleStop(1)}
+        onStart={handleStart("output")}
+        onDrag={setPos("output")}
+        onStop={handleStop("output")}
       />
       <Connector
         x={x2}
         y={y2}
-        onStart={handleStart(2)}
-        onDrag={setPos(2)}
-        onStop={handleStop(2)}
+        onStart={handleStart("input")}
+        onDrag={setPos("input")}
+        onStop={handleStop("input")}
       />
       <Bezier
         x1={pos1.x + CENTER}
@@ -102,12 +91,22 @@ const Cable = ({
   )
 }
 
-const mapStateToProps = (state, { fromId, fromSocket, toId, toSocket }) => {
-  const { x: x1, y: y1 } = socketToPos(fromId, fromSocket, state)
-  const { x: x2, y: y2 } = socketToPos(toId, toSocket, state)
-  const from = R.path([fromId, "instrument"], state.modules)
-  const to = R.path([toId, "instrument"], state.modules)
-  return { x1, y1, x2, y2, from, fromSocket, to, toSocket }
+const mapStateToProps = (
+  state,
+  { outputModule, outputSocket, inputModule, inputSocket }
+) => {
+  const { x: x1, y: y1 } = socketToPos(
+    outputModule,
+    "output",
+    outputSocket,
+    state
+  )
+  const { x: x2, y: y2 } = R.isNil(inputSocket)
+    ? { x: x1, y: y1 }
+    : socketToPos(inputModule, "input", inputSocket, state)
+  const from = R.path([outputModule, "instrument"], state.modules)
+  const to = R.path([inputModule, "instrument"], state.modules)
+  return { x1, y1, x2, y2, from, to }
 }
 
 const mapDispatchToProps = { moveConnector, removeConnector }

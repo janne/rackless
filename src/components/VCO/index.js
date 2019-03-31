@@ -13,14 +13,16 @@ export const pots = [
   { x: 35, y: 79.33, name: "pwidth", range: "audio" }
 ]
 
-export const sockets = [
-  { x: 4.33, y: 27.33, name: "i0" }, // voct
-  { x: 4.33, y: 56, name: "i1" }, // fm
-  { x: 4.33, y: 82, name: "i3" }, // pwm
-  { x: 4.33, y: 106.66, name: "o0" }, // sin
-  { x: 15.66, y: 106.66, name: "o1" }, // tri
-  { x: 27, y: 106.66, name: "o2" }, // saw
-  { x: 38, y: 106.66, name: "o3" } // sqr
+export const input = [
+  { x: 4.33, y: 27.33, socketId: 0 }, // voct
+  { x: 4.33, y: 56, socketId: 1 }, // fm
+  { x: 4.33, y: 82, socketId: 2 } // pwm
+]
+export const output = [
+  { x: 4.33, y: 106.66, socketId: 0 }, // sin
+  { x: 15.66, y: 106.66, socketId: 1 }, // tri
+  { x: 27, y: 106.66, socketId: 2 }, // saw
+  { x: 38, y: 106.66, socketId: 3 } // sqr
 ]
 
 export const module = ({ id, setValue, col, row, values }) => {
@@ -36,7 +38,7 @@ export const module = ({ id, setValue, col, row, values }) => {
   }, pots.map(pot => values[pot.name]))
 
   return (
-    <Plate col={col} row={row} hp={10} id={id} background={background}>
+    <Plate col={col} row={row} hp={10} moduleId={id} background={background}>
       {pots.map(params => (
         <Trimpot
           {...params}
@@ -47,8 +49,22 @@ export const module = ({ id, setValue, col, row, values }) => {
         />
       ))}
 
-      {sockets.map(params => (
-        <Socket {...params} id={id} key={params.name} />
+      {input.map(params => (
+        <Socket
+          moduleId={id}
+          direction="input"
+          key={`input-${params.socketId}`}
+          {...params}
+        />
+      ))}
+
+      {output.map(params => (
+        <Socket
+          moduleId={id}
+          direction="output"
+          key={`output-${params.socketId}`}
+          {...params}
+        />
       ))}
     </Plate>
   )

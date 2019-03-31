@@ -4,16 +4,16 @@ import moduleTypes from "../moduleTypes"
 
 const WIDTH = 5 * ZOOM
 
-export const getSockets = (id, state) => {
-  const type = R.path(["modules", id, "type"], state)
-  return R.pathOr(null, [type, "sockets"], moduleTypes)
+export const getSockets = (moduleId, direction, state) => {
+  const type = R.path(["modules", moduleId, "type"], state)
+  return R.pathOr(null, [type, direction], moduleTypes)
 }
 
-export const socketToPos = (moduleId, socketName, state) => {
+export const socketToPos = (moduleId, direction, socketId, state) => {
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   const socket = R.find(
-    R.propEq("name", socketName),
-    getSockets(moduleId, state)
+    R.propEq("socketId", socketId),
+    getSockets(moduleId, direction, state)
   )
   return {
     x: col * HP_PIX + socket.x * ZOOM,
@@ -21,17 +21,17 @@ export const socketToPos = (moduleId, socketName, state) => {
   }
 }
 
-export const socketAtPos = ({ x, y }, state) => {
-  for (let id of R.keys(state.modules)) {
-    const { col, row } = state.modules[id]
-    const socket = getSockets(id, state).find(
+export const socketAtPos = ({ x, y }, direction, state) => {
+  for (let moduleId of R.keys(state.modules)) {
+    const { col, row } = state.modules[moduleId]
+    const socket = getSockets(moduleId, direction, state).find(
       socket =>
         x > col * HP_PIX + socket.x * ZOOM - WIDTH &&
         x < col * HP_PIX + socket.x * ZOOM + WIDTH &&
         y > row * HEIGHT_PIX + socket.y * ZOOM - WIDTH &&
         y < row * HEIGHT_PIX + socket.y * ZOOM + WIDTH
     )
-    if (socket) return { id, socket: socket.name }
+    if (socket) return { moduleId, socketId: socket.socketId }
   }
   return null
 }

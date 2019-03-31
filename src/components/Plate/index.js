@@ -4,7 +4,15 @@ import Draggable from "react-draggable"
 import { moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
-const Plate = ({ id, col, row, hp, background, children, moveModule }) => {
+const Plate = ({
+  moduleId,
+  col,
+  row,
+  hp,
+  background,
+  children,
+  moveModule
+}) => {
   const [pos] = useState({ col, row })
 
   const styles = {
@@ -18,7 +26,7 @@ const Plate = ({ id, col, row, hp, background, children, moveModule }) => {
   const dragHandler = (e, data) => {
     const newCol = pos.col + data.x / HP_PIX
     const newRow = pos.row + data.y / HEIGHT_PIX
-    moveModule(id, newCol, newRow)
+    moveModule(moduleId, newCol, newRow)
   }
 
   return (

@@ -19,10 +19,10 @@ const initialState = {
   },
   cables: {
     [uuidv1()]: {
-      fromId: vco,
-      fromSocket: "o0",
-      toId: output,
-      toSocket: "i1",
+      outputModule: vco,
+      outputSocket: 0,
+      inputModule: output,
+      inputSocket: 0,
       color: "red"
     }
   }
@@ -45,12 +45,19 @@ export default (state = initialState, action) => {
       )(state)
     }
     case CREATE_CABLE: {
-      const { id, fromId, fromSocket, toId, toSocket, color } = action.payload
+      const {
+        id,
+        outputModule,
+        outputSocket,
+        inputModule,
+        inputSocket,
+        color
+      } = action.payload
       return {
         ...state,
         cables: {
           ...state.cables,
-          [id]: { fromId, fromSocket, toId, toSocket, color }
+          [id]: { outputModule, outputSocket, inputModule, inputSocket, color }
         }
       }
     }
@@ -59,14 +66,22 @@ export default (state = initialState, action) => {
       const state = setCableDisabled(false)
       const movedCable = state.cables[id]
       const cables = R.dissoc(id, state.cables)
-      const target = socketAtPos(pos, state)
+      const target = socketAtPos(pos, connector, state)
 
       if (!target) return { ...state, cables }
 
       const updatedCable =
-        connector === 1
-          ? { ...movedCable, fromId: target.id, fromSocket: target.socket }
-          : { ...movedCable, toId: target.id, toSocket: target.socket }
+        connector === "output"
+          ? {
+              ...movedCable,
+              outputModule: target.moduleId,
+              outputSocket: target.socketId
+            }
+          : {
+              ...movedCable,
+              inputModule: target.moduleId,
+              inputSocket: target.socketId
+            }
       return { ...state, cables: { ...cables, [id]: updatedCable } }
     }
     case REMOVE_CONNECTOR: {

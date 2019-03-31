@@ -2,8 +2,10 @@ import React from "react"
 import { connect } from "react-redux"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
-import { createCableFrom } from "../../store/actions"
+import { createCable } from "../../store/actions"
 const uuidv1 = require("uuid/v1")
+
+const noop = () => {}
 
 const styles = {
   content: { position: "absolute" },
@@ -23,9 +25,9 @@ const COLORS = [
 ]
 const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
 
-const Socket = ({ x, y, id, name, createCableFrom }) => {
+const Socket = ({ x, y, moduleId, socketId, direction, createCable }) => {
   const newCable = () => {
-    createCableFrom(uuidv1(), id, name, randomColor())
+    createCable(uuidv1(), moduleId, socketId, randomColor())
   }
   return (
     <div
@@ -37,13 +39,13 @@ const Socket = ({ x, y, id, name, createCableFrom }) => {
         src={background}
         style={styles.background}
         alt="Socket"
-        onClick={newCable}
+        onClick={direction === "output" ? newCable : noop}
       />
     </div>
   )
 }
 
-const mapDispatchToProps = { createCableFrom }
+const mapDispatchToProps = { createCable }
 
 export default connect(
   null,

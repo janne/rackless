@@ -34,10 +34,8 @@ export default class extends Tone.Instrument {
     this.input[0] = this.voct
     this.fm = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
     this.input[1] = this.fm
-    this.sync = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.input[2] = this.sync
     this.pwm = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
-    this.input[3] = this.pwm
+    this.input[2] = this.pwm
 
     const { Sine, Triangle, Sawtooth, Square } = Tone.Oscillator.Type
     const types = [Sine, Triangle, Sawtooth, Square]
