@@ -5,6 +5,7 @@ import Cable from "./components/Cable"
 import { setValue } from "./store/actions"
 import Tone from "tone"
 import moduleTypes from "./moduleTypes"
+import Module from "./components/Module"
 
 const App = ({ modules, cables, setValue }) => {
   const enableSound = () => {
@@ -12,10 +13,24 @@ const App = ({ modules, cables, setValue }) => {
   }
 
   const renderModule = (id, { type, col, row, ...values }) => {
-    const Module = R.path([type, "module"], moduleTypes)
-    if (!Module) return null
+    const { background, pots, input, output, Instrument } = R.prop(
+      type,
+      moduleTypes
+    )
+    if (!Instrument) return null
     return (
-      <Module id={id} setValue={setValue} col={col} row={row} values={values} />
+      <Module
+        background={background}
+        pots={pots}
+        input={input}
+        output={output}
+        Instrument={Instrument}
+        id={id}
+        setValue={setValue}
+        col={col}
+        row={row}
+        values={values}
+      />
     )
   }
 

@@ -1,9 +1,7 @@
-import React, { useEffect } from "react"
-import Instrument from "./Instrument"
-import background from "./background.svg"
-import Plate from "../Plate"
-import Trimpot from "../Trimpot"
-import Socket from "../Socket"
+import Tone from "tone"
+import BaseInstrument from "../BaseInstrument"
+import AudioToFrequency from "./AudioToFrequency"
+export { default as background } from "./background.svg"
 
 export const pots = [
   { x: 19.33, y: 24.66, name: "freq", range: "audio" },
@@ -26,47 +24,51 @@ export const output = [
   { x: 38, y: 106.66, name: "sqr", socketId: 3, range: "frequency" } // sqr
 ]
 
-export const module = ({ id, setValue, col, row, values }) => {
-  useEffect(() => {
-    setValue(id, "instrument", new Instrument(pots, input, output))
-  }, [])
+export class Instrument extends BaseInstrument {
+  constructor(pots, inputs, outputs) {
+    super(pots, inputs, outputs)
 
-  useEffect(() => {
-    if (!values.instrument) return
-    pots.forEach(
-      ({ name }) => (values.instrument[name].value = values[name] || 0)
-    )
-  }, pots.map(pot => values[pot.name]))
+    const { Sine, Triangle, Sawtooth, Square } = Tone.Oscillator.Type
+    const types = [Sine, Triangle, Sawtooth, Square]
 
-  return (
-    <Plate col={col} row={row} hp={10} moduleId={id} background={background}>
-      {pots.map(params => (
-        <Trimpot
-          {...params}
-          id={id}
-          value={values[params.name]}
-          setValue={setValue}
-          key={params.name}
-        />
-      ))}
+    types.forEach((type, idx) => {
+      const osc =
+        type === Square
+          ? this.makeTone(Tone.PulseOscillator)
+          : this.makeTone(Tone.Oscillator, 0, type)
 
-      {input.map(params => (
-        <Socket
-          moduleId={id}
-          direction="input"
-          key={`input-${params.socketId}`}
-          {...params}
-        />
-      ))}
+      // PWM
+      if (type === Square) {
+        const scaledPwm = this.makeTone(Tone.Gain)
+        this.pwm.connect(scaledPwm)
+        this.pwmcv.connect(scaledPwm.gain)
+        const plusPwidth = this.makeTone(Tone.Add)
+        scaledPwm.connect(plusPwidth)
+        this.pwidth.connect(plusPwidth)
+        plusPwidth.connect(osc.width)
+      }
 
-      {output.map(params => (
-        <Socket
-          moduleId={id}
-          direction="output"
-          key={`output-${params.socketId}`}
-          {...params}
-        />
-      ))}
-    </Plate>
-  )
+      // Fine
+      const scaledFine = this.makeTone(Tone.Multiply, 100)
+      this.fine.connect(scaledFine)
+      scaledFine.connect(osc.detune)
+
+      // Voct
+      const plusVoct = this.makeTone(Tone.Add)
+      this.freq.connect(plusVoct, 0, 0)
+      this.voct.connect(plusVoct, 0, 1)
+
+      // FM
+      const scaledFm = this.makeTone(Tone.Gain)
+      this.fm.connect(scaledFm)
+      this.fmcv.connect(scaledFm.gain)
+      const plusFm = this.makeTone(Tone.Add)
+      plusVoct.connect(plusFm, 0, 0)
+      scaledFm.connect(plusFm, 0, 1)
+
+      plusFm.chain(new AudioToFrequency(220), osc.frequency)
+
+      osc.start().connect(this.output[idx])
+    })
+  }
 }

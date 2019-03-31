@@ -1,41 +1,62 @@
-import Tone from "tone"
+import React, { useEffect } from "react"
+import Plate from "../Plate"
+import Trimpot from "../Trimpot"
+import Socket from "../Socket"
 
-const ranges = {
-  audio: Tone.Type.AudioRange,
-  normal: Tone.Type.NormalRange,
-  frequency: Tone.Type.Frequency
+const Module = ({
+  id,
+  setValue,
+  col,
+  row,
+  values,
+  background,
+  pots = [],
+  input = [],
+  output = [],
+  Instrument
+}) => {
+  useEffect(() => {
+    setValue(id, "instrument", new Instrument(pots, input, output))
+  }, [])
+
+  useEffect(() => {
+    if (!values.instrument) return
+    pots.forEach(
+      ({ name }) => (values.instrument[name].value = values[name] || 0)
+    )
+  }, pots.map(pot => values[pot.name]))
+
+  return (
+    <Plate col={col} row={row} hp={10} moduleId={id} background={background}>
+      {pots.map(params => (
+        <Trimpot
+          {...params}
+          id={id}
+          value={values[params.name]}
+          setValue={setValue}
+          key={params.name}
+        />
+      ))}
+
+      {input.map(params => (
+        <Socket
+          moduleId={id}
+          direction="input"
+          key={`input-${params.socketId}`}
+          {...params}
+        />
+      ))}
+
+      {output.map(params => (
+        <Socket
+          moduleId={id}
+          direction="output"
+          key={`output-${params.socketId}`}
+          {...params}
+        />
+      ))}
+    </Plate>
+  )
 }
 
-export default class extends Tone.Instrument {
-  tones = []
-
-  constructor(pots = [], inputs = [], outputs = []) {
-    super()
-    this.createInsOuts(Object.keys(inputs).length, Object.keys(outputs).length)
-
-    pots.forEach(pot => {
-      this[pot.name] = this.makeTone(Tone.Signal, 0, ranges[pot.range])
-    })
-
-    inputs.forEach(i => {
-      this[i.name] = this.makeTone(Tone.Signal, 0, ranges[i.range])
-      this.input[i.socketId] = this[i.name]
-    })
-
-    outputs.forEach(o => {
-      this[o.name] = this.makeTone(Tone.Signal, 0, ranges[o.range])
-      this.output[o.socketId] = this[o.name]
-    })
-  }
-
-  makeTone(Class, ...args) {
-    const tone = new Class(...args)
-    this.tones.push(tone)
-    return tone
-  }
-
-  dispose() {
-    this.tones.forEach(t => t.dispose())
-    super.dispose()
-  }
-}
+export default Module
