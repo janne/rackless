@@ -2,24 +2,42 @@ import Tone from "tone"
 import AudioToFrequency from "./AudioToFrequency"
 
 export default class extends Tone.Instrument {
+  tones = []
+
+  makeTone(Class, ...args) {
+    const tone = new Class(...args)
+    this.tones.push(tone)
+    return tone
+  }
+
   constructor(opts) {
     super(opts)
 
     this.createInsOuts(4, 4)
 
     const options = Tone.defaultArg(opts, Tone.Oscillator.defaults)
-    this.freq = new Tone.Signal(options.freq, Tone.Type.AudioRange)
-    this.fine = new Tone.Signal(options.fine, Tone.Type.AudioRange)
-    this.pwidth = new Tone.Signal(options.pwidth, Tone.Type.AudioRange)
-    this.fmcv = new Tone.Signal(options.fmcv, Tone.Type.NormalRange)
-    this.pwmcv = new Tone.Signal(options.pwmcv, Tone.Type.NormalRange)
+    this.freq = this.makeTone(Tone.Signal, options.freq, Tone.Type.AudioRange)
+    this.fine = this.makeTone(Tone.Signal, options.fine, Tone.Type.AudioRange)
+    this.pwidth = this.makeTone(
+      Tone.Signal,
+      options.pwidth,
+      Tone.Type.AudioRange
+    )
+    this.fmcv = this.makeTone(Tone.Signal, options.fmcv, Tone.Type.NormalRange)
+    this.pwmcv = this.makeTone(
+      Tone.Signal,
+      options.pwmcv,
+      Tone.Type.NormalRange
+    )
 
-    this.voct = this.input[0] = new Tone.Signal(0, Tone.Type.NormalRange)
-    this.fm = this.input[1] = new Tone.Signal(0, Tone.Type.AudioRange)
-    this.sync = this.input[2] = new Tone.Signal(0, Tone.Type.NormalRange)
-    this.pwm = this.input[3] = new Tone.Signal(0, Tone.Type.NormalRange)
-
-    this._oscillators = []
+    this.voct = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
+    this.input[0] = this.voct
+    this.fm = this.makeTone(Tone.Signal, 0, Tone.Type.AudioRange)
+    this.input[1] = this.fm
+    this.sync = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
+    this.input[2] = this.sync
+    this.pwm = this.makeTone(Tone.Signal, 0, Tone.Type.NormalRange)
+    this.input[3] = this.pwm
 
     const { Sine, Triangle, Sawtooth, Square } = Tone.Oscillator.Type
     const types = [Sine, Triangle, Sawtooth, Square]
@@ -27,36 +45,35 @@ export default class extends Tone.Instrument {
     types.forEach((type, idx) => {
       const osc =
         type === Square
-          ? new Tone.PulseOscillator()
-          : new Tone.Oscillator(0, type)
-      this._oscillators.push(osc)
+          ? this.makeTone(Tone.PulseOscillator)
+          : this.makeTone(Tone.Oscillator, 0, type)
 
       // PWM
       if (type === Square) {
-        const scaledPwm = new Tone.Gain()
+        const scaledPwm = this.makeTone(Tone.Gain)
         this.pwm.connect(scaledPwm)
         this.pwmcv.connect(scaledPwm.gain)
-        const plusPwidth = new Tone.Add()
+        const plusPwidth = this.makeTone(Tone.Add)
         scaledPwm.connect(plusPwidth)
         this.pwidth.connect(plusPwidth)
         plusPwidth.connect(osc.width)
       }
 
       // Fine
-      const scaledFine = new Tone.Multiply(100)
+      const scaledFine = this.makeTone(Tone.Multiply, 100)
       this.fine.connect(scaledFine)
       scaledFine.connect(osc.detune)
 
       // Voct
-      const plusVoct = new Tone.Add()
+      const plusVoct = this.makeTone(Tone.Add)
       this.freq.connect(plusVoct, 0, 0)
       this.voct.connect(plusVoct, 0, 1)
 
       // FM
-      const scaledFm = new Tone.Gain()
+      const scaledFm = this.makeTone(Tone.Gain)
       this.fm.connect(scaledFm)
       this.fmcv.connect(scaledFm.gain)
-      const plusFm = new Tone.Add()
+      const plusFm = this.makeTone(Tone.Add)
       plusVoct.connect(plusFm, 0, 0)
       scaledFm.connect(plusFm, 0, 1)
 
@@ -66,17 +83,7 @@ export default class extends Tone.Instrument {
   }
 
   dispose() {
-    Tone.Instrument.prototype.dispose.call(this)
-    this.freq.dispose()
-    this.freqHz.dispose()
-    this.fine.dispose()
-    this.pwidth.dispose()
-    this.fmcv.dispose()
-    this.pwmcv.dispose()
-    this.voct.dispose()
-    this.fm.dispose()
-    this.sync.dispose()
-    this.pwm.dispose()
-    this._oscillators.map(o => o.dispose())
+    this.tones.forEach(t => t.dispose())
+    super.dispose()
   }
 }
