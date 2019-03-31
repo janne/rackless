@@ -4,10 +4,10 @@ import * as R from "ramda"
 import Cable from "./components/Cable"
 import { setValue } from "./store/actions"
 import Tone from "tone"
-import moduleTypes from "./moduleTypes"
+import modules from "./modules"
 import Module from "./components/Module"
 
-const App = ({ modules, cables, setValue }) => {
+const App = props => {
   const enableSound = () => {
     Tone.context.resume()
   }
@@ -15,7 +15,7 @@ const App = ({ modules, cables, setValue }) => {
   const renderModule = (id, { type, col, row, ...values }) => {
     const { background, pots, input, output, Instrument } = R.prop(
       type,
-      moduleTypes
+      modules
     )
     if (!Instrument) return null
     return (
@@ -26,7 +26,7 @@ const App = ({ modules, cables, setValue }) => {
         output={output}
         Instrument={Instrument}
         id={id}
-        setValue={setValue}
+        setValue={props.setValue}
         col={col}
         row={row}
         values={values}
@@ -39,13 +39,13 @@ const App = ({ modules, cables, setValue }) => {
       {R.values(
         R.mapObjIndexed(
           (data, id) => <div key={id}>{renderModule(id, data)}</div>,
-          modules
+          props.modules
         )
       )}
       {R.values(
         R.mapObjIndexed(
           (props, id) => <Cable key={id} id={id} {...props} />,
-          cables
+          props.cables
         )
       )}
     </div>

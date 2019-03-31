@@ -1,5 +1,5 @@
 import Tone from "tone"
-import BaseInstrument from "../BaseInstrument"
+import BaseInstrument from "../../components/BaseInstrument"
 export { default as background } from "./background.svg"
 
 export const pots = [
