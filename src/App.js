@@ -7,36 +7,22 @@ import Cable from "./components/Cable"
 import { setValue } from "./store/actions"
 import Tone from "tone"
 
+const moduleTypes = {
+  VCO,
+  Output
+}
+
 const App = ({ modules, cables, setValue }) => {
   const enableSound = () => {
     Tone.context.resume()
   }
 
   const renderModule = (id, { type, col, row, ...values }) => {
-    switch (type) {
-      case "VCO":
-        return (
-          <VCO
-            id={id}
-            setValue={setValue}
-            col={col}
-            row={row}
-            values={values}
-          />
-        )
-      case "OUTPUT":
-        return (
-          <Output
-            id={id}
-            setValue={setValue}
-            col={col}
-            row={row}
-            values={values}
-          />
-        )
-      default:
-        return null
-    }
+    const Module = moduleTypes[type]
+    if (!Module) return null
+    return (
+      <Module id={id} setValue={setValue} col={col} row={row} values={values} />
+    )
   }
 
   return (

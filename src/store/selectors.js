@@ -9,7 +9,7 @@ export const getSockets = (id, state) => {
   switch (state.modules[id].type) {
     case "VCO":
       return socketsVCO
-    case "OUTPUT":
+    case "Output":
       return socketsOutput
     default:
       return null

@@ -15,7 +15,7 @@ const output = uuidv1()
 const initialState = {
   modules: {
     [vco1]: { type: "VCO", col: 1, row: 0 },
-    [output]: { type: "OUTPUT", col: 12, row: 0 }
+    [output]: { type: "Output", col: 12, row: 0 }
   },
   cables: {
     [uuidv1()]: {
