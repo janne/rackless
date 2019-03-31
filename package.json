@@ -1,6 +1,7 @@
 {
   "name": "rackless",
   "version": "0.1.0",
+  "homepage": "http://www.rackless.cc",
   "private": true,
   "dependencies": {
     "ramda": "^0.26.1",
