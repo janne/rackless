@@ -10,20 +10,20 @@ import {
 } from "./actionTypes"
 
 const output1 = uuidv1()
-const vco1 = uuidv1()
-const vco2 = uuidv1()
+const osc1 = uuidv1()
+const osc2 = uuidv1()
 const noise = uuidv1()
 
 const initialState = {
   modules: {
-    [vco1]: { type: "VCO", col: 0, row: 0 },
-    [vco2]: { type: "VCO", col: 12, row: 0 },
+    [osc1]: { type: "Oscillator", col: 0, row: 0 },
+    [osc2]: { type: "Oscillator", col: 12, row: 0 },
     [output1]: { type: "Output", col: 28, row: 0 },
     [noise]: { type: "Noise", col: 24, row: 0 }
   },
   cables: {
     [uuidv1()]: {
-      outputModule: vco1,
+      outputModule: osc1,
       outputSocket: 0,
       inputModule: output1,
       inputSocket: 0,
