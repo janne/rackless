@@ -1,5 +1,5 @@
 import Tone from "tone"
-import BaseInstrument from "../../components/BaseInstrument"
+import BaseInstrument from "../BaseInstrument"
 import AudioToFrequency from "./AudioToFrequency"
 export { default as background } from "./background.svg"
 
