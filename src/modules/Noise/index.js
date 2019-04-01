@@ -14,11 +14,14 @@ export const output = [
 export class Instrument extends BaseInstrument {
   constructor(pots, inputs, outputs) {
     super(pots, inputs, outputs)
-    const pink = this.makeTone(Tone.Noise, "pink")
-    pink.start().connect(this.pink)
-    const brown = this.makeTone(Tone.Noise, "brown")
-    brown.start().connect(this.brown)
-    const white = this.makeTone(Tone.Noise, "white")
-    white.start().connect(this.white)
+    this.makeTone(Tone.Noise, "pink")
+      .start()
+      .connect(this.pink)
+    this.makeTone(Tone.Noise, "brown")
+      .start()
+      .connect(this.brown)
+    this.makeTone(Tone.Noise, "white")
+      .start()
+      .connect(this.white)
   }
 }
