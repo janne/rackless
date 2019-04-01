@@ -4,22 +4,13 @@ import Draggable from "react-draggable"
 import { moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
-const Plate = ({
-  moduleId,
-  col,
-  row,
-  hp,
-  background,
-  children,
-  moveModule
-}) => {
+const Plate = ({ moduleId, col, row, background, children, moveModule }) => {
   const [pos] = useState({ col, row })
 
   const styles = {
     content: { position: "absolute" },
     background: {
-      height: Math.round(HEIGHT_PIX),
-      width: Math.round(HP_PIX * hp)
+      height: Math.round(HEIGHT_PIX)
     }
   }
 

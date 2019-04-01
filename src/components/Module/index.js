@@ -27,7 +27,7 @@ const Module = ({
   }, pots.map(pot => values[pot.name]))
 
   return (
-    <Plate col={col} row={row} hp={10} moduleId={id} background={background}>
+    <Plate col={col} row={row} moduleId={id} background={background}>
       {pots.map(params => (
         <Trimpot
           {...params}
