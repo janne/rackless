@@ -65,6 +65,9 @@ export const setup = ({ make, pots, inputs, outputs }) => {
     plusFm.chain(new AudioToFrequency(220), osc.frequency)
 
     const outputNames = ["sin", "tri", "saw", "sqr"]
-    osc.start().connect(outputs[outputNames[idx]])
+    const output = outputs[outputNames[idx]]
+    output.start = () => osc.start()
+    output.stop = () => osc.stop()
+    osc.connect(output)
   })
 }

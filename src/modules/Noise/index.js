@@ -9,13 +9,11 @@ export const outputs = [
 ]
 
 export const setup = ({ make, outputs }) => {
-  make(Tone.Noise, "pink")
-    .start()
-    .connect(outputs.pink)
-  make(Tone.Noise, "brown")
-    .start()
-    .connect(outputs.brown)
-  make(Tone.Noise, "white")
-    .start()
-    .connect(outputs.white)
+  const types = ["pink", "brown", "white"]
+  types.forEach(type => {
+    const noise = make(Tone.Noise, type)
+    noise.connect(outputs[type])
+    outputs[type].start = () => noise.start()
+    outputs[type].stop = () => noise.stop()
+  })
 }
