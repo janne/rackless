@@ -13,23 +13,15 @@ const App = props => {
   }
 
   const renderModule = (id, { type, col, row, ...values }) => {
-    const { background, pots, input, output, Instrument } = R.prop(
-      type,
-      modules
-    )
-    if (!Instrument) return null
+    const moduleProps = R.prop(type, modules)
     return (
       <Module
-        background={background}
-        pots={pots}
-        input={input}
-        output={output}
-        Instrument={Instrument}
         id={id}
         setValue={props.setValue}
         col={col}
         row={row}
         values={values}
+        {...moduleProps}
       />
     )
   }

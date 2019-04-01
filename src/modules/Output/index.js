@@ -1,5 +1,4 @@
 import Tone from "tone"
-import BaseInstrument from "../BaseInstrument"
 export { default as background } from "./background.svg"
 
 export const pots = [
@@ -11,7 +10,7 @@ export const pots = [
   { x: 19.3, y: 94, name: "level3", range: "normal" }
 ]
 
-export const input = [
+export const inputs = [
   { x: 4.5, y: 38, name: "i1", socketId: 0, range: "audio" },
   { x: 4.5, y: 61.33, name: "i2", socketId: 1, range: "audio" },
   { x: 4.5, y: 86.33, name: "i3l", socketId: 2, range: "audio" },
@@ -19,35 +18,31 @@ export const input = [
   { x: 37.5, y: 80.5, name: "pancv", socketId: 4, range: "audio" }
 ]
 
-export class Instrument extends BaseInstrument {
-  constructor(pots, inputs) {
-    super(pots, inputs)
+export const setup = ({ make, pots, inputs }) => {
+  const masterGain = make(Tone.Gain)
+  pots.gain.connect(masterGain.gain)
+  masterGain.connect(Tone.Master)
 
-    this.masterGain = this.makeTone(Tone.Gain)
-    this.gain.connect(this.masterGain.gain)
-    this.masterGain.connect(Tone.Master)
+  const gain1 = make(Tone.Gain)
+  pots.level1.connect(gain1.gain)
+  const panner1 = make(Tone.Panner)
+  pots.pan1.connect(panner1.pan)
+  inputs.i1.chain(gain1, panner1, masterGain)
 
-    this.gain1 = this.makeTone(Tone.Gain)
-    this.level1.connect(this.gain1.gain)
-    this.panner1 = this.makeTone(Tone.Panner)
-    this.pan1.connect(this.panner1.pan)
-    this.input[0].chain(this.gain1, this.panner1, this.masterGain)
-
-    this.gain2 = this.makeTone(Tone.Gain)
-    this.level2.connect(this.gain2.gain)
-    this.panner2 = this.makeTone(Tone.Panner)
-    this.pan2adder = this.makeTone(Tone.Add)
-    this.pan2.connect(this.pan2adder)
-    this.pancv.connect(this.pan2adder)
-    this.pan2adder.connect(this.panner2.pan)
-    this.i2.chain(this.gain2, this.panner2, this.masterGain)
-    this.gain3l = this.makeTone(Tone.Gain)
-    this.level3.connect(this.gain3l.gain)
-    this.panner3l = this.makeTone(Tone.Panner, -1)
-    this.i3l.chain(this.gain3l, this.panner3l, this.masterGain)
-    this.gain3r = this.makeTone(Tone.Gain)
-    this.level3.connect(this.gain3r.gain)
-    this.panner3r = this.makeTone(Tone.Panner, 1)
-    this.i3r.chain(this.gain3r, this.panner3r, this.masterGain)
-  }
+  const gain2 = make(Tone.Gain)
+  pots.level2.connect(gain2.gain)
+  const panner2 = make(Tone.Panner)
+  const pan2adder = make(Tone.Add)
+  pots.pan2.connect(pan2adder)
+  inputs.pancv.connect(pan2adder)
+  pan2adder.connect(panner2.pan)
+  inputs.i2.chain(gain2, panner2, masterGain)
+  const gain3l = make(Tone.Gain)
+  pots.level3.connect(gain3l.gain)
+  const panner3l = make(Tone.Panner, -1)
+  inputs.i3l.chain(gain3l, panner3l, masterGain)
+  const gain3r = make(Tone.Gain)
+  pots.level3.connect(gain3r.gain)
+  const panner3r = make(Tone.Panner, 1)
+  inputs.i3r.chain(gain3r, panner3r, masterGain)
 }

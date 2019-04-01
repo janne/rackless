@@ -54,12 +54,13 @@ const Cable = ({
     )
   })
 
-  const setPos = connector => (connector === "output" ? setPos1 : setPos2)
+  const setPos = connector => (connector === "outputs" ? setPos1 : setPos2)
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 
   const handleStop = connector => pos => {
-    const initPos = connector === "output" ? { x: x1, y: y1 } : { x: x2, y: y2 }
+    const initPos =
+      connector === "outputs" ? { x: x1, y: y1 } : { x: x2, y: y2 }
     setPos(connector)(initPos)
     moveConnector(id, connector, pos)
   }
@@ -69,16 +70,16 @@ const Cable = ({
       <Connector
         x={x1}
         y={y1}
-        onStart={handleStart("output")}
-        onDrag={setPos("output")}
-        onStop={handleStop("output")}
+        onStart={handleStart("outputs")}
+        onDrag={setPos("outputs")}
+        onStop={handleStop("outputs")}
       />
       <Connector
         x={x2}
         y={y2}
-        onStart={handleStart("input")}
-        onDrag={setPos("input")}
-        onStop={handleStop("input")}
+        onStart={handleStart("inputs")}
+        onDrag={setPos("inputs")}
+        onStop={handleStop("inputs")}
       />
       <Bezier
         x1={pos1.x + CENTER}
@@ -97,13 +98,13 @@ const mapStateToProps = (
 ) => {
   const { x: x1, y: y1 } = socketToPos(
     outputModule,
-    "output",
+    "outputs",
     outputSocket,
     state
   )
   const { x: x2, y: y2 } = R.isNil(inputSocket)
     ? { x: x1, y: y1 }
-    : socketToPos(inputModule, "input", inputSocket, state)
+    : socketToPos(inputModule, "inputs", inputSocket, state)
   const from = R.path([outputModule, "instrument"], state.modules)
   const to = R.path([inputModule, "instrument"], state.modules)
   return { x1, y1, x2, y2, from, to }

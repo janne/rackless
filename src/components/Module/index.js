@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import Plate from "../Plate"
 import Trimpot from "../Trimpot"
 import Socket from "../Socket"
+import Instrument from "../Instrument"
 
 const Module = ({
   id,
@@ -11,18 +12,18 @@ const Module = ({
   values,
   background,
   pots = [],
-  input = [],
-  output = [],
-  Instrument
+  inputs = [],
+  outputs = [],
+  setup = () => {}
 }) => {
   useEffect(() => {
-    setValue(id, "instrument", new Instrument(pots, input, output))
+    setValue(id, "instrument", new Instrument(pots, inputs, outputs, setup))
   }, [])
 
   useEffect(() => {
     if (!values.instrument) return
     pots.forEach(
-      ({ name }) => (values.instrument[name].value = values[name] || 0)
+      ({ name }) => (values.instrument.pots[name].value = values[name] || 0)
     )
   }, pots.map(pot => values[pot.name]))
 
@@ -38,19 +39,19 @@ const Module = ({
         />
       ))}
 
-      {input.map(params => (
+      {inputs.map(params => (
         <Socket
           moduleId={id}
-          direction="input"
+          direction="inputs"
           key={`input-${params.socketId}`}
           {...params}
         />
       ))}
 
-      {output.map(params => (
+      {outputs.map(params => (
         <Socket
           moduleId={id}
-          direction="output"
+          direction="outputs"
           key={`output-${params.socketId}`}
           {...params}
         />

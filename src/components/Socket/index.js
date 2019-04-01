@@ -39,7 +39,7 @@ const Socket = ({ x, y, moduleId, socketId, direction, createCable }) => {
         src={background}
         style={styles.background}
         alt="Socket"
-        onClick={direction === "output" ? newCable : noop}
+        onClick={direction === "outputs" ? newCable : noop}
       />
     </div>
   )

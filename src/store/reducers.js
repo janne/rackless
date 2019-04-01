@@ -10,7 +10,6 @@ import {
 } from "./actionTypes"
 
 const output1 = uuidv1()
-const output2 = uuidv1()
 const vco1 = uuidv1()
 const vco2 = uuidv1()
 const noise = uuidv1()
@@ -76,7 +75,7 @@ export default (state = initialState, action) => {
       if (!target) return { ...state, cables }
 
       const updatedCable =
-        connector === "output"
+        connector === "outputs"
           ? {
               ...movedCable,
               outputModule: target.moduleId,
