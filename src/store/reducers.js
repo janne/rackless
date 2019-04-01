@@ -9,19 +9,24 @@ import {
   REMOVE_CONNECTOR
 } from "./actionTypes"
 
-const vco = uuidv1()
-const output = uuidv1()
+const output1 = uuidv1()
+const output2 = uuidv1()
+const vco1 = uuidv1()
+const vco2 = uuidv1()
+const noise = uuidv1()
 
 const initialState = {
   modules: {
-    [vco]: { type: "VCO", col: 1, row: 0 },
-    [output]: { type: "Output", col: 12, row: 0 }
+    [vco1]: { type: "VCO", col: 0, row: 0 },
+    [vco2]: { type: "VCO", col: 12, row: 0 },
+    [output1]: { type: "Output", col: 28, row: 0 },
+    [noise]: { type: "Noise", col: 24, row: 0 }
   },
   cables: {
     [uuidv1()]: {
-      outputModule: vco,
+      outputModule: vco1,
       outputSocket: 0,
-      inputModule: output,
+      inputModule: output1,
       inputSocket: 0,
       color: "red"
     }
