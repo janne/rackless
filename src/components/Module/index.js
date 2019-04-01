@@ -29,30 +29,32 @@ const Module = ({
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
-      {pots.map(params => (
+      {pots.map((params, idx) => (
         <Trimpot
           {...params}
           id={id}
           value={values[params.name]}
           setValue={setValue}
-          key={params.name}
+          key={`pot-${idx}`}
         />
       ))}
 
-      {inputs.map(params => (
+      {inputs.map((params, idx) => (
         <Socket
           moduleId={id}
           direction="inputs"
-          key={`input-${params.socketId}`}
+          key={`input-${idx}`}
+          socketId={idx}
           {...params}
         />
       ))}
 
-      {outputs.map(params => (
+      {outputs.map((params, idx) => (
         <Socket
           moduleId={id}
           direction="outputs"
-          key={`output-${params.socketId}`}
+          key={`output-${idx}`}
+          socketId={idx}
           {...params}
         />
       ))}

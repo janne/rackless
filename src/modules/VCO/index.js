@@ -3,24 +3,24 @@ import AudioToFrequency from "./AudioToFrequency"
 export { default as background } from "./background.svg"
 
 export const pots = [
-  { x: 19.33, y: 24.66, name: "freq", range: "audio" },
-  { x: 35.33, y: 24.66, name: "fine", range: "audio" },
-  { x: 19, y: 53.33, name: "fmcv", range: "normal" },
-  { x: 19, y: 79.33, name: "pwmcv", range: "normal" },
-  { x: 35, y: 79.33, name: "pwidth", range: "audio" }
+  { name: "freq", x: 19.33, y: 24.66, range: "audio" },
+  { name: "fine", x: 35.33, y: 24.66, range: "audio" },
+  { name: "fmcv", x: 19, y: 53.33, range: "normal" },
+  { name: "pwmcv", x: 19, y: 79.33, range: "normal" },
+  { name: "pwidth", x: 35, y: 79.33, range: "audio" }
 ]
 
 export const inputs = [
-  { x: 4.33, y: 27.33, name: "voct", socketId: 0, range: "normal" },
-  { x: 4.33, y: 56, name: "fm", socketId: 1, range: "audio" },
-  { x: 4.33, y: 82, name: "pwm", socketId: 2, range: "normal" }
+  { name: "voct", x: 4.33, y: 27.33, range: "normal" },
+  { name: "fm", x: 4.33, y: 56, range: "audio" },
+  { name: "pwm", x: 4.33, y: 82, range: "normal" }
 ]
 
 export const outputs = [
-  { x: 4.33, y: 106.66, name: "sin", socketId: 0, range: "frequency" },
-  { x: 15.66, y: 106.66, name: "tri", socketId: 1, range: "frequency" },
-  { x: 27, y: 106.66, name: "saw", socketId: 2, range: "frequency" },
-  { x: 38, y: 106.66, name: "sqr", socketId: 3, range: "frequency" }
+  { name: "sin", x: 4.33, y: 106.66, range: "frequency" },
+  { name: "tri", x: 15.66, y: 106.66, range: "frequency" },
+  { name: "saw", x: 27, y: 106.66, range: "frequency" },
+  { name: "sqr", x: 38, y: 106.66, range: "frequency" }
 ]
 
 export const setup = ({ make, pots, inputs, outputs }) => {

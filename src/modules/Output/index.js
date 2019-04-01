@@ -2,20 +2,20 @@ import Tone from "tone"
 export { default as background } from "./background.svg"
 
 export const pots = [
-  { x: 19.33, y: 13.66, name: "gain", range: "normal" },
-  { x: 19.33, y: 35.33, name: "level1", range: "normal" },
-  { x: 35.33, y: 35.33, name: "pan1", range: "audio" },
-  { x: 19.33, y: 59, name: "level2", range: "normal" },
-  { x: 35.33, y: 58.66, name: "pan2", range: "audio" },
-  { x: 19.3, y: 94, name: "level3", range: "normal" }
+  { name: "gain", x: 19.33, y: 13.66, range: "normal" },
+  { name: "level1", x: 19.33, y: 35.33, range: "normal" },
+  { name: "pan1", x: 35.33, y: 35.33, range: "audio" },
+  { name: "level2", x: 19.33, y: 59, range: "normal" },
+  { name: "pan2", x: 35.33, y: 58.66, range: "audio" },
+  { name: "level3", x: 19.3, y: 94, range: "normal" }
 ]
 
 export const inputs = [
-  { x: 4.5, y: 38, name: "i1", socketId: 0, range: "audio" },
-  { x: 4.5, y: 61.33, name: "i2", socketId: 1, range: "audio" },
-  { x: 4.5, y: 86.33, name: "i3l", socketId: 2, range: "audio" },
-  { x: 4.5, y: 104.66, name: "i3r", socketId: 3, range: "audio" },
-  { x: 37.5, y: 80.5, name: "pancv", socketId: 4, range: "audio" }
+  { name: "i1", x: 4.5, y: 38, range: "audio" },
+  { name: "i2", x: 4.5, y: 61.33, range: "audio" },
+  { name: "i3l", x: 4.5, y: 86.33, range: "audio" },
+  { name: "i3r", x: 4.5, y: 104.66, range: "audio" },
+  { name: "pancv", x: 37.5, y: 80.5, range: "audio" }
 ]
 
 export const setup = ({ make, pots, inputs }) => {

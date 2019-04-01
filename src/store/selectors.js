@@ -11,10 +11,7 @@ export const getSockets = (moduleId, direction, state) => {
 
 export const socketToPos = (moduleId, direction, socketId, state) => {
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
-  const socket = R.find(
-    R.propEq("socketId", socketId),
-    getSockets(moduleId, direction, state)
-  )
+  const socket = getSockets(moduleId, direction, state)[socketId]
   return {
     x: col * HP_PIX + socket.x * ZOOM,
     y: row * HEIGHT_PIX + socket.y * ZOOM
@@ -24,14 +21,16 @@ export const socketToPos = (moduleId, direction, socketId, state) => {
 export const socketAtPos = ({ x, y }, direction, state) => {
   for (let moduleId of R.keys(state.modules)) {
     const { col, row } = state.modules[moduleId]
-    const socket = getSockets(moduleId, direction, state).find(
+    const sockets = getSockets(moduleId, direction, state)
+    const socketId = R.findIndex(
       socket =>
         x > col * HP_PIX + socket.x * ZOOM - WIDTH &&
         x < col * HP_PIX + socket.x * ZOOM + WIDTH &&
         y > row * HEIGHT_PIX + socket.y * ZOOM - WIDTH &&
-        y < row * HEIGHT_PIX + socket.y * ZOOM + WIDTH
+        y < row * HEIGHT_PIX + socket.y * ZOOM + WIDTH,
+      sockets
     )
-    if (socket) return { moduleId, socketId: socket.socketId }
+    if (socketId !== -1) return { moduleId, socketId }
   }
   return null
 }

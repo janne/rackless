@@ -21,14 +21,14 @@ export default class extends Tone.Instrument {
       this.pots[pot.name] = this.makeTone(Tone.Signal, 0, ranges[pot.range])
     })
 
-    inputs.forEach(i => {
+    inputs.forEach((i, socketId) => {
       this.inputs[i.name] = this.makeTone(Tone.Signal, 0, ranges[i.range])
-      this.input[i.socketId] = this.inputs[i.name]
+      this.input[socketId] = this.inputs[i.name]
     })
 
-    outputs.forEach(o => {
+    outputs.forEach((o, socketId) => {
       this.outputs[o.name] = this.makeTone(Tone.Signal, 0, ranges[o.range])
-      this.output[o.socketId] = this.outputs[o.name]
+      this.output[socketId] = this.outputs[o.name]
     })
 
     setup({
