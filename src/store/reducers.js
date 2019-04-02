@@ -9,23 +9,25 @@ import {
   REMOVE_CONNECTOR
 } from "./actionTypes"
 
-const output1 = uuidv1()
+const output = uuidv1()
 const osc1 = uuidv1()
 const osc2 = uuidv1()
 const noise = uuidv1()
+const filter = uuidv1()
 
 const initialState = {
   modules: {
     [osc1]: { type: "Oscillator", col: 0, row: 0 },
     [osc2]: { type: "Oscillator", col: 12, row: 0 },
-    [output1]: { type: "Output", col: 28, row: 0 },
-    [noise]: { type: "Noise", col: 24, row: 0 }
+    [noise]: { type: "Noise", col: 24, row: 0 },
+    [filter]: { type: "Filter", col: 28, row: 0 },
+    [output]: { type: "Output", col: 40, row: 0 }
   },
   cables: {
     [uuidv1()]: {
       outputModule: osc1,
       outputSocket: 0,
-      inputModule: output1,
+      inputModule: output,
       inputSocket: 0,
       color: "red"
     }
