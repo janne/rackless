@@ -11,31 +11,31 @@ const Module = ({
   row,
   values,
   background,
-  pots = [],
+  controls = [],
   inputs = [],
   outputs = [],
   setup = () => {}
 }) => {
   useEffect(() => {
-    setValue(id, "instrument", new Instrument(pots, inputs, outputs, setup))
+    setValue(id, "instrument", new Instrument(controls, inputs, outputs, setup))
   }, [])
 
   useEffect(() => {
     if (!values.instrument) return
-    pots.forEach(
-      ({ name }) => (values.instrument.pots[name].value = values[name] || 0)
+    controls.forEach(
+      ({ name }) => (values.instrument.controls[name].value = values[name] || 0)
     )
-  }, pots.map(pot => values[pot.name]))
+  }, controls.map(control => values[control.name]))
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
-      {pots.map((params, idx) => (
+      {controls.map((params, idx) => (
         <Trimpot
           {...params}
           id={id}
           value={values[params.name]}
           setValue={setValue}
-          key={`pot-${idx}`}
+          key={`control-${idx}`}
         />
       ))}
 

@@ -4,7 +4,7 @@ import { DraggableCore } from "react-draggable"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 
-const POT_DEGREES = 270
+const CONTROL_DEGREES = 270
 
 const Trimpot = ({
   x,
@@ -50,8 +50,8 @@ const Trimpot = ({
             width: width * ZOOM,
             transform: `rotate(${
               range === "normal"
-                ? (value - 0.5) * POT_DEGREES
-                : value * (POT_DEGREES / 2)
+                ? (value - 0.5) * CONTROL_DEGREES
+                : value * (CONTROL_DEGREES / 2)
             }deg)`
           }}
           alt="Trimpot"

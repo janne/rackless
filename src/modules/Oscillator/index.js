@@ -2,7 +2,7 @@ import Tone from "tone"
 import AudioToFrequency from "./AudioToFrequency"
 export { default as background } from "./background.svg"
 
-export const pots = [
+export const controls = [
   { name: "freq", x: 19.33, y: 24.66, range: "audio" },
   { name: "fine", x: 35.33, y: 24.66, range: "audio" },
   { name: "fmcv", x: 19, y: 53.33, range: "normal" },
@@ -23,7 +23,7 @@ export const outputs = [
   { name: "square", x: 38, y: 106.66, range: "frequency" }
 ]
 
-export const setup = ({ pots, inputs, outputs }) => {
+export const setup = ({ controls, inputs, outputs }) => {
   const types = ["sine", "triangle", "sawtooth", "square"]
   const tones = {}
 
@@ -37,27 +37,27 @@ export const setup = ({ pots, inputs, outputs }) => {
     if (type === "square") {
       tones.scaledPwm = new Tone.Gain()
       inputs.pwm.connect(tones.scaledPwm)
-      pots.pwmcv.connect(tones.scaledPwm.gain)
+      controls.pwmcv.connect(tones.scaledPwm.gain)
       tones.plusPwidth = new Tone.Add()
       tones.scaledPwm.connect(tones.plusPwidth)
-      pots.pwidth.connect(tones.plusPwidth)
+      controls.pwidth.connect(tones.plusPwidth)
       tones.plusPwidth.connect(tones[type].width)
     }
 
     // Fine
     tones.scaledFine = new Tone.Multiply(100)
-    pots.fine.connect(tones.scaledFine)
+    controls.fine.connect(tones.scaledFine)
     tones.scaledFine.connect(tones[type].detune)
 
     // Voct
     const plusVoct = new Tone.Add()
-    pots.freq.connect(plusVoct, 0, 0)
+    controls.freq.connect(plusVoct, 0, 0)
     inputs.voct.connect(plusVoct, 0, 1)
 
     // FM
     const scaledFm = new Tone.Gain()
     inputs.fm.connect(scaledFm)
-    pots.fmcv.connect(scaledFm.gain)
+    controls.fmcv.connect(scaledFm.gain)
     const plusFm = new Tone.Add()
     plusVoct.connect(plusFm, 0, 0)
     scaledFm.connect(plusFm, 0, 1)

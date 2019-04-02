@@ -9,16 +9,16 @@ const ranges = {
 export default class extends Tone.Instrument {
   tones = []
 
-  constructor(pots, inputs, outputs, setup) {
+  constructor(controls, inputs, outputs, setup) {
     super()
     this.createInsOuts(Object.keys(inputs).length, Object.keys(outputs).length)
 
     this.inputs = {}
     this.outputs = {}
-    this.pots = {}
+    this.controls = {}
 
-    pots.forEach(pot => {
-      this.pots[pot.name] = new Tone.Signal(0, ranges[pot.range])
+    controls.forEach(control => {
+      this.controls[control.name] = new Tone.Signal(0, ranges[control.range])
     })
 
     inputs.forEach((i, socketId) => {
@@ -32,14 +32,14 @@ export default class extends Tone.Instrument {
     })
 
     this.setupCallback = setup({
-      pots: this.pots,
+      controls: this.controls,
       inputs: this.inputs,
       outputs: this.outputs
     })
   }
 
   dispose() {
-    Object.values(this.pots).forEach(t => t.dispose())
+    Object.values(this.controls).forEach(t => t.dispose())
     Object.values(this.inputs).forEach(t => t.dispose())
     Object.values(this.outputs).forEach(t => t.dispose())
     if (typeof this.setupCallback === "function") this.setupCallback()
