@@ -7,8 +7,6 @@ const ranges = {
 }
 
 export default class extends Tone.Instrument {
-  tones = []
-
   constructor(controls, inputs, outputs, setup) {
     super()
     this.createInsOuts(Object.keys(inputs).length, Object.keys(outputs).length)
