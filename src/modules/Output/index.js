@@ -18,31 +18,36 @@ export const inputs = [
   { name: "pancv", x: 37.5, y: 80.5, range: "audio" }
 ]
 
-export const setup = ({ make, pots, inputs }) => {
-  const masterGain = make(Tone.Gain)
-  pots.gain.connect(masterGain.gain)
-  masterGain.connect(Tone.Master)
+export const setup = ({ pots, inputs }) => {
+  const tones = {
+    masterGain: new Tone.Gain(),
+    gain1: new Tone.Gain(),
+    panner1: new Tone.Panner(),
+    gain2: new Tone.Gain(),
+    panner2: new Tone.Panner(),
+    gain3l: new Tone.Gain(),
+    panner3l: new Tone.Panner(-1),
+    gain3r: new Tone.Gain(),
+    panner3r: new Tone.Panner(1),
+    pan2adder: new Tone.Add()
+  }
 
-  const gain1 = make(Tone.Gain)
-  pots.level1.connect(gain1.gain)
-  const panner1 = make(Tone.Panner)
-  pots.pan1.connect(panner1.pan)
-  inputs.i1.chain(gain1, panner1, masterGain)
+  pots.gain.connect(tones.masterGain.gain)
+  tones.masterGain.connect(Tone.Master)
+  pots.level1.connect(tones.gain1.gain)
+  pots.pan1.connect(tones.panner1.pan)
+  inputs.i1.chain(tones.gain1, tones.panner1, tones.masterGain)
+  pots.level2.connect(tones.gain2.gain)
+  pots.pan2.connect(tones.pan2adder)
+  inputs.pancv.connect(tones.pan2adder)
+  tones.pan2adder.connect(tones.panner2.pan)
+  inputs.i2.chain(tones.gain2, tones.panner2, tones.masterGain)
+  pots.level3.connect(tones.gain3l.gain)
+  inputs.i3l.chain(tones.gain3l, tones.panner3l, tones.masterGain)
+  pots.level3.connect(tones.gain3r.gain)
+  inputs.i3r.chain(tones.gain3r, tones.panner3r, tones.masterGain)
 
-  const gain2 = make(Tone.Gain)
-  pots.level2.connect(gain2.gain)
-  const panner2 = make(Tone.Panner)
-  const pan2adder = make(Tone.Add)
-  pots.pan2.connect(pan2adder)
-  inputs.pancv.connect(pan2adder)
-  pan2adder.connect(panner2.pan)
-  inputs.i2.chain(gain2, panner2, masterGain)
-  const gain3l = make(Tone.Gain)
-  pots.level3.connect(gain3l.gain)
-  const panner3l = make(Tone.Panner, -1)
-  inputs.i3l.chain(gain3l, panner3l, masterGain)
-  const gain3r = make(Tone.Gain)
-  pots.level3.connect(gain3r.gain)
-  const panner3r = make(Tone.Panner, 1)
-  inputs.i3r.chain(gain3r, panner3r, masterGain)
+  return () => {
+    Object.values(tones).forEach(t => t.dispose())
+  }
 }

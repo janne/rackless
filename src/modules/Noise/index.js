@@ -8,12 +8,23 @@ export const outputs = [
   { name: "pink", x: 1.33, y: 86.33, range: "audio" }
 ]
 
-export const setup = ({ make, outputs }) => {
-  const types = ["pink", "brown", "white"]
-  types.forEach(type => {
-    const noise = make(Tone.Noise, type)
+export const setup = ({ outputs }) => {
+  const tones = {
+    pink: new Tone.Noise("pink"),
+    brown: new Tone.Noise("brown"),
+    white: new Tone.Noise("white")
+  }
+
+  Object.keys(tones).forEach(type => {
+    const noise = tones[type]
     noise.connect(outputs[type])
     outputs[type].start = () => noise.start()
     outputs[type].stop = () => noise.stop()
   })
+
+  return () => {
+    Object.values(tones).forEach(noise => {
+      noise.dispose()
+    })
+  }
 }

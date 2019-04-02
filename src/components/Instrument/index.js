@@ -18,35 +18,31 @@ export default class extends Tone.Instrument {
     this.pots = {}
 
     pots.forEach(pot => {
-      this.pots[pot.name] = this.makeTone(Tone.Signal, 0, ranges[pot.range])
+      this.pots[pot.name] = new Tone.Signal(0, ranges[pot.range])
     })
 
     inputs.forEach((i, socketId) => {
-      this.inputs[i.name] = this.makeTone(Tone.Signal, 0, ranges[i.range])
+      this.inputs[i.name] = new Tone.Signal(0, ranges[i.range])
       this.input[socketId] = this.inputs[i.name]
     })
 
     outputs.forEach((o, socketId) => {
-      this.outputs[o.name] = this.makeTone(Tone.Signal, 0, ranges[o.range])
+      this.outputs[o.name] = new Tone.Signal(0, ranges[o.range])
       this.output[socketId] = this.outputs[o.name]
     })
 
-    setup({
-      make: this.makeTone,
+    this.setupCallback = setup({
       pots: this.pots,
       inputs: this.inputs,
       outputs: this.outputs
     })
   }
 
-  makeTone = (Class, ...args) => {
-    const tone = new Class(...args)
-    this.tones.push(tone)
-    return tone
-  }
-
   dispose() {
-    this.tones.forEach(t => t.dispose())
+    Object.values(this.pots).forEach(t => t.dispose())
+    Object.values(this.inputs).forEach(t => t.dispose())
+    Object.values(this.outputs).forEach(t => t.dispose())
+    if (typeof this.setupCallback === "function") this.setupCallback()
     super.dispose()
   }
 }

@@ -17,57 +17,61 @@ export const inputs = [
 ]
 
 export const outputs = [
-  { name: "sin", x: 4.33, y: 106.66, range: "frequency" },
-  { name: "tri", x: 15.66, y: 106.66, range: "frequency" },
-  { name: "saw", x: 27, y: 106.66, range: "frequency" },
-  { name: "sqr", x: 38, y: 106.66, range: "frequency" }
+  { name: "sine", x: 4.33, y: 106.66, range: "frequency" },
+  { name: "triangle", x: 15.66, y: 106.66, range: "frequency" },
+  { name: "sawtooth", x: 27, y: 106.66, range: "frequency" },
+  { name: "square", x: 38, y: 106.66, range: "frequency" }
 ]
 
-export const setup = ({ make, pots, inputs, outputs }) => {
-  const { Sine, Triangle, Sawtooth, Square } = Tone.Oscillator.Type
-  const types = [Sine, Triangle, Sawtooth, Square]
+export const setup = ({ pots, inputs, outputs }) => {
+  const types = ["sine", "triangle", "sawtooth", "square"]
+  const tones = {}
 
-  types.forEach((type, idx) => {
-    const osc =
-      type === Square
-        ? make(Tone.PulseOscillator)
-        : make(Tone.Oscillator, 0, type)
+  types.forEach(type => {
+    tones[type] =
+      type === "square"
+        ? new Tone.PulseOscillator()
+        : new Tone.Oscillator(0, type)
 
     // PWM
-    if (type === Square) {
-      const scaledPwm = make(Tone.Gain)
-      inputs.pwm.connect(scaledPwm)
-      pots.pwmcv.connect(scaledPwm.gain)
-      const plusPwidth = make(Tone.Add)
-      scaledPwm.connect(plusPwidth)
-      pots.pwidth.connect(plusPwidth)
-      plusPwidth.connect(osc.width)
+    if (type === "square") {
+      tones.scaledPwm = new Tone.Gain()
+      inputs.pwm.connect(tones.scaledPwm)
+      pots.pwmcv.connect(tones.scaledPwm.gain)
+      tones.plusPwidth = new Tone.Add()
+      tones.scaledPwm.connect(tones.plusPwidth)
+      pots.pwidth.connect(tones.plusPwidth)
+      tones.plusPwidth.connect(tones[type].width)
     }
 
     // Fine
-    const scaledFine = make(Tone.Multiply, 100)
-    pots.fine.connect(scaledFine)
-    scaledFine.connect(osc.detune)
+    tones.scaledFine = new Tone.Multiply(100)
+    pots.fine.connect(tones.scaledFine)
+    tones.scaledFine.connect(tones[type].detune)
 
     // Voct
-    const plusVoct = make(Tone.Add)
+    const plusVoct = new Tone.Add()
     pots.freq.connect(plusVoct, 0, 0)
     inputs.voct.connect(plusVoct, 0, 1)
 
     // FM
-    const scaledFm = make(Tone.Gain)
+    const scaledFm = new Tone.Gain()
     inputs.fm.connect(scaledFm)
     pots.fmcv.connect(scaledFm.gain)
-    const plusFm = make(Tone.Add)
+    const plusFm = new Tone.Add()
     plusVoct.connect(plusFm, 0, 0)
     scaledFm.connect(plusFm, 0, 1)
 
-    plusFm.chain(new AudioToFrequency(220), osc.frequency)
+    tones.audioToFrequency = new AudioToFrequency(220)
+    plusFm.chain(tones.audioToFrequency, tones[type].frequency)
 
-    const outputNames = ["sin", "tri", "saw", "sqr"]
-    const output = outputs[outputNames[idx]]
-    output.start = () => osc.start()
-    output.stop = () => osc.stop()
-    osc.connect(output)
+    const output = outputs[type]
+    output.start = () => tones[type].start()
+    output.stop = () => tones[type].stop()
+    tones[type].connect(output)
+
+    return () => {
+      Object.values(tones).forEach(t => t.dispose())
+    }
   })
 }
