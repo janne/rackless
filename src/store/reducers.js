@@ -1,37 +1,17 @@
 import * as R from "ramda"
-import uuidv1 from "uuid/v1"
 import { socketAtPos } from "./selectors"
 import {
   SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR,
-  REMOVE_CONNECTOR
+  REMOVE_CONNECTOR,
+  ADD_MODULE
 } from "./actionTypes"
 
-const output = uuidv1()
-const osc1 = uuidv1()
-const osc2 = uuidv1()
-const noise = uuidv1()
-const filter = uuidv1()
-
 const initialState = {
-  modules: {
-    [osc1]: { type: "Oscillator", col: 0, row: 0 },
-    [osc2]: { type: "Oscillator", col: 12, row: 0 },
-    [noise]: { type: "Noise", col: 24, row: 0 },
-    [filter]: { type: "Filter", col: 28, row: 0 },
-    [output]: { type: "Output", col: 40, row: 0 }
-  },
-  cables: {
-    [uuidv1()]: {
-      outputModule: osc1,
-      outputSocket: 0,
-      inputModule: output,
-      inputSocket: 0,
-      color: "red"
-    }
-  }
+  modules: {},
+  cables: {}
 }
 
 export default (state = initialState, action) => {
@@ -39,6 +19,10 @@ export default (state = initialState, action) => {
     R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
 
   switch (action.type) {
+    case ADD_MODULE: {
+      const { id, ...rest } = action.payload
+      return { ...state, modules: { ...state.modules, [id]: rest } }
+    }
     case SET_VALUE: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath(["modules", id, name]), value, state)

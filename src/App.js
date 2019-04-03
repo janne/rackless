@@ -1,13 +1,25 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Cable from "./components/Cable"
-import { setValue } from "./store/actions"
+import { setValue, loadPatch } from "./store/actions"
 import Tone from "tone"
 import modules from "./modules"
 import Module from "./components/Module"
+import firebase from "firebase/app"
+import "firebase/firestore"
 
 const App = props => {
+  useEffect(() => {
+    firebase.initializeApp({
+      apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
+      authDomain: "rackless-cc.firebaseapp.com",
+      projectId: "rackless-cc"
+    })
+    const db = firebase.firestore()
+    props.loadPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
+  }, [])
+
   const enableSound = () => {
     Tone.context.resume()
   }
@@ -49,7 +61,7 @@ const mapStateToProps = state => ({
   modules: state.modules
 })
 
-const mapDispatchToProps = { setValue }
+const mapDispatchToProps = { setValue, loadPatch }
 
 export default connect(
   mapStateToProps,
