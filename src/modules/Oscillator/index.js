@@ -1,5 +1,5 @@
 import Tone from "tone"
-import AudioToFrequency from "./AudioToFrequency"
+import AudioToFrequency from "../AudioToFrequency"
 export { default as background } from "./background.svg"
 
 export const controls = [
