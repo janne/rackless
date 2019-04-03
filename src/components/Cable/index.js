@@ -39,12 +39,18 @@ const Cable = ({
       Number(outputPort) < output.numberOfOutputs ? Number(outputPort) : 0
     const inputNum =
       Number(inputPort) < input.numberOfInputs ? Number(inputPort) : 0
-    const start = output.output[outputPort].start
+    const start = (output.numberOfOutputs === 1
+      ? output.output
+      : output.output[outputPort]
+    ).start
     if (start) start()
 
     output.connect(input, outputNum, inputNum)
     return () => {
-      const stop = output.output[outputPort].stop
+      const stop = (output.numberOfOutputs === 1
+        ? output.output
+        : output.output[outputPort]
+      ).stop
       if (stop) stop()
       output.disconnect(outputNum)
     }
