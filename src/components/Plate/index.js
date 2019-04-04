@@ -1,10 +1,17 @@
 import React, { useState } from "react"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
-import { moveModule } from "../../store/actions"
+import { dispatchAndPersist, moveModule } from "../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
-const Plate = ({ moduleId, col, row, background, children, moveModule }) => {
+const Plate = ({
+  moduleId,
+  col,
+  row,
+  background,
+  children,
+  dispatchAndPersist
+}) => {
   const [pos] = useState({ col, row })
 
   const styles = {
@@ -17,7 +24,7 @@ const Plate = ({ moduleId, col, row, background, children, moveModule }) => {
   const dragHandler = (e, data) => {
     const newCol = pos.col + data.x / HP_PIX
     const newRow = pos.row + data.y / HEIGHT_PIX
-    moveModule(moduleId, newCol, newRow)
+    dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
   return (
@@ -46,7 +53,7 @@ const Plate = ({ moduleId, col, row, background, children, moveModule }) => {
   )
 }
 
-const mapDispatchToProps = { moveModule }
+const mapDispatchToProps = { dispatchAndPersist }
 
 export default connect(
   null,

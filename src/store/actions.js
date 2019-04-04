@@ -1,31 +1,46 @@
 import * as R from "ramda"
 import {
-  GET_PATCH,
+  SET_PATCH,
   SET_VALUE,
+  SET_INSTRUMENT,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR,
-  REMOVE_CONNECTOR
+  REMOVE_CONNECTOR,
+  SET_DB
 } from "./actionTypes"
+import { getDB, getPatch } from "./selectors"
 
-export const loadPatch = (db, id) => {
+const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
+
+export const setDB = db => ({
+  type: SET_DB,
+  payload: { db }
+})
+
+export const fetchPatch = db => {
   return dispatch => {
-    const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
+    dispatch(setDB(db))
     db.ref(prefix).on("value", patch => {
       if (R.isNil(patch.val())) return
-      dispatch(updatePatch(patch.val()))
+      dispatch(setPatch(patch.val()))
     })
   }
 }
 
-export const updatePatch = payload => ({
-  type: GET_PATCH,
+export const setPatch = payload => ({
+  type: SET_PATCH,
   payload
 })
 
 export const setValue = (id, name, value) => ({
   type: SET_VALUE,
   payload: { id, name, value }
+})
+
+export const setInstrument = (id, instrument) => ({
+  type: SET_INSTRUMENT,
+  payload: { id, instrument }
 })
 
 export const createCable = (id, moduleId, socketId, color) => ({
@@ -37,6 +52,21 @@ export const createCable = (id, moduleId, socketId, color) => ({
     color
   }
 })
+
+export const persistPatch = (db, patch) => {
+  return () => db.ref(prefix).set(patch)
+}
+
+export const dispatchAndPersist = action => {
+  return (dispatch, getState) => {
+    dispatch(action)
+    const state = getState()
+    const db = getDB(state)
+    const patch = getPatch(state)
+    if (R.isNil(patch)) return
+    db.ref(prefix).set(patch)
+  }
+}
 
 export const moveModule = (id, col, row) => ({
   type: MOVE_MODULE,

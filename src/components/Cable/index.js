@@ -118,8 +118,8 @@ const mapStateToProps = (
   const { x: x2, y: y2 } = R.isNil(inputSocket)
     ? { x: x1, y: y1 }
     : socketToPos(inputModule, "inputs", inputSocket, state)
-  const from = R.path([outputModule, "instrument"], state.modules)
-  const to = R.path([inputModule, "instrument"], state.modules)
+  const from = R.path(["instruments", outputModule], state)
+  const to = R.path(["instruments", inputModule], state)
   return { x1, y1, x2, y2, from, to }
 }
 

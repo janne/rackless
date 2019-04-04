@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import * as R from "ramda"
 import Plate from "../Plate"
 import Trimpot from "../Trimpot"
 import Socket from "../Socket"
@@ -7,6 +8,8 @@ import Instrument from "../Instrument"
 const Module = ({
   id,
   setValue,
+  instrument,
+  setInstrument,
   col,
   row,
   values,
@@ -17,13 +20,13 @@ const Module = ({
   setup = () => {}
 }) => {
   useEffect(() => {
-    setValue(id, "instrument", new Instrument(controls, inputs, outputs, setup))
+    setInstrument(id, new Instrument(controls, inputs, outputs, setup))
   }, [])
 
   useEffect(() => {
-    if (!values.instrument) return
+    if (R.isNil(instrument)) return
     controls.forEach(
-      ({ name }) => (values.instrument.controls[name].value = values[name] || 0)
+      ({ name }) => (instrument.controls[name].value = values[name] || 0)
     )
   }, controls.map(control => values[control.name]))
 

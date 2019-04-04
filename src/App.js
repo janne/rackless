@@ -2,14 +2,21 @@ import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Cable from "./components/Cable"
-import { setValue, loadPatch } from "./store/actions"
+import { setValue, setInstrument, fetchPatch } from "./store/actions"
 import Tone from "tone"
-import modules from "./modules"
+import moduleTypes from "./modules"
 import Module from "./components/Module"
 import firebase from "firebase/app"
 import "firebase/database"
 
-const App = props => {
+const App = ({
+  fetchPatch,
+  setValue,
+  setInstrument,
+  instruments,
+  modules,
+  cables
+}) => {
   useEffect(() => {
     firebase.initializeApp({
       apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
@@ -19,39 +26,38 @@ const App = props => {
       storageBucket: "rackless-cc.appspot.com"
     })
     const db = firebase.database()
-    props.loadPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
+    fetchPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
   }, [])
 
   const enableSound = () => {
     Tone.context.resume()
   }
 
-  const renderModule = (id, { type, col, row, ...values }) => {
-    const moduleProps = R.prop(type, modules)
-    return (
-      <Module
-        id={id}
-        setValue={props.setValue}
-        col={col}
-        row={row}
-        values={values}
-        {...moduleProps}
-      />
-    )
-  }
+  const renderModule = (id, { type, col, row, ...values }) => (
+    <Module
+      id={id}
+      setValue={setValue}
+      setInstrument={setInstrument}
+      col={col}
+      row={row}
+      instrument={instruments[id]}
+      values={values}
+      {...moduleTypes[type]}
+    />
+  )
 
   return (
     <div className="content" onClick={enableSound}>
       {R.values(
         R.mapObjIndexed(
           (data, id) => <div key={id}>{renderModule(id, data)}</div>,
-          props.modules
+          modules
         )
       )}
       {R.values(
         R.mapObjIndexed(
           (props, id) => <Cable key={id} id={id} {...props} />,
-          props.cables
+          cables
         )
       )}
     </div>
@@ -59,11 +65,12 @@ const App = props => {
 }
 
 const mapStateToProps = state => ({
-  cables: state.cables,
-  modules: state.modules
+  cables: R.propOr([], "cables", state),
+  modules: R.propOr([], "modules", state),
+  instruments: R.propOr([], "instruments", state)
 })
 
-const mapDispatchToProps = { setValue, loadPatch }
+const mapDispatchToProps = { setValue, setInstrument, fetchPatch }
 
 export default connect(
   mapStateToProps,

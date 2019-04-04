@@ -2,11 +2,13 @@ import * as R from "ramda"
 import { socketAtPos } from "./selectors"
 import {
   SET_VALUE,
+  SET_INSTRUMENT,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR,
   REMOVE_CONNECTOR,
-  GET_PATCH
+  SET_PATCH,
+  SET_DB
 } from "./actionTypes"
 
 const initialState = {
@@ -19,12 +21,21 @@ export default (state = initialState, action) => {
     R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
 
   switch (action.type) {
-    case GET_PATCH: {
+    case SET_PATCH: {
       return { ...state, ...action.payload }
     }
     case SET_VALUE: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath(["modules", id, name]), value, state)
+    }
+    case SET_DB: {
+      const { db } = action.payload
+      return { ...state, db }
+    }
+    case SET_INSTRUMENT: {
+      const { id, instrument } = action.payload
+      console.log(R.set(R.lensPath(["instruments", id]), instrument, state))
+      return R.set(R.lensPath(["instruments", id]), instrument, state)
     }
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
