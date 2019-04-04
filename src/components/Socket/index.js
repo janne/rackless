@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
 import { createCableAndPersist } from "../../store/actions"
-const uuidv1 = require("uuid/v1")
 
 const noop = () => {}
 
