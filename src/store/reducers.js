@@ -6,7 +6,7 @@ import {
   CREATE_CABLE,
   MOVE_CONNECTOR,
   REMOVE_CONNECTOR,
-  ADD_MODULE
+  UPDATE_PATCH
 } from "./actionTypes"
 
 const initialState = {
@@ -19,9 +19,8 @@ export default (state = initialState, action) => {
     R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
 
   switch (action.type) {
-    case ADD_MODULE: {
-      const { id, ...rest } = action.payload
-      return { ...state, modules: { ...state.modules, [id]: rest } }
+    case UPDATE_PATCH: {
+      return { ...state, ...action.payload }
     }
     case SET_VALUE: {
       const { id, name, value } = action.payload

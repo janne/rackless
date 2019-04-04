@@ -1,5 +1,6 @@
+import * as R from "ramda"
 import {
-  ADD_MODULE,
+  UPDATE_PATCH,
   SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
@@ -9,23 +10,21 @@ import {
 
 export const loadPatch = (db, id) => {
   return dispatch => {
-    const ref = db
-      .collection("patches")
-      .doc(id)
-      .collection("modules")
-
-    ref
-      .get()
-      .then(snapshot =>
-        snapshot.forEach(mod =>
-          dispatch(addModule({ ...mod.data(), id: mod.id }))
-        )
-      )
+    const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
+    db.ref(prefix)
+      .once("value")
+      .then(patch => {
+        if (R.isNil(patch.val()))
+          return Promise.reject(`No such patch: ${prefix}`)
+        return patch.val()
+      })
+      .then(updatePatch)
+      .then(dispatch)
   }
 }
 
-export const addModule = payload => ({
-  type: ADD_MODULE,
+export const updatePatch = payload => ({
+  type: UPDATE_PATCH,
   payload
 })
 

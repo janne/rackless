@@ -7,16 +7,18 @@ import Tone from "tone"
 import modules from "./modules"
 import Module from "./components/Module"
 import firebase from "firebase/app"
-import "firebase/firestore"
+import "firebase/database"
 
 const App = props => {
   useEffect(() => {
     firebase.initializeApp({
       apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
       authDomain: "rackless-cc.firebaseapp.com",
-      projectId: "rackless-cc"
+      projectId: "rackless-cc",
+      databaseURL: "https://rackless-cc.firebaseio.com",
+      storageBucket: "rackless-cc.appspot.com"
     })
-    const db = firebase.firestore()
+    const db = firebase.database()
     props.loadPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
   }, [])
 
