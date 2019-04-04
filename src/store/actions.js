@@ -1,6 +1,6 @@
 import * as R from "ramda"
 import {
-  UPDATE_PATCH,
+  GET_PATCH,
   SET_VALUE,
   MOVE_MODULE,
   CREATE_CABLE,
@@ -11,20 +11,15 @@ import {
 export const loadPatch = (db, id) => {
   return dispatch => {
     const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
-    db.ref(prefix)
-      .once("value")
-      .then(patch => {
-        if (R.isNil(patch.val()))
-          return Promise.reject(`No such patch: ${prefix}`)
-        return patch.val()
-      })
-      .then(updatePatch)
-      .then(dispatch)
+    db.ref(prefix).on("value", patch => {
+      if (R.isNil(patch.val())) return
+      dispatch(updatePatch(patch.val()))
+    })
   }
 }
 
 export const updatePatch = payload => ({
-  type: UPDATE_PATCH,
+  type: GET_PATCH,
   payload
 })
 
