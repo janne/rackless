@@ -47,10 +47,10 @@ export default (state = initialState, action) => {
     case CREATE_CABLE: {
       const {
         id,
-        outputModule,
-        outputSocket,
-        inputModule,
-        inputSocket,
+        outputModule = null,
+        outputSocket = null,
+        inputModule = null,
+        inputSocket = null,
         color
       } = action.payload
       return {

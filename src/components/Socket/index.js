@@ -2,7 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
-import { createCable } from "../../store/actions"
+import { createCableAndPersist } from "../../store/actions"
 const uuidv1 = require("uuid/v1")
 
 const noop = () => {}
@@ -25,9 +25,16 @@ const COLORS = [
 ]
 const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
 
-const Socket = ({ x, y, moduleId, socketId, direction, createCable }) => {
+const Socket = ({
+  x,
+  y,
+  moduleId,
+  socketId,
+  direction,
+  createCableAndPersist
+}) => {
   const newCable = () => {
-    createCable(uuidv1(), moduleId, socketId, randomColor())
+    createCableAndPersist(moduleId, socketId, randomColor())
   }
   return (
     <div
@@ -45,7 +52,7 @@ const Socket = ({ x, y, moduleId, socketId, direction, createCable }) => {
   )
 }
 
-const mapDispatchToProps = { createCable }
+const mapDispatchToProps = { createCableAndPersist }
 
 export default connect(
   null,

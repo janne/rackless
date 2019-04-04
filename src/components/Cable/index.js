@@ -2,7 +2,11 @@ import React, { Fragment, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { ZOOM } from "../../constants"
-import { moveConnector, removeConnector } from "../../store/actions"
+import {
+  moveConnector,
+  removeConnector,
+  dispatchAndPersist
+} from "../../store/actions"
 import { socketToPos } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
@@ -16,13 +20,12 @@ const Cable = ({
   x2,
   y2,
   color,
-  moveConnector,
-  removeConnector,
   from,
   to,
   outputSocket,
   inputSocket,
-  disabled
+  disabled,
+  dispatchAndPersist
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
   const [pos1, setPos1] = useState({ x: x1, y: y1 })
@@ -69,13 +72,14 @@ const Cable = ({
 
   const setPos = connector => (connector === "outputs" ? setPos1 : setPos2)
 
-  const handleStart = connector => pos => removeConnector(id, connector, pos)
+  const handleStart = connector => pos =>
+    dispatchAndPersist(removeConnector(id, connector, pos))
 
   const handleStop = connector => pos => {
     const initPos =
       connector === "outputs" ? { x: x1, y: y1 } : { x: x2, y: y2 }
     setPos(connector)(initPos)
-    moveConnector(id, connector, pos)
+    dispatchAndPersist(moveConnector(id, connector, pos))
   }
 
   return (
@@ -123,7 +127,7 @@ const mapStateToProps = (
   return { x1, y1, x2, y2, from, to }
 }
 
-const mapDispatchToProps = { moveConnector, removeConnector }
+const mapDispatchToProps = { dispatchAndPersist }
 
 export default connect(
   mapStateToProps,

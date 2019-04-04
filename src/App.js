@@ -2,7 +2,12 @@ import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Cable from "./components/Cable"
-import { setValue, setInstrument, fetchPatch } from "./store/actions"
+import {
+  setValue,
+  setInstrument,
+  fetchPatch,
+  dispatchAndPersist
+} from "./store/actions"
 import Tone from "tone"
 import moduleTypes from "./modules"
 import Module from "./components/Module"
@@ -11,7 +16,7 @@ import "firebase/database"
 
 const App = ({
   fetchPatch,
-  setValue,
+  dispatchAndPersist,
   setInstrument,
   instruments,
   modules,
@@ -36,7 +41,9 @@ const App = ({
   const renderModule = (id, { type, col, row, ...values }) => (
     <Module
       id={id}
-      setValue={setValue}
+      setValue={(id, name, value) =>
+        dispatchAndPersist(setValue(id, name, value))
+      }
       setInstrument={setInstrument}
       col={col}
       row={row}
@@ -70,7 +77,7 @@ const mapStateToProps = state => ({
   instruments: R.propOr([], "instruments", state)
 })
 
-const mapDispatchToProps = { setValue, setInstrument, fetchPatch }
+const mapDispatchToProps = { dispatchAndPersist, setInstrument, fetchPatch }
 
 export default connect(
   mapStateToProps,
