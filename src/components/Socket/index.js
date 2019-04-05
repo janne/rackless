@@ -2,7 +2,8 @@ import React from "react"
 import { connect } from "react-redux"
 import background from "./background.svg"
 import { ZOOM } from "../../constants"
-import { createCableAndPersist } from "../../store/actions"
+import { dispatchAndPersist, createCable } from "../../store/actions"
+import { getDB } from "../../store/selectors"
 
 const noop = () => {}
 
@@ -25,15 +26,16 @@ const COLORS = [
 const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
 
 const Socket = ({
+  nextKey,
   x,
   y,
   moduleId,
   socketId,
   direction,
-  createCableAndPersist
+  dispatchAndPersist
 }) => {
   const newCable = () => {
-    createCableAndPersist(moduleId, socketId, randomColor())
+    dispatchAndPersist(createCable(nextKey, moduleId, socketId, randomColor()))
   }
   return (
     <div
@@ -51,9 +53,16 @@ const Socket = ({
   )
 }
 
-const mapDispatchToProps = { createCableAndPersist }
+const mapStateToProps = state => {
+  const ref = getDB(state).ref()
+  return {
+    nextKey: ref.child("cables").push().key
+  }
+}
+
+const mapDispatchToProps = { dispatchAndPersist }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Socket)

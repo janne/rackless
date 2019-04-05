@@ -1,4 +1,3 @@
-import * as R from "ramda"
 import {
   SET_PATCH,
   SET_VALUE,
@@ -16,28 +15,7 @@ const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
 export const fetchPatch = db => {
   return dispatch => {
     dispatch(setDB(db))
-    db.ref(prefix).on("value", patch => {
-      if (R.isNil(patch.val())) return
-      dispatch(setPatch(patch.val()))
-    })
-  }
-}
-
-export const persistPatch = (db, patch) => {
-  return () => db.ref(prefix).set(patch)
-}
-
-export const createCableAndPersist = (moduleId, socketId, color) => {
-  return (dispatch, getState) => {
-    const db = getDB(getState())
-    var key = db
-      .ref()
-      .child("cables")
-      .push().key
-    dispatch(createCable(key, moduleId, socketId, color))
-    const patch = getPatch(getState())
-    if (R.isNil(patch)) return
-    db.ref(prefix).set(patch)
+    db.ref(prefix).on("value", patch => dispatch(setPatch(patch.val() || {})))
   }
 }
 
@@ -47,7 +25,6 @@ export const dispatchAndPersist = action => {
     const state = getState()
     const db = getDB(state)
     const patch = getPatch(state)
-    if (R.isNil(patch)) return
     db.ref(prefix).set(patch)
   }
 }
