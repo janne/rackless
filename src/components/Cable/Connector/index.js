@@ -20,7 +20,7 @@ const Connector = ({ x, y, onDrag = noop, onStart = noop, onStop = noop }) => (
     onStop={(e, data) => onStop(R.pick(["x", "y"], data))}
     onDrag={(e, data) => onDrag(R.pick(["x", "y"], data))}
   >
-    <div style={{ ...styles.content }}>
+    <div style={styles.content}>
       <img
         draggable={false}
         src={background}

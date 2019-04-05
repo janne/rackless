@@ -34,7 +34,6 @@ export default (state = initialState, action) => {
     }
     case SET_INSTRUMENT: {
       const { id, instrument } = action.payload
-      console.log(R.set(R.lensPath(["instruments", id]), instrument, state))
       return R.set(R.lensPath(["instruments", id]), instrument, state)
     }
     case MOVE_MODULE: {

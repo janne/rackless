@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
 import { dispatchAndPersist, moveModule } from "../../store/actions"
@@ -12,8 +12,6 @@ const Plate = ({
   children,
   dispatchAndPersist
 }) => {
-  const [pos] = useState({ col, row })
-
   const styles = {
     content: { position: "absolute" },
     background: {
@@ -22,8 +20,8 @@ const Plate = ({
   }
 
   const dragHandler = (e, data) => {
-    const newCol = pos.col + data.x / HP_PIX
-    const newRow = pos.row + data.y / HEIGHT_PIX
+    const newCol = data.x / HP_PIX
+    const newRow = data.y / HEIGHT_PIX
     dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
@@ -31,16 +29,10 @@ const Plate = ({
     <Draggable
       grid={[HP_PIX, HEIGHT_PIX]}
       onDrag={dragHandler}
+      position={{ x: col * HP_PIX, y: row * HEIGHT_PIX }}
       cancel=".draggable"
     >
-      <div
-        onDrag={dragHandler}
-        style={{
-          ...styles.content,
-          left: pos.col * HP_PIX,
-          top: pos.row * HEIGHT_PIX
-        }}
-      >
+      <div onDrag={dragHandler} style={styles.content}>
         <img
           draggable={false}
           src={background}
