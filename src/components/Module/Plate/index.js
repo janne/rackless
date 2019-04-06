@@ -1,8 +1,8 @@
 import React from "react"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
-import { dispatchAndPersist, moveModule } from "../../store/actions"
-import { HEIGHT_PIX, HP_PIX } from "../../constants"
+import { dispatchAndPersist, moveModule } from "../../../store/actions"
+import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
 const Plate = ({
   moduleId,

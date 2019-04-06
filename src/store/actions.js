@@ -15,7 +15,9 @@ const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
 export const fetchPatch = db => {
   return dispatch => {
     dispatch(setDB(db))
-    db.ref(prefix).on("value", patch => dispatch(setPatch(patch.val() || {})))
+    db.ref(prefix).on("value", patch => {
+      dispatch(setPatch(patch.val() || {}))
+    })
   }
 }
 

@@ -2,7 +2,7 @@ import React from "react"
 import * as R from "ramda"
 import { DraggableCore } from "react-draggable"
 import background from "./background.svg"
-import { ZOOM } from "../../constants"
+import { ZOOM } from "../../../constants"
 
 const CONTROL_DEGREES = 270
 

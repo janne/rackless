@@ -1,9 +1,9 @@
 import React from "react"
 import { connect } from "react-redux"
 import background from "./background.svg"
-import { ZOOM } from "../../constants"
-import { dispatchAndPersist, createCable } from "../../store/actions"
-import { getDB } from "../../store/selectors"
+import { ZOOM } from "../../../constants"
+import { dispatchAndPersist, createCable } from "../../../store/actions"
+import { getDB } from "../../../store/selectors"
 
 const noop = () => {}
 
