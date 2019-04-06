@@ -1,7 +1,7 @@
 import Tone from "tone"
-export { default as background } from "./background.svg"
+import background from "./background.svg"
 
-export const controls = [
+const controls = [
   { name: "gain", x: 19.33, y: 13.66, range: "normal" },
   { name: "level1", x: 19.33, y: 35.33, range: "normal" },
   { name: "pan1", x: 35.33, y: 35.33, range: "audio" },
@@ -10,7 +10,7 @@ export const controls = [
   { name: "level3", x: 19.3, y: 94, range: "normal" }
 ]
 
-export const inputs = [
+const inputs = [
   { name: "i1", x: 4.5, y: 38, range: "audio" },
   { name: "i2", x: 4.5, y: 61.33, range: "audio" },
   { name: "i3l", x: 4.5, y: 86.33, range: "audio" },
@@ -18,7 +18,7 @@ export const inputs = [
   { name: "pancv", x: 37.5, y: 80.5, range: "audio" }
 ]
 
-export const setup = ({ controls, inputs }) => {
+const setup = ({ controls, inputs }) => {
   const tones = {
     masterGain: new Tone.Gain(),
     gain1: new Tone.Gain(),
@@ -51,3 +51,5 @@ export const setup = ({ controls, inputs }) => {
     Object.values(tones).forEach(t => t.dispose())
   }
 }
+
+export default { inputs, controls, setup, background }

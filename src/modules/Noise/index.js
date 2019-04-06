@@ -1,14 +1,14 @@
 import Tone from "tone"
 
-export { default as background } from "./background.svg"
+import background from "./background.svg"
 
-export const outputs = [
+const outputs = [
   { name: "white", x: 1.33, y: 21.33, range: "audio" },
   { name: "brown", x: 1.33, y: 54, range: "audio" },
   { name: "pink", x: 1.33, y: 86.33, range: "audio" }
 ]
 
-export const setup = ({ outputs }) => {
+const setup = ({ outputs }) => {
   const tones = {
     pink: new Tone.Noise("pink"),
     brown: new Tone.Noise("brown"),
@@ -28,3 +28,5 @@ export const setup = ({ outputs }) => {
     })
   }
 }
+
+export default { outputs, setup, background }

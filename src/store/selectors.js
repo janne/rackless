@@ -1,6 +1,6 @@
 import * as R from "ramda"
 import { HP_PIX, HEIGHT_PIX, ZOOM } from "../constants"
-import modules from "../modules"
+import * as moduleTypes from "../modules"
 
 const WIDTH = 5 * ZOOM
 
@@ -10,7 +10,7 @@ export const getDB = R.prop("db")
 
 export const getSockets = (moduleId, direction, state) => {
   const type = R.path(["modules", moduleId, "type"], state)
-  return R.pathOr([], [type, direction], modules)
+  return R.pathOr([], [type, direction], moduleTypes)
 }
 
 export const socketToPos = (moduleId, direction, socketId, state) => {

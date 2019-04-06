@@ -1,8 +1,7 @@
 import Tone from "tone"
-import AudioToFrequency from "../AudioToFrequency"
-export { default as background } from "./background.svg"
+import background from "./background.svg"
 
-export const controls = [
+const controls = [
   { name: "freq", x: 19.33, y: 24.66, range: "audio" },
   { name: "fine", x: 35.33, y: 24.66, range: "audio" },
   { name: "fmcv", x: 19, y: 53.33, range: "normal" },
@@ -10,20 +9,20 @@ export const controls = [
   { name: "pwidth", x: 35, y: 79.33, range: "audio" }
 ]
 
-export const inputs = [
+const inputs = [
   { name: "voct", x: 4.33, y: 27.33, range: "normal" },
   { name: "fm", x: 4.33, y: 56, range: "audio" },
   { name: "pwm", x: 4.33, y: 82, range: "normal" }
 ]
 
-export const outputs = [
+const outputs = [
   { name: "sine", x: 4.33, y: 106.66, range: "frequency" },
   { name: "triangle", x: 15.66, y: 106.66, range: "frequency" },
   { name: "sawtooth", x: 27, y: 106.66, range: "frequency" },
   { name: "square", x: 38, y: 106.66, range: "frequency" }
 ]
 
-export const setup = ({ controls, inputs, outputs }) => {
+const setup = ({ controls, inputs, outputs }) => {
   const types = ["sine", "triangle", "sawtooth", "square"]
   const tones = {}
 
@@ -62,7 +61,7 @@ export const setup = ({ controls, inputs, outputs }) => {
     plusVoct.connect(plusFm, 0, 0)
     scaledFm.connect(plusFm, 0, 1)
 
-    tones.audioToFrequency = new AudioToFrequency(220)
+    tones.audioToFrequency = new Tone.WaveShaper(x => 220 * Math.pow(2, x * 5))
     plusFm.chain(tones.audioToFrequency, tones[type].frequency)
 
     const output = outputs[type]
@@ -75,3 +74,5 @@ export const setup = ({ controls, inputs, outputs }) => {
     }
   })
 }
+
+export default { inputs, outputs, controls, setup, background }

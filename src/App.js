@@ -9,7 +9,7 @@ import {
   dispatchAndPersist
 } from "./store/actions"
 import Tone from "tone"
-import moduleTypes from "./modules"
+import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import firebase from "firebase/app"
 import "firebase/database"

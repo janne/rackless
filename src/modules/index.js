@@ -1,11 +1,4 @@
-import * as Output from "./Output"
-import * as Oscillator from "./Oscillator"
-import * as Noise from "./Noise"
-import * as Filter from "./Filter"
-
-export default {
-  Output,
-  Oscillator,
-  Noise,
-  Filter
-}
+export { default as Oscillator } from "./Oscillator"
+export { default as Output } from "./Output"
+export { default as Filter } from "./Filter"
+export { default as Noise } from "./Noise"
