@@ -6,6 +6,7 @@ import {
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR,
+  DRAG_CONNECTOR,
   REMOVE_CONNECTOR,
   SET_PATCH,
   SET_DB
@@ -73,11 +74,13 @@ export default (state = initialState, action) => {
         connector === "outputs"
           ? {
               ...movedCable,
+              drag: null,
               outputModule: target.moduleId,
               outputSocket: target.socketId
             }
           : {
               ...movedCable,
+              drag: null,
               inputModule: target.moduleId,
               inputSocket: target.socketId
             }
@@ -85,6 +88,14 @@ export default (state = initialState, action) => {
     }
     case REMOVE_CONNECTOR: {
       return setCableDisabled(true)
+    }
+    case DRAG_CONNECTOR: {
+      const { id, connector, pos } = action.payload
+      return R.set(
+        R.lensPath(["cables", id, "drag"]),
+        { pos, connector },
+        state
+      )
     }
     default:
       return state

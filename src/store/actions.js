@@ -6,6 +6,7 @@ import {
   CREATE_CABLE,
   MOVE_CONNECTOR,
   REMOVE_CONNECTOR,
+  DRAG_CONNECTOR,
   SET_DB
 } from "./actionTypes"
 import { getDB, getPatch } from "./selectors"
@@ -71,7 +72,12 @@ export const moveConnector = (id, connector, pos) => ({
   payload: { id, connector, pos }
 })
 
-export const removeConnector = (id, connector, pos) => ({
+export const removeConnector = id => ({
   type: REMOVE_CONNECTOR,
+  payload: { id }
+})
+
+export const dragConnector = (id, connector, pos) => ({
+  type: DRAG_CONNECTOR,
   payload: { id, connector, pos }
 })

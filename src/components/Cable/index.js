@@ -1,10 +1,11 @@
-import React, { Fragment, useState, useEffect } from "react"
+import React, { Fragment, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import { ZOOM } from "../../constants"
 import {
   moveConnector,
   removeConnector,
+  dragConnector,
   dispatchAndPersist
 } from "../../store/actions"
 import { socketToPos } from "../../store/selectors"
@@ -19,6 +20,7 @@ const Cable = ({
   y1,
   x2,
   y2,
+  drag,
   color,
   from,
   to,
@@ -28,13 +30,11 @@ const Cable = ({
   dispatchAndPersist
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
-  const [pos1, setPos1] = useState({ x: x1, y: y1 })
-  const [pos2, setPos2] = useState({ x: x2, y: y2 })
 
-  useEffect(() => {
-    setPos1({ x: x1, y: y1 })
-    setPos2({ x: x2, y: y2 })
-  }, [x1, y1, x2, y2])
+  const outX = R.prop("connector", drag) === "outputs" ? drag.pos.x : x1
+  const outY = R.prop("connector", drag) === "outputs" ? drag.pos.y : y1
+  const inX = R.prop("connector", drag) === "inputs" ? drag.pos.x : x2
+  const inY = R.prop("connector", drag) === "inputs" ? drag.pos.y : y2
 
   const connect = (output, outputPort, input, inputPort) => {
     if (output.numberOfOutputs === 0 || input.numberOfInputs === 0) return
@@ -70,39 +70,37 @@ const Cable = ({
     )
   })
 
-  const setPos = connector => (connector === "outputs" ? setPos1 : setPos2)
-
   const handleStart = connector => pos =>
     dispatchAndPersist(removeConnector(id, connector, pos))
 
+  const handleDrag = connector => pos =>
+    dispatchAndPersist(dragConnector(id, connector, pos))
+
   const handleStop = connector => pos => {
-    const initPos =
-      connector === "outputs" ? { x: x1, y: y1 } : { x: x2, y: y2 }
-    setPos(connector)(initPos)
     dispatchAndPersist(moveConnector(id, connector, pos))
   }
 
   return (
     <Fragment>
       <Connector
-        x={x1}
-        y={y1}
+        x={outX}
+        y={outY}
         onStart={handleStart("outputs")}
-        onDrag={setPos("outputs")}
+        onDrag={handleDrag("outputs")}
         onStop={handleStop("outputs")}
       />
       <Connector
-        x={x2}
-        y={y2}
+        x={inX}
+        y={inY}
         onStart={handleStart("inputs")}
-        onDrag={setPos("inputs")}
+        onDrag={handleDrag("inputs")}
         onStop={handleStop("inputs")}
       />
       <Bezier
-        x1={pos1.x + CENTER}
-        y1={pos1.y + CENTER}
-        x2={pos2.x + CENTER}
-        y2={pos2.y + CENTER}
+        x1={outX + CENTER}
+        y1={outY + CENTER}
+        x2={inX + CENTER}
+        y2={inY + CENTER}
         color={color}
       />
     </Fragment>
@@ -111,7 +109,7 @@ const Cable = ({
 
 const mapStateToProps = (
   state,
-  { outputModule, outputSocket, inputModule, inputSocket }
+  { outputModule, outputSocket, inputModule, inputSocket, id }
 ) => {
   const { x: x1, y: y1 } = socketToPos(
     outputModule,
@@ -124,7 +122,8 @@ const mapStateToProps = (
     : socketToPos(inputModule, "inputs", inputSocket, state)
   const from = R.path(["instruments", outputModule], state)
   const to = R.path(["instruments", inputModule], state)
-  return { x1, y1, x2, y2, from, to }
+  const drag = R.path(["cables", id, "drag"], state)
+  return { x1, y1, x2, y2, from, to, drag }
 }
 
 const mapDispatchToProps = { dispatchAndPersist }
