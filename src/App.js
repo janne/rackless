@@ -1,6 +1,15 @@
-import React, { useEffect } from "react"
+import React, { useEffect, Fragment } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
+import Tone from "tone"
+import {
+  ContextMenu,
+  MenuItem,
+  SubMenu,
+  ContextMenuTrigger
+} from "react-contextmenu"
+import firebase from "firebase/app"
+import "firebase/database"
 import Cable from "./components/Cable"
 import {
   setValue,
@@ -8,11 +17,8 @@ import {
   fetchPatch,
   dispatchAndPersist
 } from "./store/actions"
-import Tone from "tone"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
-import firebase from "firebase/app"
-import "firebase/database"
 
 const App = ({
   fetchPatch,
@@ -53,21 +59,57 @@ const App = ({
     />
   )
 
+  const handleClick = (e, data) => {
+    console.log(data.action, data.type)
+  }
+
+  const renderModuleMenu = type => (
+    <MenuItem data={{ action: "addModule", type }} onClick={handleClick}>
+      {type}
+    </MenuItem>
+  )
+
   return (
-    <div onClick={enableSound}>
-      {R.values(
-        R.mapObjIndexed(
-          (data, id) => <div key={id}>{renderModule(id, data)}</div>,
-          modules
-        )
-      )}
-      {R.values(
-        R.mapObjIndexed(
-          (props, id) => <Cable key={id} id={id} {...props} />,
-          cables
-        )
-      )}
-    </div>
+    <Fragment>
+      <ContextMenuTrigger id="root-menu" holdToDisplay={500}>
+        <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
+          {R.values(
+            R.mapObjIndexed(
+              (data, id) => (
+                <div key={id}>
+                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={500}>
+                    {renderModule(id, data)}
+                  </ContextMenuTrigger>
+                  <ContextMenu id={`${id}-menu`}>
+                    <MenuItem
+                      data={{ action: "removeModule", id }}
+                      onClick={handleClick}
+                    >
+                      Delete
+                    </MenuItem>
+                  </ContextMenu>
+                </div>
+              ),
+              modules
+            )
+          )}
+          {R.values(
+            R.mapObjIndexed(
+              (props, id) => <Cable key={id} id={id} {...props} />,
+              cables
+            )
+          )}
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenu id="root-menu">
+        <SubMenu title="Add module">
+          {renderModuleMenu("Oscillator")}
+          {renderModuleMenu("Noise")}
+          {renderModuleMenu("Filter")}
+          {renderModuleMenu("Output")}
+        </SubMenu>
+      </ContextMenu>
+    </Fragment>
   )
 }
 
