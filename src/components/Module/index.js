@@ -20,15 +20,21 @@ const Module = ({
   setup = () => {}
 }) => {
   useEffect(() => {
-    setInstrument(id, new Instrument(controls, inputs, outputs, setup))
+    const instrument = new Instrument(controls, inputs, outputs, setup)
+    setInstrument(id, instrument)
+    setupValues(instrument, values)
   }, [])
 
   useEffect(() => {
+    setupValues(instrument, values)
+  }, controls.map(control => values[control.name]))
+
+  const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
     controls.forEach(
       ({ name }) => (instrument.controls[name].value = values[name] || 0)
     )
-  }, controls.map(control => values[control.name]))
+  }
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
