@@ -42,8 +42,8 @@ const Socket = ({
   dispatchAndPersist
 }) => {
   const [newCable] = useState({
-    x: x * ZOOM - 4,
-    y: y * ZOOM - 4,
+    x: x * ZOOM,
+    y: y * ZOOM,
     key: nextKey
   })
 
@@ -83,8 +83,8 @@ const Socket = ({
               top: 0,
               left: 0,
               position: "absolute",
-              width: 27,
-              height: 27
+              width: ZOOM * 7,
+              height: ZOOM * 7
             }}
           />
         </Draggable>
