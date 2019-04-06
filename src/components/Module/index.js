@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import * as R from "ramda"
 import Plate from "./Plate"
-import Trimpot from "../Trimpot"
+import Trimpot from "./Trimpot"
 import Socket from "./Socket"
 import Instrument from "./Instrument"
 
