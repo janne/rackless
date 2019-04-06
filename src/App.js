@@ -54,7 +54,7 @@ const App = ({
   )
 
   return (
-    <div className="content" onClick={enableSound}>
+    <div onClick={enableSound}>
       {R.values(
         R.mapObjIndexed(
           (data, id) => <div key={id}>{renderModule(id, data)}</div>,
