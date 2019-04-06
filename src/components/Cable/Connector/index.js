@@ -8,7 +8,7 @@ const styles = {
   content: {
     position: "absolute"
   },
-  background: { width: 7 * ZOOM }
+  background: { width: 7 * ZOOM, cursor: "pointer" }
 }
 
 const noop = f => f

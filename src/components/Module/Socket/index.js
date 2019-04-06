@@ -9,7 +9,8 @@ const noop = () => {}
 
 const styles = {
   content: { position: "absolute" },
-  background: { width: 7 * ZOOM }
+  background: { width: 7 * ZOOM },
+  draggable: { cursor: "pointer" }
 }
 
 const COLORS = [
@@ -45,7 +46,10 @@ const Socket = ({
       <img
         draggable={false}
         src={background}
-        style={styles.background}
+        style={{
+          ...styles.background,
+          ...(direction === "outputs" ? styles.draggable : {})
+        }}
         alt="Socket"
         onClick={direction === "outputs" ? newCable : noop}
       />

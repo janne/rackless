@@ -17,7 +17,7 @@ const Trimpot = ({
   setValue
 }) => {
   const styles = {
-    content: { position: "absolute" }
+    content: { position: "absolute", cursor: "pointer" }
   }
 
   const dragHandler = (e, data) => {
