@@ -119,7 +119,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         modules: R.dissoc(id, state.modules),
-        instruments: R.dissoc(id, state.instrumets),
+        instruments: R.dissoc(id, state.instruments),
         cables: R.reject(
           cable => cable.outputModule === id || cable.inputModule === id,
           state.cables
