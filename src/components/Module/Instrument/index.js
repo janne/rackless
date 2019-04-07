@@ -6,6 +6,10 @@ const ranges = {
   frequency: Tone.Type.Frequency
 }
 
+const disposeTone = t => {
+  if (t.dispose) t.dispose()
+}
+
 export default class extends Tone.Instrument {
   constructor(controls, inputs, outputs, setup) {
     super()
@@ -46,11 +50,11 @@ export default class extends Tone.Instrument {
     })
   }
 
-  dispose() {
-    Object.values(this.controls).forEach(t => t.dispose())
-    Object.values(this.inputs).forEach(t => t.dispose())
-    Object.values(this.outputs).forEach(t => t.dispose())
+  dispose = () => {
     if (typeof this.setupCallback === "function") this.setupCallback()
+    Object.values(this.controls).forEach(disposeTone)
+    Object.values(this.inputs).forEach(disposeTone)
+    Object.values(this.outputs).forEach(disposeTone)
     super.dispose()
   }
 }
