@@ -111,6 +111,12 @@ const App = ({
           {renderModuleMenu("Filter")}
           {renderModuleMenu("Output")}
         </SubMenu>
+        <MenuItem divider />
+        <MenuItem
+          onClick={() => window.open("https://www.reddit.com/r/rackless")}
+        >
+          Open Reddit
+        </MenuItem>
       </ContextMenu>
     </Fragment>
   )
