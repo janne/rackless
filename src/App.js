@@ -26,8 +26,6 @@ const App = ({
   fetchPatch,
   dispatchAndPersist,
   setInstrument,
-  createModule,
-  deleteModule,
   instruments,
   modules,
   cables
@@ -64,7 +62,10 @@ const App = ({
   )
 
   const renderModuleMenu = type => (
-    <MenuItem data={{ type }} onClick={(e, data) => createModule(data.type)}>
+    <MenuItem
+      data={{ type }}
+      onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
+    >
       {type}
     </MenuItem>
   )
@@ -83,7 +84,9 @@ const App = ({
                   <ContextMenu id={`${id}-menu`}>
                     <MenuItem
                       data={{ id }}
-                      onClick={(e, data) => deleteModule(data.id)}
+                      onClick={(e, data) =>
+                        dispatchAndPersist(deleteModule(data.id))
+                      }
                     >
                       Delete
                     </MenuItem>
@@ -122,9 +125,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   dispatchAndPersist,
   setInstrument,
-  fetchPatch,
-  createModule,
-  deleteModule
+  fetchPatch
 }
 
 export default connect(
