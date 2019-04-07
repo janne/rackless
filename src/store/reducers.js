@@ -41,7 +41,6 @@ export default (state = initialState, action) => {
 
     case SET_USER: {
       const { uid } = action.payload
-      console.log({ uid })
       return { ...state, uid }
     }
 

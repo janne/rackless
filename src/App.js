@@ -19,7 +19,8 @@ import {
   dispatchAndPersist,
   createModule,
   deleteModule,
-  setUser
+  setUser,
+  setDB
 } from "./store/actions"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
@@ -27,6 +28,7 @@ import Module from "./components/Module"
 const App = ({
   fetchPatch,
   setUser,
+  setDB,
   dispatchAndPersist,
   setInstrument,
   instruments,
@@ -43,13 +45,17 @@ const App = ({
       storageBucket: "rackless-cc.appspot.com"
     })
 
+    setDB(firebase.database())
+
     firebase
       .auth()
       .signInAnonymously()
       .catch(error => console.error(error))
     firebase.auth().onAuthStateChanged(user => {
-      setUser(user ? user.uid : null)
-      fetchPatch(firebase.database(), "A3ukO7yv7XzgZsb1Ve7T")
+      if (user) {
+        setUser(user.uid)
+        fetchPatch()
+      }
     })
   }, [])
 
@@ -148,7 +154,8 @@ const mapDispatchToProps = {
   dispatchAndPersist,
   setInstrument,
   fetchPatch,
-  setUser
+  setUser,
+  setDB
 }
 
 export default connect(

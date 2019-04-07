@@ -8,6 +8,8 @@ export const getPatch = R.pick(["modules", "cables"])
 
 export const getDB = R.prop("db")
 
+export const getUser = R.prop("uid")
+
 export const getSockets = (moduleId, direction, state) => {
   const type = R.path(["modules", moduleId, "type"], state)
   return R.pathOr([], [type, direction], moduleTypes)

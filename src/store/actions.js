@@ -12,16 +12,18 @@ import {
   SET_DB,
   SET_USER
 } from "./actionTypes"
-import { getDB, getPatch } from "./selectors"
+import { getDB, getUser, getPatch } from "./selectors"
 
-const prefix = `/patches/-LbdSzlodm0lwGVAag7D`
-
-export const fetchPatch = db => {
-  return dispatch => {
-    dispatch(setDB(db))
-    db.ref(prefix).on("value", patch => {
-      dispatch(setPatch(patch.val() || {}))
-    })
+export const fetchPatch = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const uid = getUser(state)
+    const prefix = `/patches/${uid}`
+    getDB(state)
+      .ref(prefix)
+      .on("value", patch => {
+        dispatch(setPatch(patch.val() || {}))
+      })
   }
 }
 
@@ -29,9 +31,10 @@ export const dispatchAndPersist = action => {
   return (dispatch, getState) => {
     dispatch(action)
     const state = getState()
-    const db = getDB(state)
-    const patch = getPatch(state)
-    db.ref(prefix).set(patch)
+    const uid = getUser(state)
+    getDB(state)
+      .ref(`/patches/${uid}`)
+      .set(getPatch(state))
   }
 }
 
