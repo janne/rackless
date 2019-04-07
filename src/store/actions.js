@@ -9,7 +9,8 @@ import {
   DRAG_CONNECTOR,
   CREATE_MODULE,
   DELETE_MODULE,
-  SET_DB
+  SET_DB,
+  SET_USER
 } from "./actionTypes"
 import { getDB, getPatch } from "./selectors"
 
@@ -37,6 +38,11 @@ export const dispatchAndPersist = action => {
 export const setDB = db => ({
   type: SET_DB,
   payload: { db }
+})
+
+export const setUser = uid => ({
+  type: SET_USER,
+  payload: { uid }
 })
 
 export const setPatch = payload => ({

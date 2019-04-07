@@ -9,6 +9,7 @@ import {
   ContextMenuTrigger
 } from "react-contextmenu"
 import firebase from "firebase/app"
+import "firebase/auth"
 import "firebase/database"
 import Cable from "./components/Cable"
 import {
@@ -17,13 +18,15 @@ import {
   fetchPatch,
   dispatchAndPersist,
   createModule,
-  deleteModule
+  deleteModule,
+  setUser
 } from "./store/actions"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 
 const App = ({
   fetchPatch,
+  setUser,
   dispatchAndPersist,
   setInstrument,
   instruments,
@@ -31,6 +34,7 @@ const App = ({
   cables
 }) => {
   useEffect(() => {
+    // Initialize
     firebase.initializeApp({
       apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
       authDomain: "rackless-cc.firebaseapp.com",
@@ -38,6 +42,15 @@ const App = ({
       databaseURL: "https://rackless-cc.firebaseio.com",
       storageBucket: "rackless-cc.appspot.com"
     })
+
+    // Auth
+    firebase
+      .auth()
+      .signInAnonymously()
+      .catch(error => console.error(error))
+    firebase.auth().onAuthStateChanged(user => setUser(user ? user.uid : null))
+
+    // DB
     const db = firebase.database()
     fetchPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
   }, [])
@@ -136,7 +149,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   dispatchAndPersist,
   setInstrument,
-  fetchPatch
+  fetchPatch,
+  setUser
 }
 
 export default connect(

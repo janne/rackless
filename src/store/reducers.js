@@ -11,7 +11,8 @@ import {
   DRAG_CONNECTOR,
   REMOVE_CONNECTOR,
   SET_PATCH,
-  SET_DB
+  SET_DB,
+  SET_USER
 } from "./actionTypes"
 
 const initialState = {
@@ -36,6 +37,12 @@ export default (state = initialState, action) => {
     case SET_DB: {
       const { db } = action.payload
       return { ...state, db }
+    }
+
+    case SET_USER: {
+      const { uid } = action.payload
+      console.log({ uid })
+      return { ...state, uid }
     }
 
     case SET_INSTRUMENT: {
