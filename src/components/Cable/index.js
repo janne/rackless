@@ -50,6 +50,7 @@ const Cable = ({
 
     output.connect(input, outputNum, inputNum)
     return () => {
+      if (R.isNil(output.output)) return
       const stop = (output.numberOfOutputs === 1
         ? output.output
         : output.output[outputPort]
