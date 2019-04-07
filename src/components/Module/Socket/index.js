@@ -17,7 +17,14 @@ const CENTER = 3.3 * ZOOM
 const styles = {
   content: { position: "absolute" },
   background: { width: 7 * ZOOM },
-  draggable: { cursor: "pointer" }
+  handle: {
+    top: 0,
+    left: 0,
+    position: "absolute",
+    width: ZOOM * 7,
+    height: ZOOM * 7,
+    cursor: "pointer"
+  }
 }
 const COLORS = [
   "red",
@@ -77,16 +84,7 @@ const Socket = ({
             dispatchAndPersist(moveConnector(newCable.key, "inputs", pos))
           }}
         >
-          <div
-            className="draggable"
-            style={{
-              top: 0,
-              left: 0,
-              position: "absolute",
-              width: ZOOM * 7,
-              height: ZOOM * 7
-            }}
-          />
+          <div className="draggable" style={styles.handle} />
         </Draggable>
       )}
     </Fragment>
