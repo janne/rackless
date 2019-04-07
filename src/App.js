@@ -43,16 +43,14 @@ const App = ({
       storageBucket: "rackless-cc.appspot.com"
     })
 
-    // Auth
     firebase
       .auth()
       .signInAnonymously()
       .catch(error => console.error(error))
-    firebase.auth().onAuthStateChanged(user => setUser(user ? user.uid : null))
-
-    // DB
-    const db = firebase.database()
-    fetchPatch(db, "A3ukO7yv7XzgZsb1Ve7T")
+    firebase.auth().onAuthStateChanged(user => {
+      setUser(user ? user.uid : null)
+      fetchPatch(firebase.database(), "A3ukO7yv7XzgZsb1Ve7T")
+    })
   }, [])
 
   const enableSound = () => {
