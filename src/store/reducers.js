@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import { socketAtPos } from "./selectors"
+import { socketAtPos, getDB } from "./selectors"
 import {
   SET_VALUE,
   SET_INSTRUMENT,
@@ -108,8 +108,9 @@ export default (state = initialState, action) => {
 
     case CREATE_MODULE: {
       const { type } = action.payload
-      console.log("CREATE", type)
-      return state
+      const ref = getDB(state).ref()
+      const key = ref.child("modules").push().key
+      return R.assocPath(["modules", key], { type, col: 0, row: 0 }, state)
     }
 
     case DELETE_MODULE: {
