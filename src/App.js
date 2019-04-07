@@ -15,7 +15,9 @@ import {
   setValue,
   setInstrument,
   fetchPatch,
-  dispatchAndPersist
+  dispatchAndPersist,
+  createModule,
+  deleteModule
 } from "./store/actions"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
@@ -24,6 +26,8 @@ const App = ({
   fetchPatch,
   dispatchAndPersist,
   setInstrument,
+  createModule,
+  deleteModule,
   instruments,
   modules,
   cables
@@ -59,31 +63,27 @@ const App = ({
     />
   )
 
-  const handleClick = (e, data) => {
-    console.log(data.action, data.type)
-  }
-
   const renderModuleMenu = type => (
-    <MenuItem data={{ action: "addModule", type }} onClick={handleClick}>
+    <MenuItem data={{ type }} onClick={(e, data) => createModule(data.type)}>
       {type}
     </MenuItem>
   )
 
   return (
     <Fragment>
-      <ContextMenuTrigger id="root-menu" holdToDisplay={500}>
+      <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
         <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
           {R.values(
             R.mapObjIndexed(
               (data, id) => (
                 <div key={id}>
-                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={500}>
+                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
                     {renderModule(id, data)}
                   </ContextMenuTrigger>
                   <ContextMenu id={`${id}-menu`}>
                     <MenuItem
-                      data={{ action: "removeModule", id }}
-                      onClick={handleClick}
+                      data={{ id }}
+                      onClick={(e, data) => deleteModule(data.id)}
                     >
                       Delete
                     </MenuItem>
@@ -102,7 +102,7 @@ const App = ({
         </div>
       </ContextMenuTrigger>
       <ContextMenu id="root-menu">
-        <SubMenu title="Add module">
+        <SubMenu title="Add module" hoverDelay={200}>
           {renderModuleMenu("Oscillator")}
           {renderModuleMenu("Noise")}
           {renderModuleMenu("Filter")}
@@ -119,7 +119,13 @@ const mapStateToProps = state => ({
   instruments: R.propOr([], "instruments", state)
 })
 
-const mapDispatchToProps = { dispatchAndPersist, setInstrument, fetchPatch }
+const mapDispatchToProps = {
+  dispatchAndPersist,
+  setInstrument,
+  fetchPatch,
+  createModule,
+  deleteModule
+}
 
 export default connect(
   mapStateToProps,

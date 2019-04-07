@@ -34,9 +34,7 @@ const setup = ({ inputs, outputs, controls }) => {
 
   inputs.in.chain(tones.filter, outputs.out)
 
-  return () => {
-    Object.values(tones).forEach(t => t.dispose())
-  }
+  return () => Object.values(tones).forEach(t => t.dispose())
 }
 
 export default { inputs, outputs, controls, setup, background }

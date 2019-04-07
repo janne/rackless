@@ -68,11 +68,9 @@ const setup = ({ controls, inputs, outputs }) => {
     output.start = () => tones[type].start()
     output.stop = () => tones[type].stop()
     tones[type].connect(output)
-
-    return () => {
-      Object.values(tones).forEach(t => t.dispose())
-    }
   })
+
+  return () => Object.values(tones).forEach(t => t.dispose())
 }
 
 export default { inputs, outputs, controls, setup, background }

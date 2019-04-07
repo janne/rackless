@@ -3,6 +3,8 @@ import { socketAtPos } from "./selectors"
 import {
   SET_VALUE,
   SET_INSTRUMENT,
+  CREATE_MODULE,
+  DELETE_MODULE,
   MOVE_MODULE,
   CREATE_CABLE,
   MOVE_CONNECTOR,
@@ -25,18 +27,22 @@ export default (state = initialState, action) => {
     case SET_PATCH: {
       return { ...state, ...action.payload }
     }
+
     case SET_VALUE: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath(["modules", id, name]), value, state)
     }
+
     case SET_DB: {
       const { db } = action.payload
       return { ...state, db }
     }
+
     case SET_INSTRUMENT: {
       const { id, instrument } = action.payload
       return R.set(R.lensPath(["instruments", id]), instrument, state)
     }
+
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
       return R.compose(
@@ -86,9 +92,11 @@ export default (state = initialState, action) => {
             }
       return { ...state, cables: { ...cables, [id]: updatedCable } }
     }
+
     case REMOVE_CONNECTOR: {
       return setCableDisabled(true)
     }
+
     case DRAG_CONNECTOR: {
       const { id, connector, pos } = action.payload
       return R.set(
@@ -97,6 +105,27 @@ export default (state = initialState, action) => {
         state
       )
     }
+
+    case CREATE_MODULE: {
+      const { type } = action.payload
+      console.log("CREATE", type)
+      return state
+    }
+
+    case DELETE_MODULE: {
+      const { id } = action.payload
+      state.instruments[id].dispose()
+      return {
+        ...state,
+        modules: R.dissoc(id, state.modules),
+        instruments: R.dissoc(id, state.instrumets),
+        cables: R.reject(
+          cable => cable.outputModule === id || cable.inputModule === id,
+          state.cables
+        )
+      }
+    }
+
     default:
       return state
   }

@@ -22,11 +22,7 @@ const setup = ({ outputs }) => {
     outputs[type].stop = () => noise.stop()
   })
 
-  return () => {
-    Object.values(tones).forEach(noise => {
-      noise.dispose()
-    })
-  }
+  return () => Object.values(tones).forEach(t => t.dispose())
 }
 
 export default { outputs, setup, background }

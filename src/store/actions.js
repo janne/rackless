@@ -7,6 +7,8 @@ import {
   MOVE_CONNECTOR,
   REMOVE_CONNECTOR,
   DRAG_CONNECTOR,
+  CREATE_MODULE,
+  DELETE_MODULE,
   SET_DB
 } from "./actionTypes"
 import { getDB, getPatch } from "./selectors"
@@ -80,4 +82,14 @@ export const removeConnector = id => ({
 export const dragConnector = (id, connector, pos) => ({
   type: DRAG_CONNECTOR,
   payload: { id, connector, pos }
+})
+
+export const createModule = type => ({
+  type: CREATE_MODULE,
+  payload: { type }
+})
+
+export const deleteModule = id => ({
+  type: DELETE_MODULE,
+  payload: { id }
 })
