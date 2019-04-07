@@ -2,24 +2,24 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const controls = [
-  { name: "freq", x: 19.33, y: 24.66, range: "audio" },
-  { name: "fine", x: 35.33, y: 24.66, range: "audio" },
-  { name: "fmcv", x: 19, y: 53.33, range: "normal" },
-  { name: "pwmcv", x: 19, y: 79.33, range: "normal" },
-  { name: "pwidth", x: 35, y: 79.33, range: "audio" }
+  { name: "freq", x: 58, y: 74, range: "audio" },
+  { name: "fine", x: 106, y: 74, range: "audio" },
+  { name: "fmcv", x: 57, y: 160, range: "normal" },
+  { name: "pwmcv", x: 57, y: 238, range: "normal" },
+  { name: "pwidth", x: 105, y: 238, range: "audio" }
 ]
 
 const inputs = [
-  { name: "voct", x: 4.33, y: 27.33, range: "normal" },
-  { name: "fm", x: 4.33, y: 56, range: "audio" },
-  { name: "pwm", x: 4.33, y: 82, range: "normal" }
+  { name: "voct", x: 13, y: 82, range: "normal" },
+  { name: "fm", x: 13, y: 168, range: "audio" },
+  { name: "pwm", x: 13, y: 246, range: "normal" }
 ]
 
 const outputs = [
-  { name: "sine", x: 4.33, y: 106.66, range: "frequency" },
-  { name: "triangle", x: 15.66, y: 106.66, range: "frequency" },
-  { name: "sawtooth", x: 27, y: 106.66, range: "frequency" },
-  { name: "square", x: 38, y: 106.66, range: "frequency" }
+  { name: "sine", x: 13, y: 320, range: "frequency" },
+  { name: "triangle", x: 47, y: 320, range: "frequency" },
+  { name: "sawtooth", x: 81, y: 320, range: "frequency" },
+  { name: "square", x: 114, y: 320, range: "frequency" }
 ]
 
 const setup = ({ controls, inputs, outputs }) => {

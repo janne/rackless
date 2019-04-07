@@ -2,13 +2,12 @@ import React from "react"
 import * as R from "ramda"
 import Draggable from "react-draggable"
 import background from "./background.svg"
-import { ZOOM } from "../../../constants"
 
 const styles = {
   content: {
     position: "absolute"
   },
-  background: { width: 7 * ZOOM }
+  background: { width: 21 }
 }
 
 const noop = f => f

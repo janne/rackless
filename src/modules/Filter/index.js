@@ -3,16 +3,16 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const inputs = [
-  { name: "cutoff", x: 3.33, y: 58.33, range: "frequency" },
-  { name: "quality", x: 3.33, y: 77.33, range: "normal" },
-  { name: "in", x: 3.33, y: 98.66, range: "frequency" }
+  { name: "cutoff", x: 10, y: 175, range: "frequency" },
+  { name: "quality", x: 10, y: 232, range: "normal" },
+  { name: "in", x: 10, y: 296, range: "frequency" }
 ]
 
-const outputs = [{ name: "out", x: 19, y: 98.66, range: "frequency" }]
+const outputs = [{ name: "out", x: 57, y: 296, range: "frequency" }]
 
 const controls = [
-  { name: "cutoff", x: 16, y: 55.33, range: "frequency" },
-  { name: "quality", x: 16, y: 74.33, range: "normal" }
+  { name: "cutoff", x: 48, y: 166, range: "frequency" },
+  { name: "quality", x: 48, y: 223, range: "normal" }
 ]
 
 const setup = ({ inputs, outputs, controls }) => {

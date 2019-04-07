@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import { ZOOM } from "../../constants"
 import {
   moveConnector,
   removeConnector,
@@ -12,7 +11,7 @@ import { socketToPos } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
 
-const CENTER = 3.3 * ZOOM
+const CENTER = 10
 
 const Cable = ({
   id,

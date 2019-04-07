@@ -3,9 +3,9 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const outputs = [
-  { name: "white", x: 1.33, y: 21.33, range: "audio" },
-  { name: "brown", x: 1.33, y: 54, range: "audio" },
-  { name: "pink", x: 1.33, y: 86.33, range: "audio" }
+  { name: "white", x: 4, y: 65, range: "audio" },
+  { name: "brown", x: 4, y: 163, range: "audio" },
+  { name: "pink", x: 4, y: 260, range: "audio" }
 ]
 
 const setup = ({ outputs }) => {

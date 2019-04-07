@@ -2,20 +2,20 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const controls = [
-  { name: "gain", x: 19.33, y: 13.66, range: "normal" },
-  { name: "level1", x: 19.33, y: 35.33, range: "normal" },
-  { name: "pan1", x: 35.33, y: 35.33, range: "audio" },
-  { name: "level2", x: 19.33, y: 59, range: "normal" },
-  { name: "pan2", x: 35.33, y: 58.66, range: "audio" },
-  { name: "level3", x: 19.3, y: 94, range: "normal" }
+  { name: "gain", x: 58, y: 41, range: "normal" },
+  { name: "level1", x: 58, y: 106, range: "normal" },
+  { name: "pan1", x: 106, y: 106, range: "audio" },
+  { name: "level2", x: 58, y: 177, range: "normal" },
+  { name: "pan2", x: 106, y: 176, range: "audio" },
+  { name: "level3", x: 58, y: 282, range: "normal" }
 ]
 
 const inputs = [
-  { name: "i1", x: 4.5, y: 38, range: "audio" },
-  { name: "i2", x: 4.5, y: 61.33, range: "audio" },
-  { name: "i3l", x: 4.5, y: 86.33, range: "audio" },
-  { name: "i3r", x: 4.5, y: 104.66, range: "audio" },
-  { name: "pancv", x: 37.5, y: 80.5, range: "audio" }
+  { name: "i1", x: 13, y: 114, range: "audio" },
+  { name: "i2", x: 13, y: 184, range: "audio" },
+  { name: "i3l", x: 13, y: 259, range: "audio" },
+  { name: "i3r", x: 13, y: 314, range: "audio" },
+  { name: "pancv", x: 114, y: 243, range: "audio" }
 ]
 
 const setup = ({ controls, inputs }) => {

@@ -3,7 +3,6 @@ import * as R from "ramda"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
 import background from "./background.svg"
-import { ZOOM } from "../../../constants"
 import {
   dispatchAndPersist,
   createCable,
@@ -12,17 +11,17 @@ import {
 } from "../../../store/actions"
 import { getDB } from "../../../store/selectors"
 
-const CENTER = 3.3 * ZOOM
+const CENTER = 10
 
 const styles = {
   content: { position: "absolute" },
-  background: { width: 7 * ZOOM },
+  background: { width: 21 },
   handle: {
     top: 0,
     left: 0,
     position: "absolute",
-    width: ZOOM * 7,
-    height: ZOOM * 7,
+    width: 21,
+    height: 21,
     cursor: "pointer"
   }
 }
@@ -49,17 +48,14 @@ const Socket = ({
   dispatchAndPersist
 }) => {
   const [newCable] = useState({
-    x: x * ZOOM,
-    y: y * ZOOM,
+    x: x,
+    y: y,
     key: nextKey
   })
 
   return (
     <Fragment>
-      <div
-        className="draggable"
-        style={{ ...styles.content, left: x * ZOOM, top: y * ZOOM }}
-      >
+      <div className="draggable" style={{ ...styles.content, left: x, top: y }}>
         <img
           draggable={false}
           src={background}

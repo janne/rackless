@@ -2,7 +2,6 @@ import React from "react"
 import * as R from "ramda"
 import { DraggableCore } from "react-draggable"
 import background from "./background.svg"
-import { ZOOM } from "../../../constants"
 
 const CONTROL_DEGREES = 270
 
@@ -10,7 +9,7 @@ const Trimpot = ({
   x,
   y,
   id,
-  width = 12,
+  width = 36,
   range = "normal",
   name,
   value = 0,
@@ -38,7 +37,7 @@ const Trimpot = ({
   return (
     <div
       className="draggable"
-      style={{ ...styles.content, left: x * ZOOM, top: y * ZOOM }}
+      style={{ ...styles.content, left: x, top: y }}
       onDoubleClick={dblClickHandler}
     >
       <DraggableCore onDrag={dragHandler}>
@@ -47,7 +46,7 @@ const Trimpot = ({
           src={background}
           style={{
             ...styles.img,
-            width: width * ZOOM,
+            width,
             transform: `rotate(${
               range === "normal"
                 ? (value - 0.5) * CONTROL_DEGREES

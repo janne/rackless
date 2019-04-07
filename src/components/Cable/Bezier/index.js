@@ -1,9 +1,9 @@
 import React from "react"
-import { ZOOM, CABLE_SLACK } from "../../../constants"
+import { CABLE_SLACK } from "../../../constants"
 
 const Cable = ({ x1, y1, x2, y2, color }) => {
   const hang = Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK
-  const strokeWidth = 3 * ZOOM
+  const strokeWidth = 9
   const left = Math.min(x1, x2) - strokeWidth
   const top = Math.min(y1, y2) - strokeWidth
   const width = Math.abs(x2 - x1) + 2 * strokeWidth
