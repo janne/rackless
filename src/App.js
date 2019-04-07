@@ -61,49 +61,16 @@ const App = ({
     />
   )
 
-  const renderModuleMenu = type => (
-    <MenuItem
-      data={{ type }}
-      onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
-    >
-      {type}
-    </MenuItem>
-  )
-
-  return (
-    <Fragment>
-      <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
-        <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
-          {R.values(
-            R.mapObjIndexed(
-              (data, id) => (
-                <div key={id}>
-                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
-                    {renderModule(id, data)}
-                  </ContextMenuTrigger>
-                  <ContextMenu id={`${id}-menu`}>
-                    <MenuItem
-                      data={{ id }}
-                      onClick={(e, data) =>
-                        dispatchAndPersist(deleteModule(data.id))
-                      }
-                    >
-                      Delete
-                    </MenuItem>
-                  </ContextMenu>
-                </div>
-              ),
-              modules
-            )
-          )}
-          {R.values(
-            R.mapObjIndexed(
-              (props, id) => <Cable key={id} id={id} {...props} />,
-              cables
-            )
-          )}
-        </div>
-      </ContextMenuTrigger>
+  const renderRootMenu = () => {
+    const renderModuleMenu = type => (
+      <MenuItem
+        data={{ type }}
+        onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
+      >
+        {type}
+      </MenuItem>
+    )
+    return (
       <ContextMenu id="root-menu">
         <SubMenu title="Add module" hoverDelay={200}>
           {renderModuleMenu("Oscillator")}
@@ -118,6 +85,46 @@ const App = ({
           Open Reddit
         </MenuItem>
       </ContextMenu>
+    )
+  }
+
+  const renderModuleMenu = id => (
+    <ContextMenu id={`${id}-menu`}>
+      <MenuItem
+        data={{ id }}
+        onClick={(e, data) => dispatchAndPersist(deleteModule(data.id))}
+      >
+        Delete
+      </MenuItem>
+    </ContextMenu>
+  )
+
+  return (
+    <Fragment>
+      <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
+        <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
+          {R.values(
+            R.mapObjIndexed(
+              (data, id) => (
+                <div key={id}>
+                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
+                    {renderModule(id, data)}
+                  </ContextMenuTrigger>
+                  {renderModuleMenu(id)}
+                </div>
+              ),
+              modules
+            )
+          )}
+          {R.values(
+            R.mapObjIndexed(
+              (props, id) => <Cable key={id} id={id} {...props} />,
+              cables
+            )
+          )}
+        </div>
+      </ContextMenuTrigger>
+      {renderRootMenu()}
     </Fragment>
   )
 }
