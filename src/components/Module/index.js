@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import * as R from "ramda"
 import Plate from "./Plate"
 import Trimpot from "./Trimpot"
+import Switch from "./Switch"
 import Socket from "./Socket"
 import Instrument from "./Instrument"
 
@@ -38,15 +39,28 @@ const Module = ({
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
-      {controls.map((params, idx) => (
-        <Trimpot
-          {...params}
-          id={id}
-          value={values[params.name]}
-          setValue={setValue}
-          key={`control-${idx}`}
-        />
-      ))}
+      {controls.map((params, idx) => {
+        if (R.is(Array, params.range)) {
+          return (
+            <Switch
+              {...params}
+              id={id}
+              value={values[params.name]}
+              setValue={setValue}
+              key={`control-${idx}`}
+            />
+          )
+        }
+        return (
+          <Trimpot
+            {...params}
+            id={id}
+            value={values[params.name]}
+            setValue={setValue}
+            key={`control-${idx}`}
+          />
+        )
+      })}
 
       {inputs.map((params, idx) => (
         <Socket

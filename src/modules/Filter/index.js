@@ -12,7 +12,9 @@ const outputs = [{ name: "out", x: 57, y: 296, range: "frequency" }]
 
 const controls = [
   { name: "cutoff", x: 48, y: 166, range: "frequency" },
-  { name: "quality", x: 48, y: 223, range: "normal" }
+  { name: "quality", x: 48, y: 223, range: "normal" },
+  { name: "filterType", x: 30, y: 60, range: ["lowpass", "highpass"] },
+  { name: "slope", x: 30, y: 116, range: [-12, -24] }
 ]
 
 const setup = ({ inputs, outputs, controls }) => {

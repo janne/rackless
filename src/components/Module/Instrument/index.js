@@ -20,7 +20,9 @@ export default class extends Tone.Instrument {
     this.controls = {}
 
     controls.forEach(control => {
-      this.controls[control.name] = new Tone.Signal(0, ranges[control.range])
+      this.controls[control.name] = Array.isArray(control.range)
+        ? { value: control.range[0] }
+        : new Tone.Signal(0, ranges[control.range])
     })
 
     if (inputs.length === 1) {
