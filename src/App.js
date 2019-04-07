@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
@@ -100,32 +100,30 @@ const App = ({
   )
 
   return (
-    <Fragment>
-      <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
-        <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
-          {R.values(
-            R.mapObjIndexed(
-              (data, id) => (
-                <div key={id}>
-                  <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
-                    {renderModule(id, data)}
-                  </ContextMenuTrigger>
-                  {renderModuleMenu(id)}
-                </div>
-              ),
-              modules
-            )
-          )}
-          {R.values(
-            R.mapObjIndexed(
-              (props, id) => <Cable key={id} id={id} {...props} />,
-              cables
-            )
-          )}
-        </div>
-      </ContextMenuTrigger>
+    <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
+      <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
+        {R.values(
+          R.mapObjIndexed(
+            (data, id) => (
+              <div key={id}>
+                <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
+                  {renderModule(id, data)}
+                </ContextMenuTrigger>
+                {renderModuleMenu(id)}
+              </div>
+            ),
+            modules
+          )
+        )}
+        {R.values(
+          R.mapObjIndexed(
+            (props, id) => <Cable key={id} id={id} {...props} />,
+            cables
+          )
+        )}
+      </div>
       {renderRootMenu()}
-    </Fragment>
+    </ContextMenuTrigger>
   )
 }
 
