@@ -26,6 +26,8 @@ const Cable = ({
   outputSocket,
   inputSocket,
   disabled,
+  removeConnector,
+  dragConnector,
   dispatchAndPersist
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
@@ -70,15 +72,12 @@ const Cable = ({
     )
   })
 
-  const handleStart = connector => pos =>
-    dispatchAndPersist(removeConnector(id, connector, pos))
+  const handleStart = connector => pos => removeConnector(id, connector, pos)
 
-  const handleDrag = connector => pos =>
-    dispatchAndPersist(dragConnector(id, connector, pos))
+  const handleDrag = connector => pos => dragConnector(id, connector, pos)
 
-  const handleStop = connector => pos => {
+  const handleStop = connector => pos =>
     dispatchAndPersist(moveConnector(id, connector, pos))
-  }
 
   return (
     <Fragment>
@@ -126,7 +125,11 @@ const mapStateToProps = (
   return { x1, y1, x2, y2, from, to, drag }
 }
 
-const mapDispatchToProps = { dispatchAndPersist }
+const mapDispatchToProps = {
+  removeConnector,
+  dragConnector,
+  dispatchAndPersist
+}
 
 export default connect(
   mapStateToProps,
