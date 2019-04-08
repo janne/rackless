@@ -11,7 +11,7 @@ const disposeTone = t => {
 }
 
 export default class extends Tone.Instrument {
-  constructor(controls, inputs, outputs, setup) {
+  constructor(controls, inputs, outputs, setup, values) {
     super()
     this.createInsOuts(inputs.length, outputs.length)
 
@@ -21,8 +21,8 @@ export default class extends Tone.Instrument {
 
     controls.forEach(control => {
       this.controls[control.name] = Array.isArray(control.range)
-        ? { value: control.range[0] }
-        : new Tone.Signal(0, ranges[control.range])
+        ? { value: values[control.name] || control.range[0] }
+        : new Tone.Signal(values[control.name] || 0, ranges[control.range])
     })
 
     if (inputs.length === 1) {

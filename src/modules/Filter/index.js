@@ -19,12 +19,14 @@ const controls = [
 
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
-    filter: new Tone.Filter(),
+    filter: new Tone.Filter(controls.cutoff.value, controls.filterType.value),
     plusCutoff: new Tone.Add(),
     plusQuality: new Tone.Add(),
     audioToFrequency: new Tone.WaveShaper(x => 220 * Math.pow(2, x * 5)),
     multiply: new Tone.Multiply(20)
   }
+
+  tones.filter.rolloff = controls.slope.value
 
   controls.cutoff.connect(tones.plusCutoff, 0, 0)
   inputs.cutoff.connect(tones.plusCutoff, 0, 1)

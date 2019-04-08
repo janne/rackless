@@ -21,7 +21,7 @@ const Module = ({
   setup = () => {}
 }) => {
   useEffect(() => {
-    const instrument = new Instrument(controls, inputs, outputs, setup)
+    const instrument = new Instrument(controls, inputs, outputs, setup, values)
     setInstrument(id, instrument)
     setupValues(instrument, values)
   }, [])

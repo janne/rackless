@@ -19,7 +19,6 @@ const Switch = ({ x, y, id, name, range = [], value, setValue }) => {
     const index = R.findIndex(R.equals(currentValue), range)
     if (index >= 0) {
       const newIndex = (index + 1) % range.length
-      console.log(range[newIndex])
       setValue(id, name, range[newIndex])
     }
   }
