@@ -2,24 +2,25 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const controls = [
-  { name: "freq", x: 58, y: 74, range: "audio" },
-  { name: "fine", x: 106, y: 74, range: "audio" },
-  { name: "fmcv", x: 57, y: 160, range: "normal" },
-  { name: "pwmcv", x: 57, y: 238, range: "normal" },
-  { name: "pwidth", x: 105, y: 238, range: "audio" }
+  { name: "freq", x: 58, y: 54, range: "audio" },
+  { name: "fine", x: 105, y: 54, range: "audio" },
+  { name: "fmcv", x: 58, y: 135, range: "normal" },
+  { name: "pwmcv", x: 58, y: 218, range: "normal" },
+  { name: "pwidth", x: 105, y: 218, range: "audio" },
+  { name: "oscType", x: 107, y: 144, range: ["vco", "lfo"] }
 ]
 
 const inputs = [
-  { name: "voct", x: 13, y: 82, range: "normal" },
-  { name: "fm", x: 13, y: 168, range: "audio" },
-  { name: "pwm", x: 13, y: 246, range: "normal" }
+  { name: "voct", x: 13, y: 62, range: "normal" },
+  { name: "fm", x: 14, y: 143, range: "audio" },
+  { name: "pwm", x: 13, y: 226, range: "normal" }
 ]
 
 const outputs = [
-  { name: "sine", x: 13, y: 320, range: "frequency" },
-  { name: "triangle", x: 47, y: 320, range: "frequency" },
-  { name: "sawtooth", x: 81, y: 320, range: "frequency" },
-  { name: "square", x: 114, y: 320, range: "frequency" }
+  { name: "sine", x: 14, y: 317, range: "frequency" },
+  { name: "triangle", x: 48, y: 317, range: "frequency" },
+  { name: "sawtooth", x: 82, y: 317, range: "frequency" },
+  { name: "square", x: 115, y: 317, range: "frequency" }
 ]
 
 const setup = ({ controls, inputs, outputs }) => {
@@ -61,7 +62,12 @@ const setup = ({ controls, inputs, outputs }) => {
     plusVoct.connect(plusFm, 0, 0)
     scaledFm.connect(plusFm, 0, 1)
 
-    tones.audioToFrequency = new Tone.WaveShaper(x => 220 * Math.pow(2, x * 5))
+    const baseFreq =
+      controls.oscType.value === "vco" ? 220 : 220 * Math.pow(2, -10)
+
+    tones.audioToFrequency = new Tone.WaveShaper(
+      x => baseFreq * Math.pow(2, x * 5)
+    )
     plusFm.chain(tones.audioToFrequency, tones[type].frequency)
 
     const output = outputs[type]
