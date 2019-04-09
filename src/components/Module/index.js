@@ -20,15 +20,24 @@ const Module = ({
   outputs = [],
   setup = () => {}
 }) => {
+  const [rangeControls, otherControls] = R.partition(
+    R.compose(
+      R.is(Array),
+      R.prop("range")
+    ),
+    controls
+  )
+
   useEffect(() => {
     const instrument = new Instrument(controls, inputs, outputs, setup, values)
     setInstrument(id, instrument)
     setupValues(instrument, values)
-  }, [])
+    return () => instrument.dispose()
+  }, rangeControls.map(control => values[control.name]))
 
   useEffect(() => {
     setupValues(instrument, values)
-  }, controls.map(control => values[control.name]))
+  }, otherControls.map(control => values[control.name]))
 
   const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
