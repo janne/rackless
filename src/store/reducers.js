@@ -121,7 +121,6 @@ export default (state = initialState, action) => {
 
     case DELETE_MODULE: {
       const { id } = action.payload
-      state.instruments[id].dispose()
       return {
         ...state,
         modules: R.dissoc(id, state.modules),
