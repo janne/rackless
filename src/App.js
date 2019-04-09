@@ -90,10 +90,7 @@ const App = ({
     return (
       <ContextMenu id="root-menu">
         <SubMenu title="Add module" hoverDelay={200}>
-          {renderModuleMenu("Oscillator")}
-          {renderModuleMenu("Noise")}
-          {renderModuleMenu("Filter")}
-          {renderModuleMenu("Output")}
+          {R.map(renderModuleMenu, R.keys(moduleTypes))}
         </SubMenu>
         <MenuItem divider />
         <MenuItem
