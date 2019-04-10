@@ -27,14 +27,19 @@ export const fetchPatch = () => {
   }
 }
 
+let debouncer
 export const dispatchAndPersist = action => {
   return (dispatch, getState) => {
     dispatch(action)
-    const state = getState()
-    const uid = getUser(state)
-    getDB(state)
-      .ref(`/patches/${uid}`)
-      .set(getPatch(state))
+    if (debouncer) return
+    debouncer = setTimeout(() => {
+      debouncer = null
+      const state = getState()
+      const uid = getUser(state)
+      getDB(state)
+        .ref(`/patches/${uid}`)
+        .set(getPatch(state))
+    }, 1000)
   }
 }
 
