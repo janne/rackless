@@ -58,15 +58,20 @@ export const setInstrument = (id, instrument) => ({
   payload: { id, instrument }
 })
 
-export const createCable = (id, moduleId, socketId, color) => ({
-  type: CREATE_CABLE,
-  payload: {
-    id,
-    outputModule: moduleId,
-    outputSocket: socketId,
-    color
+export const createCable = (id, moduleId, socketId, direction, color) => {
+  const socket =
+    direction === "outputs"
+      ? { outputModule: moduleId, outputSocket: socketId }
+      : { inputModule: moduleId, inputSocket: socketId }
+  return {
+    type: CREATE_CABLE,
+    payload: {
+      id,
+      color,
+      ...socket
+    }
   }
-})
+}
 
 export const setValue = (id, name, value) => ({
   type: SET_VALUE,

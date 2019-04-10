@@ -53,6 +53,7 @@ const Socket = ({
     y: y,
     key: nextKey
   })
+  const toDirection = direction === "outputs" ? "inputs" : "outputs"
 
   return (
     <Fragment>
@@ -64,26 +65,30 @@ const Socket = ({
           alt="Socket"
         />
       </div>
-      {direction === "outputs" && (
-        <Draggable
-          position={R.pick(["x", "y"], newCable)}
-          onStart={(e, data) => {
-            dispatchAndPersist(
-              createCable(newCable.key, moduleId, socketId, randomColor())
+      <Draggable
+        position={R.pick(["x", "y"], newCable)}
+        onStart={(e, data) => {
+          dispatchAndPersist(
+            createCable(
+              newCable.key,
+              moduleId,
+              socketId,
+              direction,
+              randomColor()
             )
-          }}
-          onDrag={(e, data) => {
-            const pos = { x: e.x - CENTER, y: e.y - CENTER }
-            dragConnector(newCable.key, "inputs", pos)
-          }}
-          onStop={(e, data) => {
-            const pos = { x: e.x - CENTER, y: e.y - CENTER }
-            dispatchAndPersist(moveConnector(newCable.key, "inputs", pos))
-          }}
-        >
-          <div className="draggable" style={styles.handle} />
-        </Draggable>
-      )}
+          )
+        }}
+        onDrag={e => {
+          const pos = { x: e.x - CENTER, y: e.y - CENTER }
+          dragConnector(newCable.key, toDirection, pos)
+        }}
+        onStop={e => {
+          const pos = { x: e.x - CENTER, y: e.y - CENTER }
+          dispatchAndPersist(moveConnector(newCable.key, toDirection, pos))
+        }}
+      >
+        <div className="draggable" style={styles.handle} />
+      </Draggable>
     </Fragment>
   )
 }

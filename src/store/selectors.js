@@ -16,6 +16,7 @@ export const getSockets = (moduleId, direction, state) => {
 }
 
 export const socketToPos = (moduleId, direction, socketId, state) => {
+  if (R.isNil(moduleId) || R.isNil(socketId)) return {}
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   const socket = getSockets(moduleId, direction, state)[socketId]
   return {

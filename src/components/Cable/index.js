@@ -110,18 +110,14 @@ const mapStateToProps = (
   state,
   { outputModule, outputSocket, inputModule, inputSocket, id }
 ) => {
-  const { x: x1, y: y1 } = socketToPos(
-    outputModule,
-    "outputs",
-    outputSocket,
-    state
-  )
-  const { x: x2, y: y2 } = R.isNil(inputSocket)
-    ? { x: x1, y: y1 }
-    : socketToPos(inputModule, "inputs", inputSocket, state)
+  const fromPos = socketToPos(outputModule, "outputs", outputSocket, state)
+  const toPos = socketToPos(inputModule, "inputs", inputSocket, state)
+
   const from = R.path(["instruments", outputModule], state)
   const to = R.path(["instruments", inputModule], state)
   const drag = R.path(["cables", id, "drag"], state)
+  const { x: x1, y: y1 } = R.isEmpty(fromPos) ? toPos : fromPos
+  const { x: x2, y: y2 } = R.isEmpty(toPos) ? fromPos : toPos
   return { x1, y1, x2, y2, from, to, drag }
 }
 
