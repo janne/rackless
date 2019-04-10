@@ -45,6 +45,7 @@ const Socket = ({
   moduleId,
   socketId,
   direction,
+  dragConnector,
   dispatchAndPersist
 }) => {
   const [newCable] = useState({
@@ -73,7 +74,7 @@ const Socket = ({
           }}
           onDrag={(e, data) => {
             const pos = { x: e.x - CENTER, y: e.y - CENTER }
-            dispatchAndPersist(dragConnector(newCable.key, "inputs", pos))
+            dragConnector(newCable.key, "inputs", pos)
           }}
           onStop={(e, data) => {
             const pos = { x: e.x - CENTER, y: e.y - CENTER }
@@ -94,7 +95,10 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = { dispatchAndPersist }
+const mapDispatchToProps = {
+  dispatchAndPersist,
+  dragConnector
+}
 
 export default connect(
   mapStateToProps,
