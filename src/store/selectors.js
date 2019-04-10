@@ -47,9 +47,6 @@ export const findFreePos = (neededSpace = 10, state) => {
   const intervalTree = new IntervalTree()
 
   const hpPerRow = Math.floor(window.innerWidth / HP_PIX)
-  console.log({ hpPerRow })
-
-  console.log({ values: R.values(R.prop("modules", state)) })
 
   const values = R.map(
     m => ({
@@ -65,11 +62,9 @@ export const findFreePos = (neededSpace = 10, state) => {
     if (R.isEmpty(intervalTree.search(i, i + neededSpace - 1))) {
       const row = Math.floor(i / hpPerRow)
       const col = i % hpPerRow
-      console.log("Found!", { col, row })
       return { col, row }
     }
   }
 
-  console.log("Nope")
   return { col: 0, row: 0 }
 }
