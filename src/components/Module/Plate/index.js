@@ -1,7 +1,11 @@
 import React from "react"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
-import { dispatchAndPersist, moveModule } from "../../../store/actions"
+import {
+  dispatchAndPersist,
+  moveModule,
+  setValue
+} from "../../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
 const Plate = ({
@@ -10,6 +14,7 @@ const Plate = ({
   row,
   background,
   children,
+  setValue,
   dispatchAndPersist
 }) => {
   const styles = {
@@ -37,6 +42,9 @@ const Plate = ({
           draggable={false}
           src={background}
           style={styles.background}
+          onLoad={e =>
+            setValue(moduleId, "hp", Math.round(e.target.width / HP_PIX))
+          }
           alt=""
         />
         {children}
@@ -45,7 +53,7 @@ const Plate = ({
   )
 }
 
-const mapDispatchToProps = { dispatchAndPersist }
+const mapDispatchToProps = { dispatchAndPersist, setValue }
 
 export default connect(
   null,

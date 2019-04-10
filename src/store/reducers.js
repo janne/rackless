@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import { socketAtPos, getDB } from "./selectors"
+import { socketAtPos, getDB, findFreePos } from "./selectors"
 import {
   SET_VALUE,
   SET_INSTRUMENT,
@@ -116,7 +116,8 @@ export default (state = initialState, action) => {
       const { type } = action.payload
       const ref = getDB(state).ref()
       const key = ref.child("modules").push().key
-      return R.assocPath(["modules", key], { type, col: 0, row: 0 }, state)
+      const pos = findFreePos(10, state)
+      return R.assocPath(["modules", key], { type, ...pos }, state)
     }
 
     case DELETE_MODULE: {
