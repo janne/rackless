@@ -41,9 +41,11 @@ const Module = ({
 
   const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
-    controls.forEach(
-      ({ name }) => (instrument.controls[name].value = values[name] || 0)
-    )
+    controls.forEach(({ name, range }) => {
+      const defaultValue = range === "normal" ? 0.5 : 0
+      const value = R.isNil(values[name]) ? defaultValue : values[name]
+      instrument.controls[name].value = value
+    })
   }
 
   return (

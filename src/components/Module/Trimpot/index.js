@@ -12,9 +12,11 @@ const Trimpot = ({
   width = 36,
   range = "normal",
   name,
-  value = 0,
+  value,
   setValue
 }) => {
+  const currentValue = R.isNil(value) ? (range === "normal" ? 0.5 : 0) : value
+
   const styles = {
     content: { position: "absolute", cursor: "pointer" }
   }
@@ -26,13 +28,13 @@ const Trimpot = ({
       R.clamp(
         range === "normal" ? 0 : -1,
         1,
-        value + (data.deltaX - data.deltaY) / 300
+        currentValue + (data.deltaX - data.deltaY) / 300
       )
     )
     e.preventDefault()
   }
 
-  const dblClickHandler = e => setValue(id, name, 0)
+  const dblClickHandler = e => setValue(id, name, range === "normal" ? 0.5 : 0)
 
   return (
     <div
@@ -49,8 +51,8 @@ const Trimpot = ({
             width,
             transform: `rotate(${
               range === "normal"
-                ? (value - 0.5) * CONTROL_DEGREES
-                : value * (CONTROL_DEGREES / 2)
+                ? (currentValue - 0.5) * CONTROL_DEGREES
+                : currentValue * (CONTROL_DEGREES / 2)
             }deg)`
           }}
           alt="Trimpot"

@@ -1,4 +1,5 @@
 import Tone from "tone"
+import * as R from "ramda"
 
 const ranges = {
   audio: Tone.Type.AudioRange,
@@ -20,9 +21,18 @@ export default class extends Tone.Instrument {
     this.controls = {}
 
     controls.forEach(control => {
-      this.controls[control.name] = Array.isArray(control.range)
-        ? { value: values[control.name] || control.range[0] }
-        : new Tone.Signal(values[control.name] || 0, ranges[control.range])
+      if (Array.isArray(control.range)) {
+        const value = R.isNil(values[control.name])
+          ? control.range[0]
+          : values[control.name]
+        this.controls[control.name] = { value }
+        return
+      }
+      const defaultValue = control.range === "normal" ? 0.5 : 0
+      this.controls[control.name] = new Tone.Signal(
+        R.isNil(values[control.name]) ? defaultValue : values[control.name],
+        ranges[control.range]
+      )
     })
 
     if (inputs.length === 1) {
