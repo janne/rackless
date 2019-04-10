@@ -11,10 +11,10 @@ const controls = [
 ]
 
 const inputs = [
-  { name: "i1", x: 13, y: 114, range: "audio" },
-  { name: "i2", x: 13, y: 184, range: "audio" },
-  { name: "i3l", x: 13, y: 259, range: "audio" },
-  { name: "i3r", x: 13, y: 314, range: "audio" },
+  { name: "input1", x: 13, y: 114, range: "audio" },
+  { name: "input2", x: 13, y: 184, range: "audio" },
+  { name: "input3left", x: 13, y: 259, range: "audio" },
+  { name: "input3right", x: 13, y: 314, range: "audio" },
   { name: "pancv", x: 114, y: 243, range: "audio" }
 ]
 
@@ -36,16 +36,16 @@ const setup = ({ controls, inputs }) => {
   tones.masterGain.connect(Tone.Master)
   controls.level1.connect(tones.gain1.gain)
   controls.pan1.connect(tones.panner1.pan)
-  inputs.i1.chain(tones.gain1, tones.panner1, tones.masterGain)
+  inputs.input1.chain(tones.gain1, tones.panner1, tones.masterGain)
   controls.level2.connect(tones.gain2.gain)
   controls.pan2.connect(tones.pan2adder)
   inputs.pancv.connect(tones.pan2adder)
   tones.pan2adder.connect(tones.panner2.pan)
-  inputs.i2.chain(tones.gain2, tones.panner2, tones.masterGain)
+  inputs.input2.chain(tones.gain2, tones.panner2, tones.masterGain)
   controls.level3.connect(tones.gain3l.gain)
-  inputs.i3l.chain(tones.gain3l, tones.panner3l, tones.masterGain)
+  inputs.input3left.chain(tones.gain3l, tones.panner3l, tones.masterGain)
   controls.level3.connect(tones.gain3r.gain)
-  inputs.i3r.chain(tones.gain3r, tones.panner3r, tones.masterGain)
+  inputs.input3right.chain(tones.gain3r, tones.panner3r, tones.masterGain)
 
   return () => Object.values(tones).forEach(t => t.dispose())
 }
