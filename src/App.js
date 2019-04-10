@@ -81,6 +81,7 @@ const App = ({
   const renderRootMenu = () => {
     const renderModuleMenu = type => (
       <MenuItem
+        key={type}
         data={{ type }}
         onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
       >
