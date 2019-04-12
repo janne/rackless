@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
+import * as R from "ramda"
 import { connect } from "react-redux"
-import Draggable from "react-draggable"
+import { DraggableCore } from "react-draggable"
 import {
   dispatchAndPersist,
   moveModule,
@@ -10,8 +11,8 @@ import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
 const Plate = ({
   moduleId,
-  col,
-  row,
+  moduleX,
+  moduleY,
   background,
   children,
   setValue,
@@ -24,20 +25,35 @@ const Plate = ({
     }
   }
 
+  const [drag, setDrag] = useState(null)
+
+  const dragStart = (e, data) => {
+    setDrag({ x: data.x - moduleX, y: data.y - moduleY })
+  }
+
+  const dragEnd = () => setDrag(null)
+
   const dragHandler = (e, data) => {
-    const newCol = data.x / HP_PIX
-    const newRow = data.y / HEIGHT_PIX
+    const newCol = Math.round((data.x - R.propOr(0, "x", drag)) / HP_PIX)
+    const newRow = Math.round((data.y - R.propOr(0, "y", drag)) / HEIGHT_PIX)
     dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
   return (
-    <Draggable
+    <DraggableCore
       grid={[HP_PIX, HEIGHT_PIX]}
+      onStart={dragStart}
       onDrag={dragHandler}
-      position={{ x: col * HP_PIX, y: row * HEIGHT_PIX }}
+      onEnd={dragEnd}
       cancel=".draggable"
     >
-      <div onDrag={dragHandler} style={styles.content}>
+      <div
+        style={{
+          ...styles.content,
+          left: moduleX,
+          top: moduleY
+        }}
+      >
         <img
           draggable={false}
           src={background}
@@ -49,13 +65,20 @@ const Plate = ({
         />
         {children}
       </div>
-    </Draggable>
+    </DraggableCore>
   )
 }
 
+const mapStateToProps = (state, { moduleId }) => {
+  const { row, col } = R.pathOr({}, ["modules", moduleId], state)
+  return {
+    moduleX: Math.round(col * HP_PIX),
+    moduleY: Math.round(row * HEIGHT_PIX)
+  }
+}
 const mapDispatchToProps = { dispatchAndPersist, setValue }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Plate)
