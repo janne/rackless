@@ -61,7 +61,7 @@ const Cable = ({
       if (output.stop) output.stop()
       from.disconnect(outputNum)
     }
-  }, [from, to, outputSocket, inputSocket])
+  }, [from, to, outputSocket, inputSocket, disabled])
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 
