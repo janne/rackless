@@ -43,25 +43,29 @@ export const socketAtPos = ({ x, y }, direction, state) => {
   return null
 }
 
-export const findFreePos = (neededSpace = 10, state) => {
+const hpPerRow = () => Math.floor(window.innerWidth / HP_PIX)
+
+export const intervalTree = state => {
   const intervalTree = new IntervalTree()
 
-  const hpPerRow = Math.floor(window.innerWidth / HP_PIX)
-
-  const values = R.map(
+  R.map(
     m => ({
-      pos: Math.round(m.row * hpPerRow + m.col),
+      pos: Math.round(m.row * hpPerRow() + m.col),
       hp: m.hp
     }),
     R.values(R.prop("modules", state))
-  )
+  ).forEach(m => intervalTree.insert(m.pos, m.pos + m.hp - 1))
 
-  values.forEach(m => intervalTree.insert(m.pos, m.pos + m.hp - 1))
+  return intervalTree
+}
+
+export const findFreePos = (neededSpace = 10, state) => {
+  const tree = intervalTree(state)
 
   for (let i of R.range(0, 1000)) {
-    if (R.isEmpty(intervalTree.search(i, i + neededSpace - 1))) {
-      const row = Math.floor(i / hpPerRow)
-      const col = i % hpPerRow
+    if (R.isEmpty(tree.search(i, i + neededSpace - 1))) {
+      const row = Math.floor(i / hpPerRow())
+      const col = i % hpPerRow()
       return { col, row }
     }
   }
