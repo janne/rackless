@@ -10,8 +10,7 @@ import {
   moveConnector
 } from "../../../store/actions"
 import { getDB } from "../../../store/selectors"
-
-const CENTER = 10
+import { HP_PIX, HEIGHT_PIX } from "../../../constants"
 
 const styles = {
   content: { position: "absolute" },
@@ -42,6 +41,8 @@ const Socket = ({
   nextKey,
   x,
   y,
+  moduleX,
+  moduleY,
   moduleId,
   socketId,
   direction,
@@ -78,12 +79,18 @@ const Socket = ({
             )
           )
         }}
-        onDrag={e => {
-          const pos = { x: e.x - CENTER, y: e.y - CENTER }
+        onDrag={(e, data) => {
+          const pos = {
+            x: data.x + moduleX,
+            y: data.y + moduleY
+          }
           dragConnector(newCable.key, toDirection, pos)
         }}
-        onStop={e => {
-          const pos = { x: e.x - CENTER, y: e.y - CENTER }
+        onStop={(e, data) => {
+          const pos = {
+            x: data.x + moduleX,
+            y: data.y + moduleY
+          }
           dispatchAndPersist(moveConnector(newCable.key, toDirection, pos))
         }}
       >
@@ -93,9 +100,12 @@ const Socket = ({
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { moduleId }) => {
   const ref = getDB(state).ref()
+  const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   return {
+    moduleX: col * HP_PIX,
+    moduleY: row * HEIGHT_PIX,
     nextKey: ref.child("cables").push().key
   }
 }
