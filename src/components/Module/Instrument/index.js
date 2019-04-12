@@ -11,48 +11,51 @@ const disposeTone = t => {
   if (t.dispose) t.dispose()
 }
 
+const length = R.compose(
+  R.length,
+  R.keys
+)
+
 export default class extends Tone.Instrument {
   constructor(controls, inputs, outputs, setup, values) {
     super()
-    this.createInsOuts(inputs.length, outputs.length)
+    this.createInsOuts(length(inputs), length(outputs))
 
     this.inputs = {}
     this.outputs = {}
     this.controls = {}
 
-    controls.forEach(control => {
+    R.mapObjIndexed((control, name) => {
       if (Array.isArray(control.range)) {
-        const value = R.isNil(values[control.name])
-          ? control.range[0]
-          : values[control.name]
-        this.controls[control.name] = { value }
+        const value = R.isNil(values[name]) ? control.range[0] : values[name]
+        this.controls[name] = { value }
         return
       }
       const defaultValue = control.range === "normal" ? 0.5 : 0
-      this.controls[control.name] = new Tone.Signal(
-        R.isNil(values[control.name]) ? defaultValue : values[control.name],
+      this.controls[name] = new Tone.Signal(
+        R.isNil(values[name]) ? defaultValue : values[name],
         ranges[control.range]
       )
-    })
+    }, controls)
 
-    if (inputs.length === 1) {
-      const name = inputs[0].name
+    if (length(inputs) === 1) {
+      const name = R.head(R.keys(inputs))
       this.inputs[name] = this.input
     } else {
-      inputs.forEach((i, socketId) => {
-        this.inputs[i.name] = new Tone.Signal(0, ranges[i.range])
-        this.input[socketId] = this.inputs[i.name]
-      })
+      R.addIndex(R.mapObjIndexed)((i, socketId, _, idx) => {
+        this.inputs[socketId] = new Tone.Signal(0, ranges[i.range])
+        this.input[idx] = this.inputs[socketId]
+      }, inputs)
     }
 
-    if (outputs.length === 1) {
-      const name = outputs[0].name
+    if (length(outputs) === 1) {
+      const name = R.head(R.keys(outputs))
       this.outputs[name] = this.output
     } else {
-      outputs.forEach((o, socketId) => {
-        this.outputs[o.name] = new Tone.Signal(0, ranges[o.range])
-        this.output[socketId] = this.outputs[o.name]
-      })
+      R.addIndex(R.mapObjIndexed)((o, socketId, _, idx) => {
+        this.outputs[socketId] = new Tone.Signal(0, ranges[o.range])
+        this.output[idx] = this.outputs[socketId]
+      }, outputs)
     }
 
     this.setupCallback = setup({

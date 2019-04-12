@@ -37,40 +37,31 @@ const Cable = ({
   const inX = R.prop("connector", drag) === "inputs" ? drag.pos.x : x2
   const inY = R.prop("connector", drag) === "inputs" ? drag.pos.y : y2
 
-  const connect = (output, outputPort, input, inputPort) => {
-    if (output.numberOfOutputs === 0 || input.numberOfInputs === 0) return
-    const outputNum =
-      Number(outputPort) < output.numberOfOutputs ? Number(outputPort) : 0
-    const inputNum =
-      Number(inputPort) < input.numberOfInputs ? Number(inputPort) : 0
-    const start = (output.numberOfOutputs === 1
-      ? output.output
-      : output.output[outputPort]
-    ).start
-    if (start) start()
-
-    output.connect(input, outputNum, inputNum)
-    return () => {
-      if (R.isNil(output.output)) return
-      const stop = (output.numberOfOutputs === 1
-        ? output.output
-        : output.output[outputPort]
-      ).stop
-      if (stop) stop()
-      output.disconnect(outputNum)
-    }
-  }
-
   useEffect(() => {
     if (disabled || !from || !to) return
+    if (from.numberOfOutputs === 0 || to.numberOfInputs === 0) return
 
-    return connect(
-      from,
-      outputSocket,
-      to,
-      inputSocket
-    )
-  })
+    const outputNum =
+      from.numberOfOutputs === 1
+        ? 0
+        : R.findIndex(o => o === from.outputs[outputSocket], from.output)
+    const inputNum =
+      to.numberOfInputs === 1
+        ? 0
+        : R.findIndex(o => o === to.inputs[inputSocket], to.input)
+
+    const output =
+      from.numberOfOutputs === 1 ? from.output : from.outputs[outputSocket]
+    if (output.start) output.start()
+
+    from.connect(to, outputNum, inputNum)
+
+    return () => {
+      if (R.isNil(from.output)) return
+      if (output.stop) output.stop()
+      from.disconnect(outputNum)
+    }
+  }, [from, to, outputSocket, inputSocket])
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 

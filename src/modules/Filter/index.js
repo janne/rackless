@@ -2,20 +2,22 @@ import Tone from "tone"
 
 import background from "./background.svg"
 
-const inputs = [
-  { name: "cutoff", x: 10, y: 175, range: "frequency" },
-  { name: "quality", x: 10, y: 232, range: "normal" },
-  { name: "in", x: 10, y: 296, range: "frequency" }
-]
+const inputs = {
+  cutoff: { x: 10, y: 175, range: "frequency" },
+  quality: { x: 10, y: 232, range: "normal" },
+  in: { x: 10, y: 296, range: "frequency" }
+}
 
-const outputs = [{ name: "out", x: 57, y: 296, range: "frequency" }]
+const outputs = {
+  out: { x: 57, y: 296, range: "frequency" }
+}
 
-const controls = [
-  { name: "cutoff", x: 48, y: 166, range: "frequency" },
-  { name: "quality", x: 48, y: 223, range: "normal" },
-  { name: "filterType", x: 30, y: 60, range: ["lowpass", "highpass"] },
-  { name: "slope", x: 30, y: 116, range: [-12, -24] }
-]
+const controls = {
+  cutoff: { x: 48, y: 166, range: "frequency" },
+  quality: { x: 48, y: 223, range: "normal" },
+  filterType: { x: 30, y: 60, range: ["lowpass", "highpass"] },
+  slope: { x: 30, y: 116, range: [-12, -24] }
+}
 
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {

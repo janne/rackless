@@ -1,27 +1,27 @@
 import Tone from "tone"
 import background from "./background.svg"
 
-const controls = [
-  { name: "freq", x: 58, y: 54, range: "audio" },
-  { name: "fine", x: 105, y: 54, range: "audio" },
-  { name: "fmcv", x: 58, y: 135, range: "normal" },
-  { name: "pwmcv", x: 58, y: 218, range: "normal" },
-  { name: "pwidth", x: 105, y: 218, range: "audio" },
-  { name: "oscType", x: 107, y: 144, range: ["vco", "lfo"] }
-]
+const controls = {
+  freq: { x: 58, y: 54, range: "audio" },
+  fine: { x: 105, y: 54, range: "audio" },
+  fmcv: { x: 58, y: 135, range: "normal" },
+  pwmcv: { x: 58, y: 218, range: "normal" },
+  pwidth: { x: 105, y: 218, range: "audio" },
+  oscType: { x: 107, y: 144, range: ["vco", "lfo"] }
+}
 
-const inputs = [
-  { name: "voct", x: 13, y: 62, range: "normal" },
-  { name: "fm", x: 14, y: 143, range: "audio" },
-  { name: "pwm", x: 13, y: 226, range: "normal" }
-]
+const inputs = {
+  voct: { x: 13, y: 62, range: "normal" },
+  fm: { x: 14, y: 143, range: "audio" },
+  pwm: { x: 13, y: 226, range: "normal" }
+}
 
-const outputs = [
-  { name: "sine", x: 14, y: 317, range: "frequency" },
-  { name: "triangle", x: 48, y: 317, range: "frequency" },
-  { name: "sawtooth", x: 82, y: 317, range: "frequency" },
-  { name: "square", x: 115, y: 317, range: "frequency" }
-]
+const outputs = {
+  sine: { x: 14, y: 317, range: "frequency" },
+  triangle: { x: 48, y: 317, range: "frequency" },
+  sawtooth: { x: 82, y: 317, range: "frequency" },
+  square: { x: 115, y: 317, range: "frequency" }
+}
 
 const setup = ({ controls, inputs, outputs }) => {
   const types = ["sine", "triangle", "sawtooth", "square"]

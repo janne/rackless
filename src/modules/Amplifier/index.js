@@ -1,25 +1,25 @@
 import Tone from "tone"
 import background from "./background.svg"
 
-const controls = [
-  { name: "level1", x: 47, y: 37, range: "normal" },
-  { name: "level2", x: 47, y: 180, range: "normal" }
-]
+const controls = {
+  level1: { x: 47, y: 37, range: "normal" },
+  level2: { x: 47, y: 180, range: "normal" }
+}
 
-const inputs = [
-  { name: "cv1", x: 10, y: 46, range: "normal" },
-  { name: "input1", x: 10, y: 102, range: "audio" },
-  { name: "cv2", x: 10, y: 189, range: "normal" },
-  { name: "input2", x: 10, y: 245, range: "audio" }
-]
+const inputs = {
+  cv1: { x: 10, y: 46, range: "normal" },
+  cv2: { x: 10, y: 189, range: "normal" },
+  input1: { x: 10, y: 102, range: "audio" },
+  input2: { x: 10, y: 245, range: "audio" }
+}
 
-const outputs = [
-  { name: "output1", x: 56, y: 102, range: "audio" },
-  { name: "output2", x: 56, y: 245, range: "audio" },
-  { name: "mix", x: 56, y: 315, range: "audio" }
-]
+const outputs = {
+  output1: { x: 56, y: 102, range: "audio" },
+  output2: { x: 56, y: 245, range: "audio" },
+  mix: { x: 56, y: 315, range: "audio" }
+}
 
-const setup = ({ inputs, outputs, controls, background }) => {
+const setup = ({ inputs, outputs, controls }) => {
   const tones = {}
 
   tones.gain1 = new Tone.Gain()

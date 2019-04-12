@@ -2,11 +2,11 @@ import Tone from "tone"
 
 import background from "./background.svg"
 
-const outputs = [
-  { name: "white", x: 4, y: 65, range: "audio" },
-  { name: "brown", x: 4, y: 163, range: "audio" },
-  { name: "pink", x: 4, y: 260, range: "audio" }
-]
+const outputs = {
+  white: { x: 4, y: 65, range: "audio" },
+  brown: { x: 4, y: 163, range: "audio" },
+  pink: { x: 4, y: 260, range: "audio" }
+}
 
 const setup = ({ outputs }) => {
   const tones = {

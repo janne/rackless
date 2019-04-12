@@ -30,15 +30,15 @@ export const socketAtPos = ({ x, y }, direction, state) => {
   for (let moduleId of R.keys(state.modules)) {
     const { col, row } = state.modules[moduleId]
     const sockets = getSockets(moduleId, direction, state)
-    const socketId = R.findIndex(
+    const socketId = R.find(
       socket =>
-        x > col * HP_PIX + socket.x - WIDTH &&
-        x < col * HP_PIX + socket.x + WIDTH &&
-        y > row * HEIGHT_PIX + socket.y - WIDTH &&
-        y < row * HEIGHT_PIX + socket.y + WIDTH,
-      sockets
+        x > col * HP_PIX + sockets[socket].x - WIDTH &&
+        x < col * HP_PIX + sockets[socket].x + WIDTH &&
+        y > row * HEIGHT_PIX + sockets[socket].y - WIDTH &&
+        y < row * HEIGHT_PIX + sockets[socket].y + WIDTH,
+      R.keys(sockets)
     )
-    if (socketId !== -1) return { moduleId, socketId }
+    if (Boolean(socketId)) return { moduleId, socketId }
   }
   return null
 }

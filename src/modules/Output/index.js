@@ -1,22 +1,22 @@
 import Tone from "tone"
 import background from "./background.svg"
 
-const controls = [
-  { name: "gain", x: 58, y: 41, range: "normal" },
-  { name: "level1", x: 58, y: 106, range: "normal" },
-  { name: "pan1", x: 106, y: 106, range: "audio" },
-  { name: "level2", x: 58, y: 177, range: "normal" },
-  { name: "pan2", x: 106, y: 176, range: "audio" },
-  { name: "level3", x: 58, y: 282, range: "normal" }
-]
+const controls = {
+  gain: { x: 58, y: 41, range: "normal" },
+  level1: { x: 58, y: 106, range: "normal" },
+  pan1: { x: 106, y: 106, range: "audio" },
+  level2: { x: 58, y: 177, range: "normal" },
+  pan2: { x: 106, y: 176, range: "audio" },
+  level3: { x: 58, y: 282, range: "normal" }
+}
 
-const inputs = [
-  { name: "input1", x: 13, y: 114, range: "audio" },
-  { name: "input2", x: 13, y: 184, range: "audio" },
-  { name: "input3left", x: 13, y: 259, range: "audio" },
-  { name: "input3right", x: 13, y: 314, range: "audio" },
-  { name: "pancv", x: 114, y: 243, range: "audio" }
-]
+const inputs = {
+  input1: { x: 13, y: 114, range: "audio" },
+  input2: { x: 13, y: 184, range: "audio" },
+  input3left: { x: 13, y: 259, range: "audio" },
+  input3right: { x: 13, y: 314, range: "audio" },
+  pancv: { x: 114, y: 243, range: "audio" }
+}
 
 const setup = ({ controls, inputs }) => {
   const tones = {

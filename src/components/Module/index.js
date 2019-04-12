@@ -28,70 +28,86 @@ const Module = ({
     controls
   )
 
+  const getValue = R.flip(R.prop)(values)
+
   useEffect(() => {
     const instrument = new Instrument(controls, inputs, outputs, setup, values)
     setInstrument(id, instrument)
     setupValues(instrument, values)
     return () => instrument.dispose()
-  }, rangeControls.map(control => values[control.name]))
+  }, R.keys(rangeControls).map(getValue))
 
   useEffect(() => {
     setupValues(instrument, values)
-  }, otherControls.map(control => values[control.name]))
+  }, R.keys(otherControls).map(getValue))
 
   const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
-    controls.forEach(({ name, range }) => {
+    R.mapObjIndexed(({ range }, name) => {
       const defaultValue = range === "normal" ? 0.5 : 0
       const value = R.isNil(values[name]) ? defaultValue : values[name]
       instrument.controls[name].value = value
-    })
+    }, controls)
   }
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
-      {controls.map((params, idx) => {
-        if (R.is(Array, params.range)) {
+      {R.values(
+        R.mapObjIndexed((params, name) => {
+          if (R.is(Array, params.range)) {
+            return (
+              <Switch
+                {...params}
+                id={id}
+                name={name}
+                value={values[name]}
+                setValue={setValue}
+                key={`control-${name}`}
+              />
+            )
+          }
           return (
-            <Switch
+            <Trimpot
               {...params}
               id={id}
-              value={values[params.name]}
+              name={name}
+              value={values[name]}
               setValue={setValue}
-              key={`control-${idx}`}
+              key={`control-${name}`}
             />
           )
-        }
-        return (
-          <Trimpot
-            {...params}
-            id={id}
-            value={values[params.name]}
-            setValue={setValue}
-            key={`control-${idx}`}
-          />
+        }, controls)
+      )}
+
+      {R.values(
+        R.mapObjIndexed(
+          (params, name) => (
+            <Socket
+              moduleId={id}
+              direction="inputs"
+              key={`input-${name}`}
+              socketId={name}
+              {...params}
+            />
+          ),
+          inputs
         )
-      })}
+      )}
 
-      {inputs.map((params, idx) => (
-        <Socket
-          moduleId={id}
-          direction="inputs"
-          key={`input-${idx}`}
-          socketId={idx}
-          {...params}
-        />
-      ))}
-
-      {outputs.map((params, idx) => (
-        <Socket
-          moduleId={id}
-          direction="outputs"
-          key={`output-${idx}`}
-          socketId={idx}
-          {...params}
-        />
-      ))}
+      {R.values(
+        R.mapObjIndexed(
+          (params, name) => (
+            <Socket
+              moduleId={id}
+              direction="outputs"
+              key={`output-${name}`}
+              socketId={name}
+              {...params}
+            />
+          ),
+          outputs
+        )
+      )}
     </Plate>
   )
 }
