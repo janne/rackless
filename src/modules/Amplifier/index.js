@@ -2,13 +2,13 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const controls = {
-  level1: { x: 47, y: 37, range: "normal" },
-  level2: { x: 47, y: 180, range: "normal" }
+  level1: { x: 47, y: 37 },
+  level2: { x: 47, y: 180 }
 }
 
 const inputs = {
-  cv1: { x: 10, y: 46, range: "normal" },
-  cv2: { x: 10, y: 189, range: "normal" },
+  cv1: { x: 10, y: 46 },
+  cv2: { x: 10, y: 189 },
   input1: { x: 10, y: 102, range: "audio" },
   input2: { x: 10, y: 245, range: "audio" }
 }

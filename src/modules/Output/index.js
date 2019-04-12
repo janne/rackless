@@ -2,12 +2,12 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const controls = {
-  gain: { x: 58, y: 41, range: "normal" },
-  level1: { x: 58, y: 106, range: "normal" },
+  gain: { x: 58, y: 41 },
+  level1: { x: 58, y: 106 },
   pan1: { x: 106, y: 106, range: "audio" },
-  level2: { x: 58, y: 177, range: "normal" },
+  level2: { x: 58, y: 177 },
   pan2: { x: 106, y: 176, range: "audio" },
-  level3: { x: 58, y: 282, range: "normal" }
+  level3: { x: 58, y: 282 }
 }
 
 const inputs = {

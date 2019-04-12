@@ -5,17 +5,8 @@ import background from "./background.svg"
 
 const CONTROL_DEGREES = 270
 
-const Trimpot = ({
-  x,
-  y,
-  id,
-  width = 36,
-  range = "normal",
-  name,
-  value,
-  setValue
-}) => {
-  const currentValue = R.isNil(value) ? (range === "normal" ? 0.5 : 0) : value
+const Trimpot = ({ x, y, id, width = 36, range, name, value, setValue }) => {
+  const currentValue = R.isNil(value) ? (R.isNil(range) ? 0.5 : 0) : value
 
   const styles = {
     content: { position: "absolute", cursor: "pointer" }
@@ -26,7 +17,7 @@ const Trimpot = ({
       id,
       name,
       R.clamp(
-        range === "normal" ? 0 : -1,
+        R.isNil(range) ? 0 : -1,
         1,
         currentValue + (data.deltaX - data.deltaY) / 300
       )
@@ -34,7 +25,7 @@ const Trimpot = ({
     e.preventDefault()
   }
 
-  const dblClickHandler = e => setValue(id, name, range === "normal" ? 0.5 : 0)
+  const dblClickHandler = e => setValue(id, name, R.isNil(range) ? 0.5 : 0)
 
   return (
     <div
@@ -50,7 +41,7 @@ const Trimpot = ({
             ...styles.img,
             width,
             transform: `rotate(${
-              range === "normal"
+              R.isNil(range)
                 ? (currentValue - 0.5) * CONTROL_DEGREES
                 : currentValue * (CONTROL_DEGREES / 2)
             }deg)`

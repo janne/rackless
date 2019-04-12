@@ -3,18 +3,18 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const inputs = {
-  cutoff: { x: 10, y: 175, range: "frequency" },
-  quality: { x: 10, y: 232, range: "normal" },
-  in: { x: 10, y: 296, range: "frequency" }
+  cutoff: { x: 10, y: 175, range: "audio" },
+  quality: { x: 10, y: 232 },
+  in: { x: 10, y: 296, range: "audio" }
 }
 
 const outputs = {
-  out: { x: 57, y: 296, range: "frequency" }
+  out: { x: 57, y: 296, range: "audio" }
 }
 
 const controls = {
-  cutoff: { x: 48, y: 166, range: "frequency" },
-  quality: { x: 48, y: 223, range: "normal" },
+  cutoff: { x: 48, y: 166, range: "audio" },
+  quality: { x: 48, y: 223 },
   filterType: { x: 30, y: 60, range: ["lowpass", "highpass"] },
   slope: { x: 30, y: 116, range: [-12, -24] }
 }

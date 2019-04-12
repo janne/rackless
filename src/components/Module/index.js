@@ -44,7 +44,7 @@ const Module = ({
   const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
     R.mapObjIndexed(({ range }, name) => {
-      const defaultValue = range === "normal" ? 0.5 : 0
+      const defaultValue = R.isNil(range) ? 0.5 : 0
       const value = R.isNil(values[name]) ? defaultValue : values[name]
       instrument.controls[name].value = value
     }, controls)

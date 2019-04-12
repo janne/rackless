@@ -4,23 +4,23 @@ import background from "./background.svg"
 const controls = {
   freq: { x: 58, y: 54, range: "audio" },
   fine: { x: 105, y: 54, range: "audio" },
-  fmcv: { x: 58, y: 135, range: "normal" },
-  pwmcv: { x: 58, y: 218, range: "normal" },
+  fmcv: { x: 58, y: 135 },
+  pwmcv: { x: 58, y: 218 },
   pwidth: { x: 105, y: 218, range: "audio" },
   oscType: { x: 107, y: 144, range: ["vco", "lfo"] }
 }
 
 const inputs = {
-  voct: { x: 13, y: 62, range: "normal" },
+  voct: { x: 13, y: 62 },
   fm: { x: 14, y: 143, range: "audio" },
-  pwm: { x: 13, y: 226, range: "normal" }
+  pwm: { x: 13, y: 226 }
 }
 
 const outputs = {
-  sine: { x: 14, y: 317, range: "frequency" },
-  triangle: { x: 48, y: 317, range: "frequency" },
-  sawtooth: { x: 82, y: 317, range: "frequency" },
-  square: { x: 115, y: 317, range: "frequency" }
+  sine: { x: 14, y: 317, range: "audio" },
+  triangle: { x: 48, y: 317, range: "audio" },
+  sawtooth: { x: 82, y: 317, range: "audio" },
+  square: { x: 115, y: 317, range: "audio" }
 }
 
 const setup = ({ controls, inputs, outputs }) => {

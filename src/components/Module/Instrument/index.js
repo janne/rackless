@@ -1,12 +1,6 @@
 import Tone from "tone"
 import * as R from "ramda"
 
-const ranges = {
-  audio: Tone.Type.AudioRange,
-  normal: Tone.Type.NormalRange,
-  frequency: Tone.Type.Frequency
-}
-
 const disposeTone = t => {
   if (t.dispose) t.dispose()
 }
@@ -31,10 +25,9 @@ export default class extends Tone.Instrument {
         this.controls[name] = { value }
         return
       }
-      const defaultValue = control.range === "normal" ? 0.5 : 0
+      const defaultValue = R.isNil(control.range) ? 0.5 : 0
       this.controls[name] = new Tone.Signal(
-        R.isNil(values[name]) ? defaultValue : values[name],
-        ranges[control.range]
+        R.isNil(values[name]) ? defaultValue : values[name]
       )
     }, controls)
 
@@ -43,7 +36,7 @@ export default class extends Tone.Instrument {
       this.inputs[name] = this.input
     } else {
       R.addIndex(R.mapObjIndexed)((i, socketId, _, idx) => {
-        this.inputs[socketId] = new Tone.Signal(0, ranges[i.range])
+        this.inputs[socketId] = new Tone.Signal()
         this.input[idx] = this.inputs[socketId]
       }, inputs)
     }
@@ -53,7 +46,7 @@ export default class extends Tone.Instrument {
       this.outputs[name] = this.output
     } else {
       R.addIndex(R.mapObjIndexed)((o, socketId, _, idx) => {
-        this.outputs[socketId] = new Tone.Signal(0, ranges[o.range])
+        this.outputs[socketId] = new Tone.Signal()
         this.output[idx] = this.outputs[socketId]
       }, outputs)
     }
