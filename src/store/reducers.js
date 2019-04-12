@@ -1,5 +1,11 @@
 import * as R from "ramda"
-import { socketAtPos, getDB, findFreePos } from "./selectors"
+import {
+  socketAtPos,
+  getDB,
+  findFreePos,
+  availablePos,
+  getModule
+} from "./selectors"
 import {
   SET_VALUE,
   SET_INSTRUMENT,
@@ -51,11 +57,15 @@ export default (state = initialState, action) => {
 
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
+      const width = getModule(id, state).hp
+      const available = availablePos(col, row, width, id, state)
+      if (!available) return state
       return R.compose(
         R.set(R.lensPath(["modules", id, "col"]), col),
         R.set(R.lensPath(["modules", id, "row"]), row)
       )(state)
     }
+
     case CREATE_CABLE: {
       const {
         id,
