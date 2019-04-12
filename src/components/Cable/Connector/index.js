@@ -12,14 +12,21 @@ const styles = {
 
 const noop = f => f
 
-const Connector = ({ x, y, onDrag = noop, onStart = noop, onStop = noop }) => (
+const Connector = ({
+  x,
+  y,
+  onDrag = noop,
+  onStart = noop,
+  onStop = noop,
+  disabled
+}) => (
   <Draggable
     position={{ x, y }}
     onStart={(e, data) => onStart(R.pick(["x", "y"], data))}
     onStop={(e, data) => onStop(R.pick(["x", "y"], data))}
     onDrag={(e, data) => onDrag(R.pick(["x", "y"], data))}
   >
-    <div style={styles.content}>
+    <div style={{ ...styles.content, cursor: disabled ? "grabbing" : "grab" }}>
       <img
         draggable={false}
         src={background}

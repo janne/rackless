@@ -78,6 +78,7 @@ const Cable = ({
         onStart={handleStart("outputs")}
         onDrag={handleDrag("outputs")}
         onStop={handleStop("outputs")}
+        disabled={disabled}
       />
       <Connector
         x={inX}
@@ -85,6 +86,7 @@ const Cable = ({
         onStart={handleStart("inputs")}
         onDrag={handleDrag("inputs")}
         onStop={handleStop("inputs")}
+        disabled={disabled}
       />
       <Bezier
         x1={outX + CENTER}

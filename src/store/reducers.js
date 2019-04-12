@@ -69,7 +69,14 @@ export default (state = initialState, action) => {
         ...state,
         cables: {
           ...state.cables,
-          [id]: { outputModule, outputSocket, inputModule, inputSocket, color }
+          [id]: {
+            outputModule,
+            outputSocket,
+            inputModule,
+            inputSocket,
+            color,
+            disabled: true
+          }
         }
       }
     }
