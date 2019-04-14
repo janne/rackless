@@ -33,7 +33,18 @@ const setup = ({ inputs, outputs, controls }) => {
 
   tones.envelope.connect(outputs.out)
 
-  return () => Object.values(tones).forEach(t => t.dispose())
+  const dispose = () => Object.values(tones).forEach(t => t.dispose())
+
+  const initialState = { signal: false }
+
+  const loop = (state = initialState) => {
+    const { signal } = state
+    // const values = tones.analyser.getValue()
+    console.log(signal)
+    return { signal: !signal }
+  }
+
+  return [dispose, loop]
 }
 
 export default { inputs, outputs, controls, setup, background }
