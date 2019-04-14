@@ -60,14 +60,18 @@ const App = ({
   }, [])
 
   useEffect(() => {
-    const loops = R.values(instruments)
-      .map(R.prop("loop"))
-      .filter(Boolean)
+    const instrumentsWithLoops = R.filter(
+      i => Boolean(R.prop("loop", i)),
+      instruments
+    )
     const performAnimation = () => {
       requestAnimationFrame(performAnimation)
-      loops.forEach(loop => loop())
+      R.forEachObjIndexed((instrument, key) => {
+        instrument.loopState = instrument.loop(instrument.loopState)
+      }, instrumentsWithLoops)
     }
-    if (!R.isEmpty(loops)) requestAnimationFrame(performAnimation)
+    if (!R.isEmpty(instrumentsWithLoops))
+      requestAnimationFrame(performAnimation)
   }, [instruments])
 
   const enableSound = () => {
