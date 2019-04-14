@@ -13,7 +13,6 @@ import "firebase/auth"
 import "firebase/database"
 import Cable from "./components/Cable"
 import {
-  setValue,
   setInstrument,
   fetchPatch,
   dispatchAndPersist,
@@ -30,7 +29,6 @@ const App = ({
   setUser,
   setDB,
   dispatchAndPersist,
-  setInstrument,
   instruments = [],
   modules,
   cables
@@ -78,20 +76,7 @@ const App = ({
     Tone.context.resume()
   }
 
-  const renderModule = (id, { type, col, row, ...values }) => (
-    <Module
-      id={id}
-      setValue={(id, name, value) =>
-        dispatchAndPersist(setValue(id, name, value))
-      }
-      setInstrument={setInstrument}
-      col={col}
-      row={row}
-      instrument={instruments[id]}
-      values={values}
-      {...moduleTypes[type]}
-    />
-  )
+  const renderModule = id => <Module id={id} />
 
   const renderRootMenu = () => {
     const renderModuleMenu = type => (
@@ -132,18 +117,16 @@ const App = ({
   return (
     <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
       <div onClick={enableSound} style={{ height: "100vh", width: "100vw" }}>
-        {R.values(
-          R.mapObjIndexed(
-            (data, id) => (
-              <div key={id}>
-                <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
-                  {renderModule(id, data)}
-                </ContextMenuTrigger>
-                {renderModuleMenu(id)}
-              </div>
-            ),
-            modules
-          )
+        {R.map(
+          id => (
+            <div key={id}>
+              <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
+                {renderModule(id)}
+              </ContextMenuTrigger>
+              {renderModuleMenu(id)}
+            </div>
+          ),
+          R.keys(modules)
         )}
         {R.values(
           R.mapObjIndexed(

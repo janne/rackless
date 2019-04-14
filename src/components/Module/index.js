@@ -1,25 +1,34 @@
 import React, { useEffect } from "react"
+import { connect } from "react-redux"
 import * as R from "ramda"
 import Plate from "./Plate"
 import Trimpot from "./Trimpot"
 import Switch from "./Switch"
 import Socket from "./Socket"
 import Instrument from "./Instrument"
+import {
+  setValue,
+  setInstrument,
+  dispatchAndPersist
+} from "../../store/actions"
+import * as moduleTypes from "../../modules"
 
 const Module = ({
   id,
-  setValue,
   instrument,
   setInstrument,
-  col,
-  row,
-  values,
-  background,
-  controls = [],
-  inputs = [],
-  outputs = [],
-  setup = () => {}
+  data,
+  dispatchAndPersist
 }) => {
+  const { col, row, type, ...values } = data
+  const {
+    background,
+    controls = [],
+    inputs = [],
+    outputs = [],
+    setup = () => {}
+  } = moduleTypes[type]
+
   const [rangeControls, otherControls] = R.partition(
     R.compose(
       R.is(Array),
@@ -50,6 +59,9 @@ const Module = ({
     }, controls)
   }
 
+  const dispatchedSetValue = (id, name, value) =>
+    dispatchAndPersist(setValue(id, name, value))
+
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
       {R.values(
@@ -61,7 +73,7 @@ const Module = ({
                 id={id}
                 name={name}
                 value={values[name]}
-                setValue={setValue}
+                setValue={dispatchedSetValue}
                 key={`control-${name}`}
               />
             )
@@ -72,7 +84,7 @@ const Module = ({
               id={id}
               name={name}
               value={values[name]}
-              setValue={setValue}
+              setValue={dispatchedSetValue}
               key={`control-${name}`}
             />
           )
@@ -112,4 +124,17 @@ const Module = ({
   )
 }
 
-export default Module
+const mapStateToProps = (state, { id }) => ({
+  data: R.path(["modules", id], state),
+  instrument: R.path(["instruments", id], state)
+})
+
+const mapDispatchToProps = {
+  setInstrument,
+  dispatchAndPersist
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Module)
