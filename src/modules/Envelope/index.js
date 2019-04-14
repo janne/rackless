@@ -22,7 +22,8 @@ const setup = ({ inputs, outputs, controls }) => {
   const tones = {
     envelope: new Tone.Envelope(),
     gateAnalyser: new Tone.Analyser("waveform", 32),
-    retrigAnalyser: new Tone.Analyser("waveform", 32)
+    retrigAnalyser: new Tone.Analyser("waveform", 32),
+    inverter: new Tone.WaveShaper(x => 1 - x)
   }
 
   tones.envelope.attack = controls.attack.value || 0.01
@@ -34,6 +35,7 @@ const setup = ({ inputs, outputs, controls }) => {
   inputs.retrig.connect(tones.retrigAnalyser)
 
   tones.envelope.connect(outputs.out)
+  tones.envelope.chain(tones.inverter, outputs.inv)
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
