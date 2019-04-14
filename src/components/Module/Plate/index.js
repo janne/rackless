@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
 import { DraggableCore } from "react-draggable"
@@ -25,17 +25,16 @@ const Plate = ({
     }
   }
 
-  const [drag, setDrag] = useState(null)
+  const drag = useRef()
 
   const dragStart = (e, data) => {
-    setDrag({ x: data.x - moduleX, y: data.y - moduleY })
+    drag.current = { x: data.x - moduleX, y: data.y - moduleY }
   }
 
-  const dragEnd = () => setDrag(null)
-
   const dragHandler = (e, data) => {
-    const newCol = Math.round((data.x - R.propOr(0, "x", drag)) / HP_PIX)
-    const newRow = Math.round((data.y - R.propOr(0, "y", drag)) / HEIGHT_PIX)
+    const { x, y } = drag.current
+    const newCol = Math.round((data.x - x) / HP_PIX)
+    const newRow = Math.round((data.y - y) / HEIGHT_PIX)
     dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
@@ -44,7 +43,6 @@ const Plate = ({
       grid={[HP_PIX, HEIGHT_PIX]}
       onStart={dragStart}
       onDrag={dragHandler}
-      onEnd={dragEnd}
       cancel=".draggable"
     >
       <div
