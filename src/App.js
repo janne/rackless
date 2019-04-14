@@ -59,6 +59,17 @@ const App = ({
     })
   }, [])
 
+  useEffect(() => {
+    const loops = R.values(instruments)
+      .map(R.prop("loop"))
+      .filter(Boolean)
+    const performAnimation = () => {
+      requestAnimationFrame(performAnimation)
+      loops.forEach(loop => loop())
+    }
+    if (!R.isEmpty(loops)) requestAnimationFrame(performAnimation)
+  }, [instruments])
+
   const enableSound = () => {
     Tone.context.resume()
   }

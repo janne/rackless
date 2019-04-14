@@ -51,15 +51,24 @@ export default class extends Tone.Instrument {
       }, outputs)
     }
 
-    this.setupCallback = setup({
+    const setupReturn = setup({
       controls: this.controls,
       inputs: this.inputs,
       outputs: this.outputs
     })
+
+    if (Array.isArray(setupReturn)) {
+      const [dispose, loop] = setupReturn
+      this.instrumentDispose = dispose
+      this.loop = loop
+    } else {
+      this.instrumentDispose = setupReturn
+      this.loop = null
+    }
   }
 
   dispose = () => {
-    if (typeof this.setupCallback === "function") this.setupCallback()
+    if (typeof this.instrumentDispose === "function") this.instrumentDispose()
     Object.values(this.controls).forEach(disposeTone)
     Object.values(this.inputs).forEach(disposeTone)
     Object.values(this.outputs).forEach(disposeTone)
