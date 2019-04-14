@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useRef } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
 import Draggable from "react-draggable"
@@ -49,11 +49,7 @@ const Socket = ({
   dragConnector,
   dispatchAndPersist
 }) => {
-  const [newCable] = useState({
-    x: x,
-    y: y,
-    key: nextKey
-  })
+  const key = useRef(nextKey)
   const toDirection = direction === "outputs" ? "inputs" : "outputs"
 
   return (
@@ -67,11 +63,11 @@ const Socket = ({
         />
       </div>
       <Draggable
-        position={R.pick(["x", "y"], newCable)}
+        position={{ x, y }}
         onStart={(e, data) => {
           dispatchAndPersist(
             createCable(
-              newCable.key,
+              key.current,
               moduleId,
               socketId,
               direction,
@@ -84,14 +80,14 @@ const Socket = ({
             x: data.x + moduleX,
             y: data.y + moduleY
           }
-          dragConnector(newCable.key, toDirection, pos)
+          dragConnector(key.current, toDirection, pos)
         }}
         onStop={(e, data) => {
           const pos = {
             x: data.x + moduleX,
             y: data.y + moduleY
           }
-          dispatchAndPersist(moveConnector(newCable.key, toDirection, pos))
+          dispatchAndPersist(moveConnector(key.current, toDirection, pos))
         }}
       >
         <div className="draggable" style={styles.handle} />
