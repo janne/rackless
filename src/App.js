@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
@@ -57,21 +57,6 @@ const App = ({
     })
   }, [])
 
-  useEffect(() => {
-    const instrumentsWithLoop = R.filter(
-      i => Boolean(R.prop("loop", i)),
-      instruments
-    )
-    const performAnimation = () => {
-      if (!R.isEmpty(instrumentsWithLoop))
-        requestAnimationFrame(performAnimation)
-      R.forEach(instrument => {
-        instrument.loopState = instrument.loop(instrument.loopState)
-      }, R.values(instrumentsWithLoop))
-    }
-    if (!R.isEmpty(instrumentsWithLoop)) requestAnimationFrame(performAnimation)
-  }, [instruments])
-
   const enableSound = () => {
     Tone.context.resume()
   }
@@ -113,6 +98,28 @@ const App = ({
       </MenuItem>
     </ContextMenu>
   )
+
+  const performAnimation = useRef()
+
+  useEffect(() => {
+    performAnimation.current = () => {
+      requestAnimationFrame(performAnimation.current)
+      const instrumentsWithLoop = R.filter(
+        i => Boolean(R.prop("loop", i)),
+        instruments
+      )
+      if (!R.isEmpty(instrumentsWithLoop)) {
+        R.forEachObjIndexed((instrument, id) => {
+          instrument.loopState = instrument.loop(
+            modules[id].values,
+            instrument.loopState
+          )
+        }, instrumentsWithLoop)
+      }
+    }
+  }, [instruments, modules])
+
+  useEffect(() => requestAnimationFrame(performAnimation.current), [])
 
   return (
     <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>

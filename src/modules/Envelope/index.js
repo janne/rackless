@@ -43,7 +43,14 @@ const setup = ({ inputs, outputs, controls }) => {
     return gate
   }
 
-  const loop = ({ gate: previousGate, retrig: previousRetrig } = {}) => {
+  const loop = (
+    values,
+    { gate: previousGate, retrig: previousRetrig } = {}
+  ) => {
+    Object.keys(values).forEach(
+      key => (tones.envelope[key] = values[key] || 0.01)
+    )
+
     const gateValue = tones.gateAnalyser.getValue()[0]
     const gate = gateFlip(previousGate, gateValue)
 
