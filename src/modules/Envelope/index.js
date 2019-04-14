@@ -12,10 +12,10 @@ const outputs = {
 }
 
 const controls = {
-  attack: { x: 12, y: 37, range: "time" },
-  decay: { x: 12, y: 96, range: "time" },
-  sustain: { x: 12, y: 213 },
-  release: { x: 12, y: 154, range: "time" }
+  attack: { x: 12, y: 37 },
+  decay: { x: 12, y: 96 },
+  sustain: { x: 12, y: 154 },
+  release: { x: 12, y: 213 }
 }
 
 const setup = ({ inputs, outputs, controls }) => {
@@ -24,10 +24,10 @@ const setup = ({ inputs, outputs, controls }) => {
     analyser: new Tone.Analyser("waveform", 32)
   }
 
-  tones.envelope.attack = controls.attack
-  tones.envelope.decay = controls.decay
-  tones.envelope.sustain = controls.sustain
-  tones.envelope.release = controls.release
+  tones.envelope.attack = controls.attack.value || 0.01
+  tones.envelope.decay = controls.decay.value || 0.01
+  tones.envelope.sustain = controls.sustain.value
+  tones.envelope.release = controls.release.value || 0.01
 
   inputs.gate.connect(tones.analyser)
 
@@ -35,13 +35,20 @@ const setup = ({ inputs, outputs, controls }) => {
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const initialState = { signal: false }
+  const loop = (gateHigh = false) => {
+    const values = tones.analyser.getValue()
 
-  const loop = (state = initialState) => {
-    const { signal } = state
-    // const values = tones.analyser.getValue()
-    console.log(signal)
-    return { signal: !signal }
+    if (!gateHigh && values[0] > 0.8) {
+      tones.envelope.triggerAttack()
+      return true
+    }
+
+    if (gateHigh && values[0] < 0.2) {
+      tones.envelope.triggerRelease()
+      return false
+    }
+
+    return gateHigh
   }
 
   return [dispose, loop]
