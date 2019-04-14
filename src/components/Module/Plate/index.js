@@ -5,7 +5,7 @@ import { DraggableCore } from "react-draggable"
 import {
   dispatchAndPersist,
   moveModule,
-  setValue
+  setModuleValue
 } from "../../../store/actions"
 import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
@@ -15,7 +15,7 @@ const Plate = ({
   moduleY,
   background,
   children,
-  setValue,
+  setModuleValue,
   dispatchAndPersist
 }) => {
   const styles = {
@@ -57,7 +57,7 @@ const Plate = ({
           src={background}
           style={styles.background}
           onLoad={e =>
-            setValue(moduleId, "hp", Math.round(e.target.width / HP_PIX))
+            setModuleValue(moduleId, "hp", Math.round(e.target.width / HP_PIX))
           }
           alt=""
         />
@@ -74,7 +74,7 @@ const mapStateToProps = (state, { moduleId }) => {
     moduleY: Math.round(row * HEIGHT_PIX)
   }
 }
-const mapDispatchToProps = { dispatchAndPersist, setValue }
+const mapDispatchToProps = { dispatchAndPersist, setModuleValue }
 
 export default connect(
   mapStateToProps,

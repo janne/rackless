@@ -1,4 +1,5 @@
 export const SET_VALUE = "SET_VALUE"
+export const SET_MODULE_VALUE = "SET_MODULE_VALUE"
 export const SET_INSTRUMENT = "SET_INSTRUMENT"
 export const MOVE_MODULE = "MOVE_MODULE"
 export const CREATE_CABLE = "CREATE_CABLE"

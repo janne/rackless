@@ -20,7 +20,7 @@ const Module = ({
   data,
   dispatchAndPersist
 }) => {
-  const { col, row, type, ...values } = data
+  const { col, row, type, values = [] } = data
   const {
     background,
     controls = [],

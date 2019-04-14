@@ -8,6 +8,7 @@ import {
 } from "./selectors"
 import {
   SET_VALUE,
+  SET_MODULE_VALUE,
   SET_INSTRUMENT,
   CREATE_MODULE,
   DELETE_MODULE,
@@ -36,6 +37,11 @@ export default (state = initialState, action) => {
     }
 
     case SET_VALUE: {
+      const { id, name, value } = action.payload
+      return R.set(R.lensPath(["modules", id, "values", name]), value, state)
+    }
+
+    case SET_MODULE_VALUE: {
       const { id, name, value } = action.payload
       return R.set(R.lensPath(["modules", id, name]), value, state)
     }
@@ -134,7 +140,9 @@ export default (state = initialState, action) => {
       const ref = getDB(state).ref()
       const key = ref.child("modules").push().key
       const pos = findFreePos(10, state)
-      return R.assocPath(["modules", key], { type, ...pos }, state)
+      const values = {}
+
+      return R.assocPath(["modules", key], { type, values, ...pos }, state)
     }
 
     case DELETE_MODULE: {
