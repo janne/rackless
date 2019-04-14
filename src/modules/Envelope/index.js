@@ -21,7 +21,8 @@ const controls = {
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
     envelope: new Tone.Envelope(),
-    analyser: new Tone.Analyser("waveform", 32)
+    gateAnalyser: new Tone.Analyser("waveform", 32),
+    retrigAnalyser: new Tone.Analyser("waveform", 32)
   }
 
   tones.envelope.attack = controls.attack.value || 0.01
@@ -29,26 +30,32 @@ const setup = ({ inputs, outputs, controls }) => {
   tones.envelope.sustain = controls.sustain.value
   tones.envelope.release = controls.release.value || 0.01
 
-  inputs.gate.connect(tones.analyser)
+  inputs.gate.connect(tones.gateAnalyser)
+  inputs.retrig.connect(tones.retrigAnalyser)
 
   tones.envelope.connect(outputs.out)
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const loop = (gateHigh = false) => {
-    const values = tones.analyser.getValue()
+  const gateFlip = (gate, value) => {
+    if (!gate && value > 0.8) return true
+    if (gate && value < 0.2) return false
+    return gate
+  }
 
-    if (!gateHigh && values[0] > 0.8) {
+  const loop = ({ gate: previousGate, retrig: previousRetrig } = {}) => {
+    const gateValue = tones.gateAnalyser.getValue()[0]
+    const gate = gateFlip(previousGate, gateValue)
+
+    const retrigValue = tones.retrigAnalyser.getValue()[0]
+    const retrig = gateFlip(previousRetrig, retrigValue)
+
+    if ((gate && !previousGate) || (retrig && gate && !previousRetrig))
       tones.envelope.triggerAttack()
-      return true
-    }
 
-    if (gateHigh && values[0] < 0.2) {
-      tones.envelope.triggerRelease()
-      return false
-    }
+    if (!gate && previousGate) tones.envelope.triggerRelease()
 
-    return gateHigh
+    return { gate, retrig }
   }
 
   return [dispose, loop]

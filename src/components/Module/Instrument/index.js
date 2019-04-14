@@ -69,6 +69,7 @@ export default class extends Tone.Instrument {
 
   dispose = () => {
     if (typeof this.instrumentDispose === "function") this.instrumentDispose()
+    this.loop = null
     Object.values(this.controls).forEach(disposeTone)
     Object.values(this.inputs).forEach(disposeTone)
     Object.values(this.outputs).forEach(disposeTone)

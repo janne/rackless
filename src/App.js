@@ -31,7 +31,7 @@ const App = ({
   setDB,
   dispatchAndPersist,
   setInstrument,
-  instruments,
+  instruments = [],
   modules,
   cables
 }) => {
@@ -60,18 +60,18 @@ const App = ({
   }, [])
 
   useEffect(() => {
-    const instrumentsWithLoops = R.filter(
+    const instrumentsWithLoop = R.filter(
       i => Boolean(R.prop("loop", i)),
       instruments
     )
     const performAnimation = () => {
-      requestAnimationFrame(performAnimation)
-      R.forEachObjIndexed((instrument, key) => {
+      if (!R.isEmpty(instrumentsWithLoop))
+        requestAnimationFrame(performAnimation)
+      R.forEach(instrument => {
         instrument.loopState = instrument.loop(instrument.loopState)
-      }, instrumentsWithLoops)
+      }, R.values(instrumentsWithLoop))
     }
-    if (!R.isEmpty(instrumentsWithLoops))
-      requestAnimationFrame(performAnimation)
+    if (!R.isEmpty(instrumentsWithLoop)) requestAnimationFrame(performAnimation)
   }, [instruments])
 
   const enableSound = () => {
