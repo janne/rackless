@@ -19,7 +19,7 @@ export const fetchPatch = () => {
   return (dispatch, getState) => {
     const state = getState()
     const uid = getUser(state)
-    const prefix = `/patches/${uid}`
+    const prefix = `/users/${uid}`
     getDB(state)
       .ref(prefix)
       .on("value", patch => {
@@ -38,7 +38,7 @@ export const dispatchAndPersist = action => {
       const state = getState()
       const uid = getUser(state)
       getDB(state)
-        .ref(`/patches/${uid}`)
+        .ref(`/users/${uid}`)
         .set(getPatch(state))
     }, 1000)
   }
