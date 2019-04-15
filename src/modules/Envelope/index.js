@@ -65,7 +65,7 @@ const setup = ({ inputs, outputs, controls }) => {
     return { gate, retrig }
   }
 
-  return [dispose, loop]
+  return { dispose, loop }
 }
 
 export default { inputs, outputs, controls, setup, background }

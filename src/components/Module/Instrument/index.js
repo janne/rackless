@@ -57,14 +57,9 @@ export default class extends Tone.Instrument {
       outputs: this.outputs
     })
 
-    if (Array.isArray(setupReturn)) {
-      const [dispose, loop] = setupReturn
-      this.instrumentDispose = dispose
-      this.loop = loop
-    } else {
-      this.instrumentDispose = setupReturn
-      this.loop = null
-    }
+    const { dispose, loop } = setupReturn || {}
+    this.instrumentDispose = dispose
+    this.loop = loop
   }
 
   dispose = () => {

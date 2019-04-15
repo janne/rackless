@@ -76,7 +76,7 @@ const setup = ({ controls, inputs, outputs }) => {
     tones[type].connect(output)
   })
 
-  return () => Object.values(tones).forEach(t => t.dispose())
+  return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
 }
 
 export default { inputs, outputs, controls, setup, background }

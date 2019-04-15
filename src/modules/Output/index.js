@@ -47,7 +47,7 @@ const setup = ({ controls, inputs }) => {
   controls.level3.connect(tones.gain3r.gain)
   inputs.input3right.chain(tones.gain3r, tones.panner3r, tones.masterGain)
 
-  return () => Object.values(tones).forEach(t => t.dispose())
+  return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
 }
 
 export default { inputs, controls, setup, background }

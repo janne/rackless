@@ -40,7 +40,7 @@ const setup = ({ inputs, outputs, controls }) => {
   tones.gain2.connect(outputs.output2)
   tones.gain2.connect(outputs.mix)
 
-  return () => Object.values(tones).forEach(t => t.dispose())
+  return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
 }
 
 export default { inputs, outputs, controls, setup, background }

@@ -81,11 +81,10 @@ const Module = ({
           const { Component, x, y } = params
           if (Component) {
             return (
-              <Wrapper x={x} y={y}>
+              <Wrapper x={x} y={y} key={`control-${name}`}>
                 <Component
                   id={id}
                   name={name}
-                  key={`control-${name}`}
                   value={values[name]}
                   setValue={dispatchedSetValue}
                   {...R.propOr({}, "props", instrument)}
@@ -95,27 +94,25 @@ const Module = ({
           }
           if (R.is(Array, params.range)) {
             return (
-              <Wrapper x={x} y={y}>
+              <Wrapper x={x} y={y} key={`control-${name}`}>
                 <Switch
                   {...params}
                   id={id}
                   name={name}
                   value={values[name]}
                   setValue={dispatchedSetValue}
-                  key={`control-${name}`}
                 />
               </Wrapper>
             )
           }
           return (
-            <Wrapper x={x} y={y}>
+            <Wrapper x={x} y={y} key={`control-${name}`}>
               <Trimpot
                 {...params}
                 id={id}
                 name={name}
                 value={values[name]}
                 setValue={dispatchedSetValue}
-                key={`control-${name}`}
               />
             </Wrapper>
           )
