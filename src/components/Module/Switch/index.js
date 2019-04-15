@@ -5,11 +5,8 @@ import background from "./background.svg"
 const Switch = ({ x, y, id, name, range = [], value, setValue }) => {
   const styles = {
     content: {
-      position: "absolute",
       cursor: "pointer",
-      width: 32,
-      left: x,
-      top: y
+      width: 32
     }
   }
 

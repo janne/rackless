@@ -45,10 +45,8 @@ const setup = ({ inputs, outputs, controls }) => {
     return gate
   }
 
-  const loop = (
-    values,
-    { gate: previousGate, retrig: previousRetrig } = {}
-  ) => {
+  const loop = (props, values) => {
+    const { gate: previousGate, retrig: previousRetrig } = props
     Object.keys(values).forEach(
       key => (tones.envelope[key] = values[key] || 0.01)
     )

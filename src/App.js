@@ -110,9 +110,9 @@ const App = ({
       )
       if (!R.isEmpty(instrumentsWithLoop)) {
         R.forEachObjIndexed((instrument, id) => {
-          instrument.loopState = instrument.loop(
-            modules[id].values,
-            instrument.loopState
+          instrument.props = instrument.loop(
+            instrument.props || {},
+            modules[id].values || {}
           )
         }, instrumentsWithLoop)
       }

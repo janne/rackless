@@ -5,11 +5,11 @@ import background from "./background.svg"
 
 const CONTROL_DEGREES = 270
 
-const Trimpot = ({ x, y, id, width = 36, range, name, value, setValue }) => {
+const Trimpot = ({ id, width = 36, range, name, value, setValue }) => {
   const currentValue = R.isNil(value) ? (R.isNil(range) ? 0.5 : 0) : value
 
   const styles = {
-    content: { position: "absolute", cursor: "pointer" }
+    content: { cursor: "pointer" }
   }
 
   const dragHandler = (e, data) => {
@@ -30,7 +30,7 @@ const Trimpot = ({ x, y, id, width = 36, range, name, value, setValue }) => {
   return (
     <div
       className="draggable"
-      style={{ ...styles.content, left: x, top: y }}
+      style={styles.content}
       onDoubleClick={dblClickHandler}
     >
       <DraggableCore onDrag={dragHandler}>

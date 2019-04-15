@@ -13,6 +13,18 @@ import {
 } from "../../store/actions"
 import * as moduleTypes from "../../modules"
 
+const Wrapper = ({ x, y, children }) => (
+  <div
+    style={{
+      position: "absolute",
+      left: x,
+      top: y
+    }}
+  >
+    {children}
+  </div>
+)
+
 const Module = ({
   id,
   instrument,
@@ -66,9 +78,38 @@ const Module = ({
     <Plate col={col} row={row} moduleId={id} background={background}>
       {R.values(
         R.mapObjIndexed((params, name) => {
+          const { Component, x, y } = params
+          if (Component) {
+            return (
+              <Wrapper x={x} y={y}>
+                <Component
+                  id={id}
+                  name={name}
+                  key={`control-${name}`}
+                  value={values[name]}
+                  setValue={dispatchedSetValue}
+                  {...R.propOr({}, "props", instrument)}
+                />
+              </Wrapper>
+            )
+          }
           if (R.is(Array, params.range)) {
             return (
-              <Switch
+              <Wrapper x={x} y={y}>
+                <Switch
+                  {...params}
+                  id={id}
+                  name={name}
+                  value={values[name]}
+                  setValue={dispatchedSetValue}
+                  key={`control-${name}`}
+                />
+              </Wrapper>
+            )
+          }
+          return (
+            <Wrapper x={x} y={y}>
+              <Trimpot
                 {...params}
                 id={id}
                 name={name}
@@ -76,17 +117,7 @@ const Module = ({
                 setValue={dispatchedSetValue}
                 key={`control-${name}`}
               />
-            )
-          }
-          return (
-            <Trimpot
-              {...params}
-              id={id}
-              name={name}
-              value={values[name]}
-              setValue={dispatchedSetValue}
-              key={`control-${name}`}
-            />
+            </Wrapper>
           )
         }, controls)
       )}
