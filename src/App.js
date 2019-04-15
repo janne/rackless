@@ -119,7 +119,9 @@ const App = ({
     }
   }, [instruments, modules])
 
-  useEffect(() => requestAnimationFrame(performAnimation.current), [])
+  useEffect(() => {
+    requestAnimationFrame(performAnimation.current)
+  }, [])
 
   return (
     <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
