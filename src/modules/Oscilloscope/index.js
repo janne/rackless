@@ -1,5 +1,4 @@
 import React from "react"
-import * as R from "ramda"
 import Tone from "tone"
 import background from "./background.svg"
 
