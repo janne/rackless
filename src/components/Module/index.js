@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Plate from "./Plate"
@@ -41,6 +41,11 @@ const Module = ({
     setup = () => {}
   } = moduleTypes[type]
 
+  const controlsWithRefs = R.map(
+    control => ({ ...control, ref: useRef() }),
+    controls
+  )
+
   const [rangeControls, otherControls] = R.partition(
     R.compose(
       R.is(Array),
@@ -52,7 +57,13 @@ const Module = ({
   const getValue = R.flip(R.prop)(values)
 
   useEffect(() => {
-    const instrument = new Instrument(controls, inputs, outputs, setup, values)
+    const instrument = new Instrument(
+      controlsWithRefs,
+      inputs,
+      outputs,
+      setup,
+      values
+    )
     setInstrument(id, instrument)
     setupValues(instrument, values)
     return () => instrument.dispose()
@@ -80,14 +91,17 @@ const Module = ({
         R.mapObjIndexed((params, name) => {
           const { Component, x, y } = params
           if (Component) {
+            const ComponentWithRef = React.forwardRef(Component)
+            const props = R.propOr({}, "props", instrument)
             return (
               <Wrapper x={x} y={y} key={`control-${name}`}>
-                <Component
+                <ComponentWithRef
                   id={id}
                   name={name}
                   value={values[name]}
                   setValue={dispatchedSetValue}
-                  {...R.propOr({}, "props", instrument)}
+                  {...params}
+                  {...props}
                 />
               </Wrapper>
             )
@@ -116,7 +130,7 @@ const Module = ({
               />
             </Wrapper>
           )
-        }, controls)
+        }, controlsWithRefs)
       )}
 
       {R.values(

@@ -29,6 +29,7 @@ export default class extends Tone.Instrument {
       this.controls[name] = new Tone.Signal(
         R.isNil(values[name]) ? defaultValue : values[name]
       )
+      this.controls[name].ref = control.ref
     }, controls)
 
     if (length(inputs) === 1) {
