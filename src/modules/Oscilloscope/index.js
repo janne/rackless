@@ -10,12 +10,12 @@ const height = 144
 const Component = (_, ref) => <canvas ref={ref} width={width} height={height} />
 
 const controls = {
-  aScale: { x: 7, y: 190 },
-  aPos: { x: 7, y: 238 },
-  bScale: { x: 58, y: 190 },
-  bPos: { x: 58, y: 238 },
-  cScale: { x: 109, y: 190 },
-  cPos: { x: 109, y: 238 },
+  aScale: { x: 10, y: 185, width: 30 },
+  aPos: { x: 10, y: 233, width: 30 },
+  bScale: { x: 61, y: 185, width: 30 },
+  bPos: { x: 61, y: 233, width: 30 },
+  cScale: { x: 112, y: 185, width: 30 },
+  cPos: { x: 112, y: 233, width: 30 },
   monitor: { x: 4, y: 34, Component }
 }
 
