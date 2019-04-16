@@ -18,7 +18,11 @@ const inputs = {
   pancv: { x: 114, y: 243, range: "audio" }
 }
 
-const setup = ({ controls, inputs }) => {
+const outputs = {
+  out: { x: 116, y: 314, range: "audio" }
+}
+
+const setup = ({ controls, inputs, outputs }) => {
   const tones = {
     masterGain: new Tone.Gain(),
     gain1: new Tone.Gain(),
@@ -46,8 +50,9 @@ const setup = ({ controls, inputs }) => {
   inputs.input3left.chain(tones.gain3l, tones.panner3l, tones.masterGain)
   controls.level3.connect(tones.gain3r.gain)
   inputs.input3right.chain(tones.gain3r, tones.panner3r, tones.masterGain)
+  tones.masterGain.connect(outputs.out)
 
   return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
 }
 
-export default { inputs, controls, setup, background }
+export default { inputs, outputs, controls, setup, background }
