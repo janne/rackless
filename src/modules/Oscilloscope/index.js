@@ -10,24 +10,25 @@ const height = 144
 const Component = (_, ref) => <canvas ref={ref} width={width} height={height} />
 
 const controls = {
-  select: { x: 11, y: 201 },
-  left: { x: 58, y: 201 },
-  right: { x: 105, y: 201 },
-  monitor: { x: 4, y: 38, Component }
+  aScale: { x: 7, y: 190 },
+  aPos: { x: 7, y: 238 },
+  bScale: { x: 58, y: 190 },
+  bPos: { x: 58, y: 238 },
+  cScale: { x: 109, y: 190 },
+  cPos: { x: 109, y: 238 },
+  monitor: { x: 4, y: 34, Component }
 }
 
 const inputs = {
-  a: { x: 15, y: 264 },
-  b: { x: 49, y: 264 },
-  c: { x: 83, y: 264 },
-  d: { x: 117, y: 264 }
+  a: { x: 15, y: 282 },
+  b: { x: 66, y: 282 },
+  c: { x: 117, y: 282 }
 }
 
 const outputs = {
-  a: { x: 15, y: 309 },
-  b: { x: 49, y: 309 },
-  c: { x: 83, y: 309 },
-  d: { x: 117, y: 309 }
+  a: { x: 15, y: 322 },
+  b: { x: 66, y: 322 },
+  c: { x: 117, y: 322 }
 }
 
 const setup = ({ inputs, outputs, controls }) => {
@@ -40,7 +41,7 @@ const setup = ({ inputs, outputs, controls }) => {
     if (old) old.dispose()
   }
 
-  const analysers = { a: "white", b: "red", c: "green", d: "blue" }
+  const analysers = { a: "#C4C4C4", b: "red", c: "green" }
 
   R.keys(analysers).forEach(analyser => {
     route(analyser)
@@ -68,9 +69,13 @@ const setup = ({ inputs, outputs, controls }) => {
         0,
         R.range(0, resolution - width)
       )
+
+      const scaler = controls[`${analyser}Scale`].value
+      const pos = controls[`${analyser}Pos`].value * 2
+
       value.slice(start, start + width).forEach((v, i) => {
         const x = scale(i, 0, width, 0, width)
-        const y = scale(v, -1, 1, 0, height)
+        const y = scale(v * scaler + pos, 0, 2, 0, height)
         if (i === 0) context.moveTo(x, y)
         else context.lineTo(x, y)
       })
