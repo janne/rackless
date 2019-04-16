@@ -3,6 +3,7 @@ import * as R from "ramda"
 import Tone from "tone"
 import background from "./background.svg"
 
+const resolution = 512
 const width = 144
 const height = 144
 
@@ -31,10 +32,10 @@ const outputs = {
 
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
-    analyserA: new Tone.Analyser("waveform", 512),
-    analyserB: new Tone.Analyser("waveform", 512),
-    analyserC: new Tone.Analyser("waveform", 512),
-    analyserD: new Tone.Analyser("waveform", 512)
+    analyserA: new Tone.Analyser("waveform", resolution),
+    analyserB: new Tone.Analyser("waveform", resolution),
+    analyserC: new Tone.Analyser("waveform", resolution),
+    analyserD: new Tone.Analyser("waveform", resolution)
   }
 
   inputs.a.chain(tones.analyserA, outputs.a)
@@ -68,10 +69,10 @@ const setup = ({ inputs, outputs, controls }) => {
         (prev, curr) =>
           value[prev] <= 0 && value[curr] >= 0 ? R.reduced(prev) : curr,
         0,
-        R.range(0, 368)
+        R.range(0, resolution - width)
       )
-      value.slice(start, start + 144).forEach((v, i) => {
-        const x = scale(i, 0, 144, 0, width)
+      value.slice(start, start + width).forEach((v, i) => {
+        const x = scale(i, 0, width, 0, width)
         const y = scale(v, -1, 1, 0, height)
         if (i === 0) context.moveTo(x, y)
         else context.lineTo(x, y)
