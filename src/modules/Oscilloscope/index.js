@@ -1,4 +1,5 @@
 import React from "react"
+import * as R from "ramda"
 import Tone from "tone"
 import background from "./background.svg"
 
@@ -30,10 +31,10 @@ const outputs = {
 
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
-    analyserA: new Tone.Analyser("waveform", 128),
-    analyserB: new Tone.Analyser("waveform", 128),
-    analyserC: new Tone.Analyser("waveform", 128),
-    analyserD: new Tone.Analyser("waveform", 128)
+    analyserA: new Tone.Analyser("waveform", 512),
+    analyserB: new Tone.Analyser("waveform", 512),
+    analyserC: new Tone.Analyser("waveform", 512),
+    analyserD: new Tone.Analyser("waveform", 512)
   }
 
   inputs.a.chain(tones.analyserA, outputs.a)
@@ -63,9 +64,14 @@ const setup = ({ inputs, outputs, controls }) => {
       context.beginPath()
       const lineWidth = 2
       context.lineWidth = lineWidth
-      let start = 0
-      value.slice(start, 64).forEach((v, i) => {
-        const x = scale(i, 0, 64, 0, width)
+      const start = R.reduce(
+        (prev, curr) =>
+          value[prev] <= 0 && value[curr] >= 0 ? R.reduced(prev) : curr,
+        0,
+        R.range(0, 368)
+      )
+      value.slice(start, start + 144).forEach((v, i) => {
+        const x = scale(i, 0, 144, 0, width)
         const y = scale(v, -1, 1, 0, height)
         if (i === 0) context.moveTo(x, y)
         else context.lineTo(x, y)
