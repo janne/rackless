@@ -31,17 +31,21 @@ const outputs = {
 }
 
 const setup = ({ inputs, outputs, controls }) => {
-  const tones = {
-    analyserA: new Tone.Analyser("waveform", resolution),
-    analyserB: new Tone.Analyser("waveform", resolution),
-    analyserC: new Tone.Analyser("waveform", resolution),
-    analyserD: new Tone.Analyser("waveform", resolution)
+  const tones = {}
+
+  const route = analyser => {
+    const old = tones[analyser]
+    tones[analyser] = new Tone.Analyser("waveform", resolution)
+    inputs[analyser].chain(tones[analyser], outputs[analyser])
+    if (old) old.dispose()
   }
 
-  inputs.a.chain(tones.analyserA, outputs.a)
-  inputs.b.chain(tones.analyserB, outputs.b)
-  inputs.c.chain(tones.analyserC, outputs.c)
-  inputs.d.chain(tones.analyserD, outputs.d)
+  const analysers = { a: "white", b: "red", c: "green", d: "blue" }
+
+  R.keys(analysers).forEach(analyser => {
+    route(analyser)
+    outputs[analyser].stop = () => route(analyser)
+  })
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
@@ -53,15 +57,8 @@ const setup = ({ inputs, outputs, controls }) => {
     const context = canvas.getContext("2d")
     context.clearRect(0, 0, width, height)
 
-    const inputs = [
-      { tone: tones.analyserA, color: "white" },
-      { tone: tones.analyserB, color: "red" },
-      { tone: tones.analyserC, color: "green" },
-      { tone: tones.analyserD, color: "blue" }
-    ]
-
-    inputs.forEach(({ tone, color }) => {
-      const value = tone.getValue()
+    R.keys(analysers).forEach(analyser => {
+      const value = tones[analyser].getValue()
       context.beginPath()
       const lineWidth = 2
       context.lineWidth = lineWidth
@@ -78,7 +75,7 @@ const setup = ({ inputs, outputs, controls }) => {
         else context.lineTo(x, y)
       })
       context.lineCap = "round"
-      context.strokeStyle = color
+      context.strokeStyle = analysers[analyser]
       context.stroke()
     })
   }
