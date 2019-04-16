@@ -30,10 +30,10 @@ const outputs = {
 
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
-    analyserA: new Tone.Analyser("waveform", 256),
-    analyserB: new Tone.Analyser("waveform", 256),
-    analyserC: new Tone.Analyser("waveform", 256),
-    analyserD: new Tone.Analyser("waveform", 256)
+    analyserA: new Tone.Analyser("waveform", 128),
+    analyserB: new Tone.Analyser("waveform", 128),
+    analyserC: new Tone.Analyser("waveform", 128),
+    analyserD: new Tone.Analyser("waveform", 128)
   }
 
   inputs.a.chain(tones.analyserA, outputs.a)
@@ -49,21 +49,31 @@ const setup = ({ inputs, outputs, controls }) => {
   const loop = () => {
     const canvas = controls.monitor.ref.current
     const context = canvas.getContext("2d")
-    const value = tones.analyserA.getValue()
     context.clearRect(0, 0, width, height)
-    context.beginPath()
-    const lineWidth = 2
-    context.lineWidth = lineWidth
-    let start = 0
-    value.slice(start, 128).forEach((v, i) => {
-      const x = scale(i, 0, 128, 0, width)
-      const y = scale(v, -1, 1, 0, height)
-      if (i === 0) context.moveTo(x, y)
-      else context.lineTo(x, y)
+
+    const inputs = [
+      { tone: tones.analyserA, color: "white" },
+      { tone: tones.analyserB, color: "red" },
+      { tone: tones.analyserC, color: "green" },
+      { tone: tones.analyserD, color: "blue" }
+    ]
+
+    inputs.forEach(({ tone, color }) => {
+      const value = tone.getValue()
+      context.beginPath()
+      const lineWidth = 2
+      context.lineWidth = lineWidth
+      let start = 0
+      value.slice(start, 64).forEach((v, i) => {
+        const x = scale(i, 0, 64, 0, width)
+        const y = scale(v, -1, 1, 0, height)
+        if (i === 0) context.moveTo(x, y)
+        else context.lineTo(x, y)
+      })
+      context.lineCap = "round"
+      context.strokeStyle = color
+      context.stroke()
     })
-    context.lineCap = "round"
-    context.strokeStyle = "white"
-    context.stroke()
   }
 
   return { dispose, loop }
