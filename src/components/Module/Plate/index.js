@@ -11,6 +11,8 @@ import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
 const Plate = ({
   moduleId,
+  col,
+  row,
   moduleX,
   moduleY,
   background,
@@ -35,7 +37,8 @@ const Plate = ({
     const { x, y } = drag.current
     const newCol = Math.round((data.x - x) / HP_PIX)
     const newRow = Math.round((data.y - y) / HEIGHT_PIX)
-    dispatchAndPersist(moveModule(moduleId, newCol, newRow))
+    if ((newCol !== col || newRow !== row) && newCol >= 0 && newRow >= 0)
+      dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
   return (
