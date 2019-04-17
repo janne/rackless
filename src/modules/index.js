@@ -1,6 +1,7 @@
 export { default as Amplifier } from "./Amplifier"
 export { default as Envelope } from "./Envelope"
 export { default as Filter } from "./Filter"
+export { default as Midi } from "./Midi"
 export { default as Noise } from "./Noise"
 export { default as Oscillator } from "./Oscillator"
 export { default as Oscilloscope } from "./Oscilloscope"
