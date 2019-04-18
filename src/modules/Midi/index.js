@@ -42,23 +42,29 @@ const setup = ({ outputs }) => {
   tones.pitch.connect(outputs.pitch)
 
   let midi = null
-  let keys = 0
+  let keys = []
 
   initializeMidi().then(input => {
     midi = input
+
+    const midiToVoct = midi => R.clamp(0, 1, (keys[0] - 57) / (12 * 5) + 0.5)
 
     input.addListener("controlchange", "all", e => {
       console.log("cc", e.controller.number, e.value)
     })
     input.addListener("noteon", "all", e => {
-      keys++
-      tones.voct.value = R.clamp(0, 1, (e.note.number - 57) / (12 * 5) + 0.5)
+      keys = [e.note.number, ...keys]
+      tones.voct.value = midiToVoct(keys[0])
       tones.velocity.value = e.velocity
       tones.gate.value = 1
     })
     input.addListener("noteoff", "all", e => {
-      keys--
-      if (keys === 0) tones.gate.value = 0
+      keys = R.without([e.note.number], keys)
+      if (R.isEmpty(keys)) {
+        tones.gate.value = 0
+        return
+      }
+      tones.voct.value = midiToVoct(keys[0])
     })
     input.addListener("pitchbend", "all", e => {
       tones.pitch.value = e.value * (1 / 5)
