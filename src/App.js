@@ -55,6 +55,8 @@ const App = ({
         fetchPatch()
       }
     })
+
+    Tone.context.lookAhead = 0
   }, [])
 
   const enableSound = () => {
