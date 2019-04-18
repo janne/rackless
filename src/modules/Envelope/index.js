@@ -47,9 +47,10 @@ const setup = ({ inputs, outputs, controls }) => {
 
   const loop = (props, values) => {
     const { gate: previousGate, retrig: previousRetrig } = props
-    Object.keys(values).forEach(
-      key => (tones.envelope[key] = values[key] || 0.01)
-    )
+    Object.keys(values).forEach(key => {
+      const multiplier = key === "sustain" ? 1 : 10
+      tones.envelope[key] = values[key] * values[key] * multiplier || 0.01
+    })
 
     const gateValue = tones.gateAnalyser.getValue()[0]
     const gate = gateFlip(previousGate, gateValue)
