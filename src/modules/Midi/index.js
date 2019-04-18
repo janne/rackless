@@ -8,7 +8,15 @@ const outputs = {
   voct: { x: 14, y: 306, range: "audio" },
   gate: { x: 49, y: 306 },
   velocity: { x: 84, y: 306 },
-  pitch: { x: 119, y: 306, range: "audio" }
+  pitch: { x: 119, y: 306, range: "audio" },
+  cc1: { x: 14, y: 188 },
+  cc2: { x: 49, y: 188 },
+  cc3: { x: 84, y: 188 },
+  cc4: { x: 119, y: 188 },
+  cc5: { x: 14, y: 247 },
+  cc6: { x: 49, y: 247 },
+  cc7: { x: 84, y: 247 },
+  cc8: { x: 119, y: 247 }
 }
 
 const initializeMidi = async () =>
@@ -30,16 +38,32 @@ const initializeMidi = async () =>
 
 const setup = ({ outputs }) => {
   const tones = {
-    voct: new Tone.Signal(0, Tone.Type.Normal),
+    voct: new Tone.Signal(0, Tone.Type.Audio),
     gate: new Tone.Signal(0, Tone.Type.Normal),
     velocity: new Tone.Signal(0, Tone.Type.Normal),
-    pitch: new Tone.Signal(0, Tone.Type.Normal)
+    pitch: new Tone.Signal(0, Tone.Type.Audio),
+    cc1: new Tone.Signal(0, Tone.Type.Normal),
+    cc2: new Tone.Signal(0, Tone.Type.Normal),
+    cc3: new Tone.Signal(0, Tone.Type.Normal),
+    cc4: new Tone.Signal(0, Tone.Type.Normal),
+    cc5: new Tone.Signal(0, Tone.Type.Normal),
+    cc6: new Tone.Signal(0, Tone.Type.Normal),
+    cc7: new Tone.Signal(0, Tone.Type.Normal),
+    cc8: new Tone.Signal(0, Tone.Type.Normal)
   }
 
   tones.voct.connect(outputs.voct)
   tones.gate.connect(outputs.gate)
   tones.velocity.connect(outputs.velocity)
   tones.pitch.connect(outputs.pitch)
+  tones.cc1.connect(outputs.cc1)
+  tones.cc2.connect(outputs.cc2)
+  tones.cc3.connect(outputs.cc3)
+  tones.cc4.connect(outputs.cc4)
+  tones.cc5.connect(outputs.cc5)
+  tones.cc6.connect(outputs.cc6)
+  tones.cc7.connect(outputs.cc7)
+  tones.cc8.connect(outputs.cc8)
 
   let midi = null
   let keys = []
@@ -50,7 +74,9 @@ const setup = ({ outputs }) => {
     const midiToVoct = midi => R.clamp(0, 1, (keys[0] - 57) / (12 * 5) + 0.5)
 
     input.addListener("controlchange", "all", e => {
-      console.log("cc", e.controller.number, e.value)
+      const cc = e.controller.number
+      if (cc < 1 || cc > 8) return
+      tones[`cc${cc}`].value = e.value / 127
     })
     input.addListener("noteon", "all", e => {
       keys = [e.note.number, ...keys]
