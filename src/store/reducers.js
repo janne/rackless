@@ -63,13 +63,24 @@ export default (state = initialState, action) => {
 
     case MOVE_MODULE: {
       const { id, col, row } = action.payload
-      const width = getModule(id, state).hp
-      const available = availablePos(col, row, width, id, state)
-      if (!available) return state
-      return R.compose(
-        R.set(R.lensPath(["modules", id, "col"]), col),
-        R.set(R.lensPath(["modules", id, "row"]), row)
-      )(state)
+      const { hp, col: oldCol, row: oldRow } = getModule(id, state)
+      const moveIfPossible = (newCol = col) => {
+        if (newCol < 0 || row < 0) return null
+        if (availablePos(newCol, row, hp, id, state)) {
+          return R.compose(
+            R.set(R.lensPath(["modules", id, "col"]), newCol),
+            R.set(R.lensPath(["modules", id, "row"]), row)
+          )(state)
+        }
+        return null
+      }
+      if (row !== oldRow) return moveIfPossible() || state
+      const diff = Math.sign(col - oldCol)
+      for (const n of R.range(0, Math.abs(col - oldCol))) {
+        const newState = moveIfPossible(col - n * diff)
+        if (newState) return newState
+      }
+      return state
     }
 
     case CREATE_CABLE: {

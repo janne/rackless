@@ -37,7 +37,7 @@ const Plate = ({
     const { x, y } = drag.current
     const newCol = Math.round((data.x - x) / HP_PIX)
     const newRow = Math.round((data.y - y) / HEIGHT_PIX)
-    if ((newCol !== col || newRow !== row) && newCol >= 0 && newRow >= 0)
+    if (newCol !== col || newRow !== row)
       dispatchAndPersist(moveModule(moduleId, newCol, newRow))
   }
 
