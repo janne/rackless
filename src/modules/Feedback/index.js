@@ -18,14 +18,19 @@ const controls = {
 }
 
 const setup = ({ inputs, outputs, controls }) => {
-  const tones = { feedback: new Tone.FeedbackDelay() }
+  const tones = {
+    feedback: new Tone.FeedbackDelay(),
+    mulFeedack: new Tone.Pow(2),
+    mulTime: new Tone.Pow(2),
+    mulWet: new Tone.Pow(2)
+  }
 
-  inputs.feedback.connect(tones.feedback.feedback)
-  controls.feedback.connect(tones.feedback.feedback)
-  inputs.time.connect(tones.feedback.delayTime)
-  controls.time.connect(tones.feedback.delayTime)
-  inputs.wet.connect(tones.feedback.wet)
-  controls.wet.connect(tones.feedback.wet)
+  inputs.feedback.chain(tones.mulFeedack, tones.feedback.feedback)
+  controls.feedback.chain(tones.mulFeedack, tones.feedback.feedback)
+  inputs.time.chain(tones.mulTime, tones.feedback.delayTime)
+  controls.time.chain(tones.mulTime, tones.feedback.delayTime)
+  inputs.wet.chain(tones.mulWet, tones.feedback.wet)
+  controls.wet.chain(tones.mulWet, tones.feedback.wet)
   inputs.in.chain(tones.feedback, outputs.out)
 
   return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
