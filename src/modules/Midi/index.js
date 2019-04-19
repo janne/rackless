@@ -5,18 +5,18 @@ import webmidi from "webmidi"
 import background from "./background.svg"
 
 const outputs = {
-  voct: { x: 14, y: 306, range: "audio" },
-  gate: { x: 49, y: 306 },
-  velocity: { x: 84, y: 306 },
-  pitch: { x: 119, y: 306, range: "audio" },
-  cc1: { x: 14, y: 188 },
-  cc2: { x: 49, y: 188 },
-  cc3: { x: 84, y: 188 },
-  cc4: { x: 119, y: 188 },
-  cc5: { x: 14, y: 247 },
-  cc6: { x: 49, y: 247 },
-  cc7: { x: 84, y: 247 },
-  cc8: { x: 119, y: 247 }
+  voct: { x: 5, y: 313, range: "audio" },
+  gate: { x: 36, y: 313 },
+  velocity: { x: 5, y: 253 },
+  pitch: { x: 36, y: 253, range: "audio" },
+  cc1: { x: 5, y: 43 },
+  cc2: { x: 36, y: 43 },
+  cc3: { x: 5, y: 93 },
+  cc4: { x: 36, y: 93 },
+  cc5: { x: 5, y: 143 },
+  cc6: { x: 36, y: 143 },
+  cc7: { x: 5, y: 193 },
+  cc8: { x: 36, y: 193 }
 }
 
 const initializeMidi = async () =>
