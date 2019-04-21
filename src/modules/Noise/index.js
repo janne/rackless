@@ -1,4 +1,5 @@
 import Tone from "tone"
+import * as R from "ramda"
 
 import background from "./background.svg"
 
@@ -39,8 +40,8 @@ const setup = ({ inputs, outputs }) => {
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
   const gateFlip = (gate, values) => {
-    if (!gate && values.find(v => v > 0.8)) return true
-    if (gate && values.find(v => v < 0.2)) return false
+    if (!gate && R.any(R.gt(0.8), values)) return true
+    if (gate && R.any(R.lt(0.2), values)) return false
     return gate
   }
 
