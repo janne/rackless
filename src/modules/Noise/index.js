@@ -3,26 +3,61 @@ import Tone from "tone"
 import background from "./background.svg"
 
 const outputs = {
-  white: { x: 4, y: 65, range: "audio" },
-  brown: { x: 4, y: 163, range: "audio" },
-  pink: { x: 4, y: 260, range: "audio" }
+  white: { x: 4, y: 43, range: "audio" },
+  brown: { x: 4, y: 93, range: "audio" },
+  pink: { x: 4, y: 143, range: "audio" },
+  out: { x: 4, y: 303, range: "audio" }
 }
 
-const setup = ({ outputs }) => {
+const inputs = {
+  sample: { x: 5, y: 200, range: "audio" },
+  hold: { x: 5, y: 250 }
+}
+
+const setup = ({ inputs, outputs }) => {
   const tones = {
     pink: new Tone.Noise("pink"),
     brown: new Tone.Noise("brown"),
-    white: new Tone.Noise("white")
+    white: new Tone.Noise("white"),
+    signal: new Tone.Signal(),
+    sampleAnalyser: new Tone.Analyser("waveform", 64),
+    holdAnalyser: new Tone.Analyser("waveform", 64)
   }
 
-  Object.keys(tones).forEach(type => {
+  inputs.hold.connect(tones.holdAnalyser)
+  inputs.sample.connect(tones.sampleAnalyser)
+  tones.signal.connect(outputs.out)
+
+  const typesOfNoise = ["white", "brown", "pink"]
+  typesOfNoise.forEach(type => {
     const noise = tones[type]
     noise.connect(outputs[type])
     outputs[type].start = () => noise.start()
     outputs[type].stop = () => noise.stop()
   })
 
-  return { dispose: () => Object.values(tones).forEach(t => t.dispose()) }
+  const dispose = () => Object.values(tones).forEach(t => t.dispose())
+
+  const gateFlip = (gate, values) => {
+    if (!gate && values.find(v => v > 0.8)) return true
+    if (gate && values.find(v => v < 0.2)) return false
+    return gate
+  }
+
+  const loop = props => {
+    const { hold: previousHold } = props
+
+    const holdValues = tones.holdAnalyser.getValue()
+
+    const hold = gateFlip(previousHold, holdValues)
+
+    if (hold && !previousHold)
+      tones.signal.value = tones.sampleAnalyser.getValue()[0]
+
+    return { hold }
+  }
+
+  return { dispose, loop }
 }
 
-export default { outputs, setup, background }
+export default { inputs, outputs, setup, background }
