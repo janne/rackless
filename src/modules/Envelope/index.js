@@ -1,4 +1,5 @@
 import Tone from "tone"
+import * as R from "ramda"
 import background from "./background.svg"
 
 const inputs = {
@@ -21,8 +22,8 @@ const controls = {
 const setup = ({ inputs, outputs, controls }) => {
   const tones = {
     envelope: new Tone.Envelope(),
-    gateAnalyser: new Tone.Analyser("waveform", 32),
-    retrigAnalyser: new Tone.Analyser("waveform", 32),
+    gateAnalyser: new Tone.Analyser("waveform", 64),
+    retrigAnalyser: new Tone.Analyser("waveform", 64),
     inverter: new Tone.WaveShaper(x => 1 - x)
   }
 
@@ -39,9 +40,9 @@ const setup = ({ inputs, outputs, controls }) => {
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const gateFlip = (gate, value) => {
-    if (!gate && value > 0.8) return true
-    if (gate && value < 0.2) return false
+  const gateFlip = (gate, values) => {
+    if (!gate && R.any(R.flip(R.gt)(0.8), values)) return true
+    if (gate && R.any(R.flip(R.lt)(0.2), values)) return false
     return gate
   }
 
@@ -52,11 +53,11 @@ const setup = ({ inputs, outputs, controls }) => {
       tones.envelope[key] = values[key] * values[key] * multiplier || 0.01
     })
 
-    const gateValue = tones.gateAnalyser.getValue()[0]
-    const gate = gateFlip(previousGate, gateValue)
+    const gateValues = tones.gateAnalyser.getValue()
+    const gate = gateFlip(previousGate, gateValues)
 
-    const retrigValue = tones.retrigAnalyser.getValue()[0]
-    const retrig = gateFlip(previousRetrig, retrigValue)
+    const retrigValues = tones.retrigAnalyser.getValue()
+    const retrig = gateFlip(previousRetrig, retrigValues)
 
     if ((gate && !previousGate) || (retrig && gate && !previousRetrig))
       tones.envelope.triggerAttack()
