@@ -75,7 +75,7 @@ const setup = ({ inputs, outputs, controls }) => {
 
       value.slice(start, start + width).forEach((v, i) => {
         const x = scale(i, 0, width, 0, width)
-        const y = scale(v * scaler + pos, 0, 2, 0, height)
+        const y = scale(-v * scaler + pos, 0, 2, 0, height)
         if (i === 0) context.moveTo(x, y)
         else context.lineTo(x, y)
       })
