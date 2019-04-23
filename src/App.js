@@ -55,13 +55,7 @@ const App = ({
     Tone.context.lookAhead = 0
 
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log(
-          `Fetching patch for ${user.isAnonymous ? "anonymous " : ""}user:`,
-          user.uid
-        )
-        fetchPatch(user)
-      }
+      if (user) fetchPatch(user)
     })
   }, [])
 
@@ -71,12 +65,6 @@ const App = ({
       .ref(`/users/${user.uid}`)
       .remove()
 
-  const mergeAnonymousUser = (prevUser, googleCredential) => {
-    removePatch(prevUser)
-    prevUser.delete()
-    return firebase.auth().signInAndRetrieveDataWithCredential(googleCredential)
-  }
-
   const signInHandler = async () => {
     const provider = new firebase.auth.GoogleAuthProvider()
     const { currentUser } = firebase.auth()
@@ -84,23 +72,19 @@ const App = ({
       return firebase
         .auth()
         .signInWithPopup(provider)
-        .then(({ user }) => {
-          console.log("Logged in with Google:", user.uid)
-          setLoggedIn(true)
-        })
+        .then(() => setLoggedIn(true))
     }
     return currentUser
       .linkWithPopup(provider)
-      .then(({ user }) => {
-        setLoggedIn(true)
-        console.log("Linked with Google", user.uid)
-      })
+      .then(() => setLoggedIn(true))
       .catch(({ code, credential }) => {
         if (code === "auth/credential-already-in-use") {
-          console.log(`Merging user ${currentUser.uid} with Google`)
-          mergeAnonymousUser(currentUser, credential).then(() =>
-            setLoggedIn(true)
-          )
+          removePatch(currentUser)
+          currentUser.delete()
+          firebase
+            .auth()
+            .signInAndRetrieveDataWithCredential(credential)
+            .then(() => setLoggedIn(true))
         }
       })
   }
@@ -109,15 +93,14 @@ const App = ({
     firebase
       .auth()
       .signOut()
-      .then(() => {
-        console.log("User signed out")
+      .then(() =>
         setPatch({
           isLoggedIn: false,
           modules: null,
           cables: null,
           instruments: null
         })
-      })
+      )
   }
 
   const enableSound = () => {
