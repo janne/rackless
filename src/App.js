@@ -73,21 +73,8 @@ const App = ({
 
   const mergeAnonymousUser = (prevUser, googleCredential) => {
     removePatch(prevUser)
-    firebase
-      .auth()
-      .signInAndRetrieveDataWithCredential(googleCredential)
-      .then(user => {
-        user
-          .delete()
-          .then(() =>
-            prevUser.linkAndRetrieveDataWithCredential(googleCredential)
-          )
-          .then(() =>
-            firebase
-              .auth()
-              .signInAndRetrieveDataWithCredential(googleCredential)
-          )
-      })
+    prevUser.delete()
+    return firebase.auth().signInAndRetrieveDataWithCredential(googleCredential)
   }
 
   const signInHandler = async () => {
@@ -111,7 +98,9 @@ const App = ({
       .catch(({ code, credential }) => {
         if (code === "auth/credential-already-in-use") {
           console.log(`Merging user ${currentUser.uid} with Google`)
-          mergeAnonymousUser(currentUser, credential)
+          mergeAnonymousUser(currentUser, credential).then(() =>
+            setLoggedIn(true)
+          )
         }
       })
   }
@@ -160,12 +149,7 @@ const App = ({
         </MenuItem>
         <MenuItem divider />
         {!isLoggedIn && <MenuItem onClick={signInHandler}>Log in</MenuItem>}
-        {isLoggedIn && (
-          <MenuItem onClick={signOutHandler}>
-            Log out {firebase.auth().currentUser.displayName}
-          </MenuItem>
-        )}
-        <MenuItem onClick={signOutHandler}>Log out anonymous</MenuItem>
+        {isLoggedIn && <MenuItem onClick={signOutHandler}>Log out</MenuItem>}
       </ContextMenu>
     )
   }
