@@ -132,7 +132,11 @@ const App = ({
         </MenuItem>
         <MenuItem divider />
         {!isLoggedIn && <MenuItem onClick={signInHandler}>Log in</MenuItem>}
-        {isLoggedIn && <MenuItem onClick={signOutHandler}>Log out</MenuItem>}
+        {isLoggedIn && (
+          <MenuItem onClick={signOutHandler}>
+            Log out {firebase.auth().currentUser.displayName}
+          </MenuItem>
+        )}
       </ContextMenu>
     )
   }
