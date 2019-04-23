@@ -1,6 +1,7 @@
 import React, { Fragment, useRef } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
+import firebase from "firebase/app"
 import Draggable from "react-draggable"
 import background from "./background.svg"
 import {
@@ -9,7 +10,6 @@ import {
   dragConnector,
   moveConnector
 } from "../../../store/actions"
-import { getDB } from "../../../store/selectors"
 import { HP_PIX, HEIGHT_PIX } from "../../../constants"
 
 const styles = {
@@ -97,7 +97,7 @@ const Socket = ({
 }
 
 const mapStateToProps = (state, { moduleId }) => {
-  const ref = getDB(state).ref()
+  const ref = firebase.database().ref()
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   return {
     moduleX: col * HP_PIX,

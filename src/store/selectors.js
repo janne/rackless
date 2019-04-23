@@ -7,9 +7,7 @@ const WIDTH = 15
 
 export const getPatch = R.pick(["modules", "cables"])
 
-export const getDB = R.prop("db")
-
-export const getUser = R.prop("uid")
+export const getLoggedIn = R.prop("isLoggedIn")
 
 export const getModule = (moduleId, state) =>
   R.path(["modules", moduleId], state)
@@ -23,6 +21,7 @@ export const socketToPos = (moduleId, direction, socketId, state) => {
   if (R.isNil(moduleId) || R.isNil(socketId)) return {}
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   const socket = getSockets(moduleId, direction, state)[socketId]
+  if (R.isNil(socket)) return {}
   return {
     x: col * HP_PIX + socket.x,
     y: row * HEIGHT_PIX + socket.y

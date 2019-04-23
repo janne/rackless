@@ -1,11 +1,6 @@
 import * as R from "ramda"
-import {
-  socketAtPos,
-  getDB,
-  findFreePos,
-  availablePos,
-  getModule
-} from "./selectors"
+import firebase from "firebase/app"
+import { socketAtPos, findFreePos, availablePos, getModule } from "./selectors"
 import {
   SET_VALUE,
   SET_MODULE_VALUE,
@@ -18,8 +13,7 @@ import {
   DRAG_CONNECTOR,
   REMOVE_CONNECTOR,
   SET_PATCH,
-  SET_DB,
-  SET_USER
+  SET_LOGGED_IN
 } from "./actionTypes"
 
 const initialState = {
@@ -46,14 +40,9 @@ export default (state = initialState, action) => {
       return R.set(R.lensPath(["modules", id, name]), value, state)
     }
 
-    case SET_DB: {
-      const { db } = action.payload
-      return { ...state, db }
-    }
-
-    case SET_USER: {
-      const { uid } = action.payload
-      return { ...state, uid }
+    case SET_LOGGED_IN: {
+      const { isLoggedIn } = action.payload
+      return { ...state, isLoggedIn }
     }
 
     case SET_INSTRUMENT: {
@@ -148,7 +137,7 @@ export default (state = initialState, action) => {
 
     case CREATE_MODULE: {
       const { type } = action.payload
-      const ref = getDB(state).ref()
+      const ref = firebase.database().ref()
       const key = ref.child("modules").push().key
       const pos = findFreePos(10, state)
       const values = {}
@@ -164,7 +153,7 @@ export default (state = initialState, action) => {
         instruments: R.dissoc(id, state.instruments),
         cables: R.reject(
           cable => cable.outputModule === id || cable.inputModule === id,
-          state.cables
+          R.propOr([], "cables", state)
         )
       }
     }

@@ -10,23 +10,18 @@ import {
   DRAG_CONNECTOR,
   CREATE_MODULE,
   DELETE_MODULE,
-  SET_DB,
-  SET_USER
+  SET_LOGGED_IN
 } from "./actionTypes"
-import { getDB, getUser, getPatch } from "./selectors"
+import { getPatch } from "./selectors"
+import firebase from "firebase/app"
 
-export const fetchPatch = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const uid = getUser(state)
-    const prefix = `/users/${uid}`
-    getDB(state)
-      .ref(prefix)
-      .on("value", patch => {
-        dispatch(setPatch(patch.val() || {}))
-      })
-  }
-}
+export const fetchPatch = user => dispatch =>
+  firebase
+    .database()
+    .ref(`/users/${user.uid}`)
+    .on("value", patch => {
+      dispatch(setPatch(patch.val() || {}))
+    })
 
 let debouncer
 export const dispatchAndPersist = action => {
@@ -35,23 +30,29 @@ export const dispatchAndPersist = action => {
     if (debouncer) return
     debouncer = setTimeout(() => {
       debouncer = null
-      const state = getState()
-      const uid = getUser(state)
-      getDB(state)
-        .ref(`/users/${uid}`)
-        .set(getPatch(state))
+      new Promise(resolve => {
+        const user = firebase.auth().currentUser
+        if (user) return resolve(user)
+        firebase
+          .auth()
+          .signInAnonymously()
+          .then(({ user }) => {
+            console.log("Logged in as anonymous user", user.uid)
+            resolve(user)
+          })
+      }).then(user => {
+        firebase
+          .database()
+          .ref(`/users/${user.uid}`)
+          .set(getPatch(getState()))
+      })
     }, 1000)
   }
 }
 
-export const setDB = db => ({
-  type: SET_DB,
-  payload: { db }
-})
-
-export const setUser = uid => ({
-  type: SET_USER,
-  payload: { uid }
+export const setLoggedIn = isLoggedIn => ({
+  type: SET_LOGGED_IN,
+  payload: { isLoggedIn }
 })
 
 export const setPatch = payload => ({
