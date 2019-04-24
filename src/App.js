@@ -60,7 +60,7 @@ const App = ({
       }
       setLoggedIn(user && !user.isAnonymous)
     })
-  }, [])
+  }, [fetchPatch, setLoggedIn])
 
   const removePatch = async user =>
     firebase
