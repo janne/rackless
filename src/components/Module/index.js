@@ -42,7 +42,10 @@ const Module = ({
   } = moduleTypes[type]
 
   const controlsWithRefs = R.map(
-    control => ({ ...control, ref: useRef() }),
+    control => ({
+      ...control,
+      ref: useRef() // eslint-disable-line react-hooks/rules-of-hooks
+    }),
     controls
   )
 
@@ -67,11 +70,11 @@ const Module = ({
     setInstrument(id, instrument)
     setupValues(instrument, values)
     return () => instrument.dispose()
-  }, R.keys(rangeControls).map(getValue))
+  }, R.keys(rangeControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setupValues(instrument, values)
-  }, R.keys(otherControls).map(getValue))
+  }, R.keys(otherControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setupValues = (instrument, values) => {
     if (R.isNil(instrument)) return
