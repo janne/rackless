@@ -36,10 +36,7 @@ export const dispatchAndPersist = action => {
         firebase
           .auth()
           .signInAnonymously()
-          .then(({ user }) => {
-            console.log("Logged in as anonymous user", user.uid)
-            resolve(user)
-          })
+          .then(({ user }) => resolve(user))
       }).then(user => {
         firebase
           .database()
