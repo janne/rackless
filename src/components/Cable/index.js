@@ -30,13 +30,6 @@ const Cable = ({
   dragConnector,
   dispatchAndPersist
 }) => {
-  if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
-
-  const outX = R.prop("connector", drag) === "outputs" ? drag.pos.x : x1
-  const outY = R.prop("connector", drag) === "outputs" ? drag.pos.y : y1
-  const inX = R.prop("connector", drag) === "inputs" ? drag.pos.x : x2
-  const inY = R.prop("connector", drag) === "inputs" ? drag.pos.y : y2
-
   useEffect(() => {
     if (disabled || !from || !to) return
     if (from.numberOfOutputs === 0 || to.numberOfInputs === 0) return
@@ -62,6 +55,13 @@ const Cable = ({
       from.disconnect(outputNum)
     }
   }, [from, to, outputSocket, inputSocket, disabled])
+
+  if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
+
+  const outX = R.prop("connector", drag) === "outputs" ? drag.pos.x : x1
+  const outY = R.prop("connector", drag) === "outputs" ? drag.pos.y : y1
+  const inX = R.prop("connector", drag) === "inputs" ? drag.pos.x : x2
+  const inY = R.prop("connector", drag) === "inputs" ? drag.pos.y : y2
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
 
