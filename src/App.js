@@ -55,7 +55,10 @@ const App = ({
     Tone.context.lookAhead = 0
 
     firebase.auth().onAuthStateChanged(user => {
-      if (user) fetchPatch(user)
+      if (user) {
+        fetchPatch(user)
+      }
+      setLoggedIn(user && !user.isAnonymous)
     })
   }, [])
 
@@ -69,24 +72,15 @@ const App = ({
     const provider = new firebase.auth.GoogleAuthProvider()
     const { currentUser } = firebase.auth()
     if (R.isNil(currentUser)) {
-      return firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(() => setLoggedIn(true))
+      return firebase.auth().signInWithPopup(provider)
     }
-    return currentUser
-      .linkWithPopup(provider)
-      .then(() => setLoggedIn(true))
-      .catch(({ code, credential }) => {
-        if (code === "auth/credential-already-in-use") {
-          removePatch(currentUser)
-          currentUser.delete()
-          firebase
-            .auth()
-            .signInAndRetrieveDataWithCredential(credential)
-            .then(() => setLoggedIn(true))
-        }
-      })
+    return currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
+      if (code === "auth/credential-already-in-use") {
+        removePatch(currentUser)
+        currentUser.delete()
+        firebase.auth().signInAndRetrieveDataWithCredential(credential)
+      }
+    })
   }
 
   const signOutHandler = async () => {
