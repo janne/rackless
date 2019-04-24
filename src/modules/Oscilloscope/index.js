@@ -1,4 +1,4 @@
-import React from "react"
+import React, { createRef } from "react"
 import * as R from "ramda"
 import Tone from "tone"
 import background from "./background.svg"
@@ -16,7 +16,7 @@ const controls = {
   bPos: { x: 61, y: 233, width: 30 },
   cScale: { x: 112, y: 185, width: 30 },
   cPos: { x: 112, y: 233, width: 30 },
-  monitor: { x: 4, y: 34, Component }
+  monitor: { x: 4, y: 34, Component, ref: createRef() }
 }
 
 const inputs = {

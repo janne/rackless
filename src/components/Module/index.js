@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Plate from "./Plate"
@@ -41,14 +41,6 @@ const Module = ({
     setup = () => {}
   } = moduleTypes[type]
 
-  const controlsWithRefs = R.map(
-    control => ({
-      ...control,
-      ref: useRef() // eslint-disable-line react-hooks/rules-of-hooks
-    }),
-    controls
-  )
-
   const [rangeControls, otherControls] = R.partition(
     R.compose(
       R.is(Array),
@@ -60,13 +52,7 @@ const Module = ({
   const getValue = R.flip(R.prop)(values)
 
   useEffect(() => {
-    const instrument = new Instrument(
-      controlsWithRefs,
-      inputs,
-      outputs,
-      setup,
-      values
-    )
+    const instrument = new Instrument(controls, inputs, outputs, setup, values)
     setInstrument(id, instrument)
     setupValues(instrument, values)
     return () => instrument.dispose()
@@ -133,7 +119,7 @@ const Module = ({
               />
             </Wrapper>
           )
-        }, controlsWithRefs)
+        }, controls)
       )}
 
       {R.values(
