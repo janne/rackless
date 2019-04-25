@@ -10,18 +10,22 @@ import {
   DRAG_CONNECTOR,
   CREATE_MODULE,
   DELETE_MODULE,
-  SET_LOGGED_IN
+  SET_LOGGED_IN,
+  SET_LOADING
 } from "./actionTypes"
 import { getPatch } from "./selectors"
 import firebase from "firebase/app"
 
-export const fetchPatch = user => dispatch =>
+export const fetchPatch = user => dispatch => {
+  dispatch(setLoading(true))
   firebase
     .database()
     .ref(`/users/${user.uid}`)
     .on("value", patch => {
+      dispatch(setLoading(false))
       dispatch(setPatch(patch.val() || {}))
     })
+}
 
 let debouncer
 export const dispatchAndPersist = action => {
@@ -50,6 +54,11 @@ export const dispatchAndPersist = action => {
 export const setLoggedIn = isLoggedIn => ({
   type: SET_LOGGED_IN,
   payload: { isLoggedIn }
+})
+
+export const setLoading = isLoading => ({
+  type: SET_LOADING,
+  payload: { isLoading }
 })
 
 export const setPatch = payload => ({

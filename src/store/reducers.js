@@ -13,7 +13,8 @@ import {
   DRAG_CONNECTOR,
   REMOVE_CONNECTOR,
   SET_PATCH,
-  SET_LOGGED_IN
+  SET_LOGGED_IN,
+  SET_LOADING
 } from "./actionTypes"
 
 const initialState = {
@@ -43,6 +44,11 @@ export default (state = initialState, action) => {
     case SET_LOGGED_IN: {
       const { isLoggedIn } = action.payload
       return { ...state, isLoggedIn }
+    }
+
+    case SET_LOADING: {
+      const { isLoading } = action.payload
+      return { ...state, isLoading }
     }
 
     case SET_INSTRUMENT: {

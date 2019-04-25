@@ -19,9 +19,10 @@ import {
   dispatchAndPersist,
   createModule,
   deleteModule,
-  setLoggedIn
+  setLoggedIn,
+  setLoading
 } from "./store/actions"
-import { getLoggedIn } from "./store/selectors"
+import { getLoggedIn, getLoading } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 
@@ -29,6 +30,18 @@ const styles = {
   container: {
     height: 771,
     width: 1524
+  },
+  loader: {
+    zIndex: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    height: "100%",
+    top: 0,
+    left: 0,
+    right: 0,
+    background: "rgba(0, 0, 0, 0.9)"
   }
 }
 
@@ -37,6 +50,7 @@ const App = ({
   setPatch,
   isLoggedIn,
   setLoggedIn,
+  isLoading,
   dispatchAndPersist,
   instruments = [],
   modules,
@@ -172,6 +186,11 @@ const App = ({
 
   return (
     <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
+      {isLoading && (
+        <div style={styles.loader}>
+          <img src="spinner.gif" alt="Spinner" width="200" height="200" />
+        </div>
+      )}
       <div onClick={enableSound} style={styles.container}>
         {R.map(
           id => (
@@ -198,6 +217,7 @@ const App = ({
 
 const mapStateToProps = state => ({
   isLoggedIn: getLoggedIn(state),
+  isLoading: getLoading(state),
   cables: R.propOr([], "cables", state),
   modules: R.propOr([], "modules", state),
   instruments: R.propOr([], "instruments", state)
@@ -208,7 +228,8 @@ const mapDispatchToProps = {
   setInstrument,
   fetchPatch,
   setPatch,
-  setLoggedIn
+  setLoggedIn,
+  setLoading
 }
 
 export default connect(

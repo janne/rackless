@@ -9,6 +9,8 @@ export const getPatch = R.pick(["modules", "cables"])
 
 export const getLoggedIn = R.prop("isLoggedIn")
 
+export const getLoading = R.prop("isLoading")
+
 export const getModule = (moduleId, state) =>
   R.path(["modules", moduleId], state)
 
