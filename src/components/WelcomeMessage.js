@@ -15,7 +15,7 @@ const WelcomeMessage = ({ enabled }) => {
   useEffect(() => {
     setTimeout(() => {
       if (enabled) setShow(true)
-    }, 1000)
+    }, 2000)
   })
 
   if (!enabled || !show) return null
