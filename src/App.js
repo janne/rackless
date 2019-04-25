@@ -25,6 +25,7 @@ import {
 import { getLoggedIn, getLoading } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
+import WelcomeMessage from "./components/WelcomeMessage"
 
 const styles = {
   container: {
@@ -193,6 +194,7 @@ const App = ({
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
         </div>
       )}
+      <WelcomeMessage enabled={R.isEmpty(modules) && !isLoading} />
       <div onClick={enableSound} style={styles.container}>
         {R.map(
           id => (
