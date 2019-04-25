@@ -61,7 +61,7 @@ const App = ({
     // Initialize
     firebase.initializeApp({
       apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
-      authDomain: "rackless-cc.firebaseapp.com",
+      authDomain: "www.rackless.cc",
       projectId: "rackless-cc",
       databaseURL: "https://rackless-cc.firebaseio.com",
       storageBucket: "rackless-cc.appspot.com"
