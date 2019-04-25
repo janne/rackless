@@ -27,8 +27,8 @@ import Module from "./components/Module"
 
 const styles = {
   container: {
-    height: "100vh",
-    width: "100vw"
+    height: 771,
+    width: 1524
   }
 }
 
