@@ -52,6 +52,7 @@ const App = ({
   setLoggedIn,
   isLoading,
   dispatchAndPersist,
+  setLoading,
   instruments = [],
   modules,
   cables
@@ -72,9 +73,10 @@ const App = ({
       if (user) {
         fetchPatch(user)
       }
+      setLoading(false)
       setLoggedIn(user && !user.isAnonymous)
     })
-  }, [fetchPatch, setLoggedIn])
+  }, [fetchPatch, setLoading, setLoggedIn])
 
   const removePatch = async user =>
     firebase

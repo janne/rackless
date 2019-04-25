@@ -18,8 +18,11 @@ import {
 } from "./actionTypes"
 
 const initialState = {
-  modules: {},
-  cables: {}
+  modules: null,
+  cables: null,
+  instruments: null,
+  isLoading: true,
+  isLoggedIn: false
 }
 
 export default (state = initialState, action) => {
