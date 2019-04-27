@@ -80,11 +80,10 @@ const Module = ({
         R.mapObjIndexed((params, name) => {
           const { Component, x, y } = params
           if (Component) {
-            const ComponentWithRef = React.forwardRef(Component)
             const props = R.propOr({}, "props", instrument)
             return (
               <Wrapper x={x} y={y} key={`control-${name}`}>
-                <ComponentWithRef
+                <Component
                   id={id}
                   name={name}
                   value={values[name]}

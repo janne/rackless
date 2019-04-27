@@ -169,9 +169,9 @@ const App = ({
   useEffect(() => {
     performAnimation.current = () => {
       requestAnimationFrame(performAnimation.current)
-      R.forEach(instrument => {
-        if (instrument.animate) instrument.animate()
-      }, R.values(instruments))
+      R.forEachObjIndexed((instrument, id) => {
+        if (instrument.animate) instrument.animate(id)
+      }, instruments)
     }
 
     performLoop.current = () => {

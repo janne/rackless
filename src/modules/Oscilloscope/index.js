@@ -7,7 +7,12 @@ const resolution = 512
 const width = 144
 const height = 144
 
-const Component = (_, ref) => <canvas ref={ref} width={width} height={height} />
+const refs = {}
+
+const Component = ({ id }) => {
+  refs[id] = createRef()
+  return <canvas ref={refs[id]} width={width} height={height} />
+}
 
 const controls = {
   aScale: { x: 10, y: 185, width: 30 },
@@ -16,7 +21,7 @@ const controls = {
   bPos: { x: 61, y: 233, width: 30 },
   cScale: { x: 112, y: 185, width: 30 },
   cPos: { x: 112, y: 233, width: 30 },
-  monitor: { x: 4, y: 34, Component, ref: createRef() }
+  monitor: { x: 4, y: 34, Component }
 }
 
 const inputs = {
@@ -53,8 +58,8 @@ const setup = ({ inputs, outputs, controls }) => {
   const scale = (value, istart, istop, ostart, ostop) =>
     ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
 
-  const animate = () => {
-    const canvas = controls.monitor.ref.current
+  const animate = id => {
+    const canvas = refs[id].current
     const context = canvas.getContext("2d")
     context.clearRect(0, 0, width, height)
 
