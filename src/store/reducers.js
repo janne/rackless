@@ -114,6 +114,17 @@ export default (state = initialState, action) => {
 
       if (!target) return { ...state, cables }
 
+      const existingCables = R.filter(
+        ({ inputModule, inputSocket, outputModule, outputSocket }) =>
+          (inputModule === target.moduleId &&
+            inputSocket === target.socketId) ||
+          (outputModule === target.moduleId &&
+            outputSocket === target.socketId),
+        cables
+      )
+
+      if (!R.isEmpty(existingCables)) return { ...state, cables }
+
       const updatedCable =
         connector === "outputs"
           ? {
