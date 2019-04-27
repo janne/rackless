@@ -58,14 +58,16 @@ export default class extends Tone.Instrument {
       outputs: this.outputs
     })
 
-    const { dispose, loop } = setupReturn || {}
+    const { dispose, loop, animate } = setupReturn || {}
     this.instrumentDispose = dispose
     this.loop = loop
+    this.animate = animate
   }
 
   dispose = () => {
     if (typeof this.instrumentDispose === "function") this.instrumentDispose()
     this.loop = null
+    this.animate = null
     Object.values(this.controls).forEach(disposeTone)
     Object.values(this.inputs).forEach(disposeTone)
     Object.values(this.outputs).forEach(disposeTone)

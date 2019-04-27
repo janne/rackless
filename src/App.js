@@ -164,26 +164,32 @@ const App = ({
   )
 
   const performAnimation = useRef()
+  const performLoop = useRef()
 
   useEffect(() => {
     performAnimation.current = () => {
       requestAnimationFrame(performAnimation.current)
+      R.forEach(instrument => {
+        if (instrument.animate) instrument.animate()
+      }, R.values(instruments))
+    }
+
+    performLoop.current = () => {
       const instrumentsWithLoop = R.filter(
         i => Boolean(R.prop("loop", i)),
         instruments
       )
-      if (!R.isEmpty(instrumentsWithLoop)) {
-        R.forEachObjIndexed((instrument, id) => {
-          instrument.props = instrument.loop(
-            instrument.props || {},
-            modules[id].values || {}
-          )
-        }, instrumentsWithLoop)
-      }
+      R.forEachObjIndexed((instrument, id) => {
+        instrument.props = instrument.loop(
+          instrument.props || {},
+          modules[id].values || {}
+        )
+      }, instrumentsWithLoop)
     }
   }, [instruments, modules])
 
   useEffect(() => {
+    setInterval(() => performLoop.current(), 10)
     requestAnimationFrame(performAnimation.current)
   }, [])
 

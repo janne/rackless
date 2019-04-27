@@ -53,7 +53,7 @@ const setup = ({ inputs, outputs, controls }) => {
   const scale = (value, istart, istop, ostart, ostop) =>
     ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
 
-  const loop = () => {
+  const animate = () => {
     const canvas = controls.monitor.ref.current
     const context = canvas.getContext("2d")
     context.clearRect(0, 0, width, height)
@@ -85,7 +85,7 @@ const setup = ({ inputs, outputs, controls }) => {
     })
   }
 
-  return { dispose, loop }
+  return { dispose, animate }
 }
 
 export default { controls, inputs, outputs, setup, background }
