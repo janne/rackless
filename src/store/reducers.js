@@ -116,9 +116,11 @@ export default (state = initialState, action) => {
 
       const existingCables = R.filter(
         ({ inputModule, inputSocket, outputModule, outputSocket }) =>
-          (inputModule === target.moduleId &&
+          (connector === "inputs" &&
+            inputModule === target.moduleId &&
             inputSocket === target.socketId) ||
-          (outputModule === target.moduleId &&
+          (connector === "outputs" &&
+            outputModule === target.moduleId &&
             outputSocket === target.socketId),
         cables
       )
