@@ -120,6 +120,8 @@ const App = ({
 
   const renderModule = id => <Module id={id} />
 
+  const titleize = text => text.replace(/([A-Z])/g, " $1")
+
   const renderRootMenu = () => {
     const renderModuleMenu = type => (
       <MenuItem
@@ -127,7 +129,7 @@ const App = ({
         data={{ type }}
         onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
       >
-        {type}
+        {titleize(type)}
       </MenuItem>
     )
 
