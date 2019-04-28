@@ -36,7 +36,7 @@ const setup = ({ inputs, outputs }) => {
     const newSig = tones.analyser.getValue()[0]
     if (newSig === sig) return { sig }
     const slope = newSig > sig ? "attack" : "decay"
-    const controlTime = Math.pow(values[slope] || 0, 2) * 10
+    const controlTime = Math.pow(values[slope] || 0.5, 2) * 10
     const signalTime = tones[slope].getValue()[0]
     const time = controlTime + signalTime
 
