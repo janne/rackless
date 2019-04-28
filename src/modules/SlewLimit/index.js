@@ -20,19 +20,25 @@ const outputs = {
 const setup = ({ inputs, outputs }) => {
   const tones = {
     analyser: new Tone.Analyser("waveform", 64),
+    attack: new Tone.Analyser("waveform", 64),
+    decay: new Tone.Analyser("waveform", 64),
     signal: new Tone.Signal()
   }
 
   inputs.in.connect(tones.analyser)
+  inputs.attack.connect(tones.attack)
+  inputs.decay.connect(tones.decay)
   tones.signal.connect(outputs.out)
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
   const loop = ({ sig }, values) => {
     const newSig = tones.analyser.getValue()[0]
-    if (newSig != sig) {
-      tones.signal.linearRampTo(newSig, 1)
-    }
+    if (newSig === sig) return { sig }
+    const slope = newSig > sig ? "attack" : "decay"
+    const controlTime = Math.pow(values[slope] || 0, 2) * 10
+    const signalTime = tones[slope].getValue()[0]
+    tones.signal.linearRampTo(newSig, controlTime + signalTime)
     return { sig: newSig }
   }
 
