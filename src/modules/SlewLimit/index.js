@@ -4,7 +4,7 @@ import background from "./background.svg"
 const controls = {
   attack: { x: 12, y: 42 },
   decay: { x: 12, y: 135 },
-  type: { x: 15, y: 245, range: ["exp", "lin"] }
+  ramp: { x: 15, y: 245, range: ["exp", "lin"] }
 }
 
 const inputs = {
@@ -38,7 +38,15 @@ const setup = ({ inputs, outputs }) => {
     const slope = newSig > sig ? "attack" : "decay"
     const controlTime = Math.pow(values[slope] || 0, 2) * 10
     const signalTime = tones[slope].getValue()[0]
-    tones.signal.linearRampTo(newSig, controlTime + signalTime)
+    const time = controlTime + signalTime
+
+    if (time === 0) {
+      tones.signal.value = newSig
+    } else if (values.ramp === "lin") {
+      tones.signal.linearRampTo(newSig, time)
+    } else {
+      tones.signal.targetRampTo(newSig, time)
+    }
     return { sig: newSig }
   }
 
