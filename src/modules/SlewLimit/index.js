@@ -17,7 +17,7 @@ const outputs = {
   out: { x: 36, y: 313 }
 }
 
-const setup = ({ controls, inputs, outputs }) => {
+const setup = ({ inputs, outputs }) => {
   const tones = {
     analyser: new Tone.Analyser("waveform", 64),
     signal: new Tone.Signal()
@@ -28,8 +28,12 @@ const setup = ({ controls, inputs, outputs }) => {
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const loop = () => {
-    tones.signal.value = tones.analyser.getValue()[0]
+  const loop = ({ sig }, values) => {
+    const newSig = tones.analyser.getValue()[0]
+    if (newSig != sig) {
+      tones.signal.linearRampTo(newSig, 1)
+    }
+    return { sig: newSig }
   }
 
   return { dispose, loop }
