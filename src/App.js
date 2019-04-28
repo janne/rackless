@@ -29,8 +29,8 @@ import WelcomeMessage from "./components/WelcomeMessage"
 
 const styles = {
   container: {
-    height: 771,
-    width: 1524
+    minHeight: 480,
+    minWidth: 640
   },
   loader: {
     zIndex: 10,
