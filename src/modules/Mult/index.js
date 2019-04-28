@@ -1,4 +1,3 @@
-import Tone from "tone"
 import background from "./background.svg"
 
 export const inputs = {
