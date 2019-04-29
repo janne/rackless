@@ -2,6 +2,11 @@ import React, { useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
+import AppBar from "@material-ui/core/AppBar"
+import Toolbar from "@material-ui/core/Toolbar"
+import TypoGraphy from "@material-ui/core/Typography"
+import IconButton from "@material-ui/core/IconButton"
+import { Menu as MenuIcon, AddCircle } from "@material-ui/icons"
 import {
   ContextMenu,
   MenuItem,
@@ -25,12 +30,17 @@ import {
 import { getLoggedIn, getLoading } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
-import WelcomeMessage from "./components/WelcomeMessage"
 
 const styles = {
-  container: {
-    minHeight: 480,
-    minWidth: 640
+  root: {
+    flexGrow: 1
+  },
+  menuTitle: {
+    flexGrow: 1
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20
   },
   loader: {
     zIndex: 10,
@@ -196,13 +206,25 @@ const App = ({
   }, [])
 
   return (
-    <ContextMenuTrigger id="root-menu" holdToDisplay={-1}>
+    <div style={styles.root}>
+      <AppBar position="static">
+        <Toolbar variant="dense">
+          <IconButton color="inherit" style={styles.menuButton}>
+            <MenuIcon />
+          </IconButton>
+          <TypoGraphy variant="h6" color="inherit" style={styles.menuTitle}>
+            Synth
+          </TypoGraphy>
+          <IconButton color="inherit">
+            <AddCircle />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       {isLoading && (
         <div style={styles.loader}>
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
         </div>
       )}
-      <WelcomeMessage enabled={R.isEmpty(modules) && !isLoading} />
       <div onClick={enableSound} style={styles.container}>
         {R.map(
           id => (
@@ -222,8 +244,7 @@ const App = ({
           )
         )}
       </div>
-      {renderRootMenu()}
-    </ContextMenuTrigger>
+    </div>
   )
 }
 
