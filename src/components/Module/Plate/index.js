@@ -7,7 +7,7 @@ import {
   moveModule,
   setModuleValue
 } from "../../../store/actions"
-import { HEIGHT_PIX, HP_PIX } from "../../../constants"
+import { HEIGHT_PIX, HP_PIX, TOPBAR_HEIGHT } from "../../../constants"
 
 const Plate = ({
   moduleId,
@@ -52,7 +52,7 @@ const Plate = ({
         style={{
           ...styles.content,
           left: moduleX,
-          top: moduleY
+          top: moduleY + TOPBAR_HEIGHT
         }}
       >
         <img

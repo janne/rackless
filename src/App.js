@@ -24,6 +24,9 @@ const styles = {
   root: {
     flexGrow: 1
   },
+  rack: {
+    border: "solid 1px red"
+  },
   menuTitle: {
     flexGrow: 1
   },
@@ -181,15 +184,13 @@ const App = ({
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
         </div>
       )}
-      <div onClick={enableSound} style={styles.container}>
-        {R.map(id => renderModule(id), R.keys(modules))}
-        {R.values(
-          R.mapObjIndexed(
-            (props, id) => <Cable key={id} id={id} {...props} />,
-            cables
-          )
-        )}
-      </div>
+      {R.map(id => renderModule(id), R.keys(modules))}
+      {R.values(
+        R.mapObjIndexed(
+          (props, id) => <Cable key={id} id={id} {...props} />,
+          cables
+        )
+      )}
     </div>
   )
 }
