@@ -1,6 +1,10 @@
 import React, { useState } from "react"
 import * as R from "ramda"
-import { Menu as MenuIcon, AddCircle } from "@material-ui/icons"
+import {
+  Menu as MenuIcon,
+  AddCircle as AddIcon,
+  Delete as DeleteIcon
+} from "@material-ui/icons"
 import {
   Menu,
   MenuItem,
@@ -22,7 +26,7 @@ const styles = {
   }
 }
 
-const TopBar = ({ items }) => {
+const TopBar = ({ items, deleteHandler, deleting }) => {
   const theme = createMuiTheme({
     palette: {
       primary: colors.grey,
@@ -61,11 +65,15 @@ const TopBar = ({ items }) => {
           <Typography variant="h6" style={styles.menuTitle}>
             Rackless
           </Typography>
+          <IconButton>
+            <DeleteIcon color={deleting ? "secondary" : "inherit"} />
+          </IconButton>
+
           <IconButton
             id="addMenuButton"
             onClick={e => setAddMenu(e.currentTarget)}
           >
-            <AddCircle />
+            <AddIcon />
           </IconButton>
         </Toolbar>
       </AppBar>

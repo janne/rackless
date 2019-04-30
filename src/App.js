@@ -24,9 +24,6 @@ const styles = {
   root: {
     flexGrow: 1
   },
-  rack: {
-    border: "solid 1px red"
-  },
   menuTitle: {
     flexGrow: 1
   },
@@ -178,7 +175,7 @@ const App = ({
 
   return (
     <div style={styles.root}>
-      <TopBar items={navItems()} />
+      <TopBar items={navItems()} deleting={false} />
       {isLoading && (
         <div style={styles.loader}>
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
