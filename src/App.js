@@ -2,12 +2,6 @@ import React, { useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
-import {
-  ContextMenu,
-  MenuItem,
-  SubMenu,
-  ContextMenuTrigger
-} from "react-contextmenu"
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
@@ -18,7 +12,6 @@ import {
   setPatch,
   dispatchAndPersist,
   createModule,
-  deleteModule,
   setLoggedIn,
   setLoading
 } from "./store/actions"
@@ -128,49 +121,6 @@ const App = ({
 
   const titleize = text => text.replace(/([A-Z])/g, " $1")
 
-  const renderRootMenu = () => {
-    const renderModuleMenu = type => (
-      <MenuItem
-        key={type}
-        data={{ type }}
-        onClick={(e, data) => dispatchAndPersist(createModule(data.type))}
-      >
-        {titleize(type)}
-      </MenuItem>
-    )
-
-    return (
-      <ContextMenu id="root-menu">
-        <SubMenu title="Add module" hoverDelay={200}>
-          {R.map(renderModuleMenu, R.keys(moduleTypes))}
-        </SubMenu>
-        <MenuItem
-          onClick={() => window.open("https://www.reddit.com/r/rackless")}
-        >
-          Open Reddit
-        </MenuItem>
-        <MenuItem divider />
-        {!isLoggedIn && <MenuItem onClick={signInHandler}>Log in</MenuItem>}
-        {isLoggedIn && (
-          <MenuItem onClick={signOutHandler}>
-            Log out {firebase.auth().currentUser.displayName}
-          </MenuItem>
-        )}
-      </ContextMenu>
-    )
-  }
-
-  const renderModuleMenu = id => (
-    <ContextMenu id={`${id}-menu`}>
-      <MenuItem
-        data={{ id }}
-        onClick={(e, data) => dispatchAndPersist(deleteModule(data.id))}
-      >
-        Delete
-      </MenuItem>
-    </ContextMenu>
-  )
-
   const performAnimation = useRef()
   const performLoop = useRef()
 
@@ -201,26 +151,38 @@ const App = ({
     requestAnimationFrame(performAnimation.current)
   }, [])
 
+  const navItems = () => ({
+    menu: [
+      {
+        title: "Open Reddit",
+        handler: () => window.open("https://www.reddit.com/r/rackless")
+      },
+      {
+        title: isLoggedIn
+          ? `Log out ${firebase.auth().currentUser.displayName}`
+          : "Log in",
+        handler: isLoggedIn ? signOutHandler : signInHandler
+      }
+    ],
+    add: R.map(
+      type => ({
+        title: titleize(type),
+        handler: () => dispatchAndPersist(createModule(type))
+      }),
+      R.keys(moduleTypes)
+    )
+  })
+
   return (
     <div style={styles.root}>
-      <TopBar />
+      <TopBar items={navItems()} />
       {isLoading && (
         <div style={styles.loader}>
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
         </div>
       )}
       <div onClick={enableSound} style={styles.container}>
-        {R.map(
-          id => (
-            <div key={id}>
-              <ContextMenuTrigger id={`${id}-menu`} holdToDisplay={-1}>
-                {renderModule(id)}
-              </ContextMenuTrigger>
-              {renderModuleMenu(id)}
-            </div>
-          ),
-          R.keys(modules)
-        )}
+        {R.map(id => renderModule(id), R.keys(modules))}
         {R.values(
           R.mapObjIndexed(
             (props, id) => <Cable key={id} id={id} {...props} />,
