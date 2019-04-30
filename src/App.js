@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { Fragment, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
@@ -22,8 +22,13 @@ import Module from "./components/Module"
 import TopBar from "./TopBar"
 
 const styles = {
-  root: {
-    flexGrow: 1
+  content: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 48,
+    overflow: "scroll"
   },
   menuTitle: {
     flexGrow: 1
@@ -177,25 +182,27 @@ const App = ({
   })
 
   return (
-    <div style={styles.root}>
+    <Fragment>
       <TopBar
         items={navItems()}
         deleteHandler={toggleDelete}
         deleting={deleting}
       />
-      {isLoading && (
-        <div style={styles.loader}>
-          <img src="spinner.gif" alt="Spinner" width="200" height="200" />
-        </div>
-      )}
-      {R.map(id => renderModule(id), R.keys(modules))}
-      {R.values(
-        R.mapObjIndexed(
-          (props, id) => <Cable key={id} id={id} {...props} />,
-          cables
-        )
-      )}
-    </div>
+      <div style={styles.content}>
+        {isLoading && (
+          <div style={styles.loader}>
+            <img src="spinner.gif" alt="Spinner" width="200" height="200" />
+          </div>
+        )}
+        {R.map(id => renderModule(id), R.keys(modules))}
+        {R.values(
+          R.mapObjIndexed(
+            (props, id) => <Cable key={id} id={id} {...props} />,
+            cables
+          )
+        )}
+      </div>
+    </Fragment>
   )
 }
 

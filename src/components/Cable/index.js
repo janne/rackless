@@ -10,7 +10,6 @@ import {
 import { socketToPos } from "../../store/selectors"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
-import { TOPBAR_HEIGHT } from "../../constants"
 
 const CENTER = 10
 
@@ -95,9 +94,9 @@ const Cable = ({
       />
       <Bezier
         x1={outX + CENTER}
-        y1={outY + CENTER + TOPBAR_HEIGHT}
+        y1={outY + CENTER}
         x2={inX + CENTER}
-        y2={inY + CENTER + TOPBAR_HEIGHT}
+        y2={inY + CENTER}
         color={color}
       />
     </Fragment>

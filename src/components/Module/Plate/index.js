@@ -10,7 +10,7 @@ import {
   toggleDelete
 } from "../../../store/actions"
 import { isDeleting } from "../../../store/selectors"
-import { HEIGHT_PIX, HP_PIX, TOPBAR_HEIGHT } from "../../../constants"
+import { HEIGHT_PIX, HP_PIX } from "../../../constants"
 
 const Plate = ({
   moduleId,
@@ -65,7 +65,7 @@ const Plate = ({
         style={{
           ...styles.content,
           left: moduleX,
-          top: moduleY + TOPBAR_HEIGHT
+          top: moduleY
         }}
       >
         <img
