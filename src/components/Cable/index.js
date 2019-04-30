@@ -32,7 +32,10 @@ const Cable = ({
 }) => {
   useEffect(() => {
     if (disabled || !from || !to) return
+
     if (from.numberOfOutputs === 0 || to.numberOfInputs === 0) return
+    if (R.isNil(R.path(["outputs", outputSocket], from))) return
+    if (R.isNil(R.path(["inputs", inputSocket], to))) return
 
     const outputNum =
       from.numberOfOutputs === 1
@@ -45,6 +48,7 @@ const Cable = ({
 
     const output =
       from.numberOfOutputs === 1 ? from.output : from.outputs[outputSocket]
+
     if (output.start) output.start()
 
     from.connect(to, outputNum, inputNum)
