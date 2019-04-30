@@ -5,8 +5,11 @@ import { DraggableCore } from "react-draggable"
 import {
   dispatchAndPersist,
   moveModule,
-  setModuleValue
+  setModuleValue,
+  deleteModule,
+  toggleDelete
 } from "../../../store/actions"
+import { isDeleting } from "../../../store/selectors"
 import { HEIGHT_PIX, HP_PIX, TOPBAR_HEIGHT } from "../../../constants"
 
 const Plate = ({
@@ -15,15 +18,19 @@ const Plate = ({
   row,
   moduleX,
   moduleY,
+  deleting,
   background,
   children,
   setModuleValue,
-  dispatchAndPersist
+  dispatchAndPersist,
+  deleteModule,
+  toggleDelete
 }) => {
   const styles = {
     content: { position: "absolute" },
     background: {
-      height: Math.round(HEIGHT_PIX)
+      height: Math.round(HEIGHT_PIX),
+      opacity: deleting ? 0.5 : 1
     }
   }
 
@@ -49,6 +56,12 @@ const Plate = ({
       cancel=".draggable"
     >
       <div
+        onClick={() => {
+          if (deleting) {
+            toggleDelete()
+            deleteModule(moduleId)
+          }
+        }}
         style={{
           ...styles.content,
           left: moduleX,
@@ -74,10 +87,16 @@ const mapStateToProps = (state, { moduleId }) => {
   const { row, col } = R.pathOr({}, ["modules", moduleId], state)
   return {
     moduleX: Math.round(col * HP_PIX),
-    moduleY: Math.round(row * HEIGHT_PIX)
+    moduleY: Math.round(row * HEIGHT_PIX),
+    deleting: isDeleting(state)
   }
 }
-const mapDispatchToProps = { dispatchAndPersist, setModuleValue }
+const mapDispatchToProps = {
+  dispatchAndPersist,
+  setModuleValue,
+  deleteModule,
+  toggleDelete
+}
 
 export default connect(
   mapStateToProps,
