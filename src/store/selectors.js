@@ -99,3 +99,5 @@ export const findFreePos = (neededSpace = 10, state) => {
 
   return { col: 0, row: 0 }
 }
+
+export const isDeleting = state => R.propOr(false, "deleting", state)

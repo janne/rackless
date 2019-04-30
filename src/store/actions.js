@@ -11,7 +11,8 @@ import {
   CREATE_MODULE,
   DELETE_MODULE,
   SET_LOGGED_IN,
-  SET_LOADING
+  SET_LOADING,
+  TOGGLE_DELETE
 } from "./actionTypes"
 import { getPatch } from "./selectors"
 import firebase from "firebase/app"
@@ -125,3 +126,5 @@ export const deleteModule = id => ({
   type: DELETE_MODULE,
   payload: { id }
 })
+
+export const toggleDelete = () => ({ type: TOGGLE_DELETE })

@@ -45,7 +45,11 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
       close()
       handler()
     }
-    return <MenuItem onClick={handleAndClose}>{title}</MenuItem>
+    return (
+      <MenuItem key={title} onClick={handleAndClose}>
+        {title}
+      </MenuItem>
+    )
   }
 
   const closeTopMenu = () => setTopMenu(null)
@@ -65,7 +69,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
           <Typography variant="h6" style={styles.menuTitle}>
             Rackless
           </Typography>
-          <IconButton>
+          <IconButton onClick={deleteHandler}>
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
 

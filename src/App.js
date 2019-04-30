@@ -13,9 +13,10 @@ import {
   dispatchAndPersist,
   createModule,
   setLoggedIn,
-  setLoading
+  setLoading,
+  toggleDelete
 } from "./store/actions"
-import { getLoggedIn, getLoading } from "./store/selectors"
+import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import TopBar from "./TopBar"
@@ -55,7 +56,9 @@ const App = ({
   setLoading,
   instruments = [],
   modules,
-  cables
+  cables,
+  toggleDelete,
+  deleting
 }) => {
   useEffect(() => {
     // Initialize
@@ -175,7 +178,11 @@ const App = ({
 
   return (
     <div style={styles.root}>
-      <TopBar items={navItems()} deleting={false} />
+      <TopBar
+        items={navItems()}
+        deleteHandler={toggleDelete}
+        deleting={deleting}
+      />
       {isLoading && (
         <div style={styles.loader}>
           <img src="spinner.gif" alt="Spinner" width="200" height="200" />
@@ -197,7 +204,8 @@ const mapStateToProps = state => ({
   isLoading: getLoading(state),
   cables: R.propOr([], "cables", state),
   modules: R.propOr([], "modules", state),
-  instruments: R.propOr([], "instruments", state)
+  instruments: R.propOr([], "instruments", state),
+  deleting: isDeleting(state)
 })
 
 const mapDispatchToProps = {
@@ -206,7 +214,8 @@ const mapDispatchToProps = {
   fetchPatch,
   setPatch,
   setLoggedIn,
-  setLoading
+  setLoading,
+  toggleDelete
 }
 
 export default connect(

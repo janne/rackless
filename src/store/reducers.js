@@ -14,7 +14,8 @@ import {
   REMOVE_CONNECTOR,
   SET_PATCH,
   SET_LOGGED_IN,
-  SET_LOADING
+  SET_LOADING,
+  TOGGLE_DELETE
 } from "./actionTypes"
 
 const initialState = {
@@ -22,7 +23,8 @@ const initialState = {
   cables: null,
   instruments: null,
   isLoading: true,
-  isLoggedIn: false
+  isLoggedIn: false,
+  deleting: false
 }
 
 export default (state = initialState, action) => {
@@ -30,6 +32,9 @@ export default (state = initialState, action) => {
     R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
 
   switch (action.type) {
+    case TOGGLE_DELETE: {
+      return { ...state, deleting: !state.deleting }
+    }
     case SET_PATCH: {
       return { ...state, ...action.payload }
     }
