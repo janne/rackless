@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import { getDbKey } from "../firebase"
+import { getDbKey } from "../utils/firebase"
 import { socketAtPos, findFreePos, availablePos, getModule } from "./selectors"
 import {
   SET_VALUE,

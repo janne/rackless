@@ -18,7 +18,12 @@ import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import TopBar from "./components/TopBar"
 import Loader from "./components/Loader"
-import { initialize, setLoginHandler, getCurrentUser, signIn } from "./firebase"
+import {
+  initialize,
+  setLoginHandler,
+  getCurrentUser,
+  signIn
+} from "./utils/firebase"
 
 const styles = {
   content: {

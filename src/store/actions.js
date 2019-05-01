@@ -15,8 +15,8 @@ import {
   TOGGLE_DELETE
 } from "./actionTypes"
 import { getPatch } from "./selectors"
-import * as firebase from "../firebase"
-import debounce from "../debounce"
+import * as firebase from "../utils/firebase"
+import debounce from "../utils/debounce"
 
 export const fetchPatch = user => dispatch => {
   dispatch(setLoading(true))

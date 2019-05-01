@@ -1,7 +1,7 @@
 import React, { Fragment, useRef } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
-import { getDbKey } from "../../../firebase"
+import { getDbKey } from "../../../utils/firebase"
 import Draggable from "react-draggable"
 import background from "./background.svg"
 import {
