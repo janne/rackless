@@ -23,7 +23,6 @@ const Plate = ({
   children,
   setModuleValue,
   dispatchAndPersist,
-  deleteModule,
   toggleDelete
 }) => {
   const styles = {
@@ -59,7 +58,7 @@ const Plate = ({
         onClick={() => {
           if (deleting) {
             toggleDelete()
-            deleteModule(moduleId)
+            dispatchAndPersist(deleteModule(moduleId))
           }
         }}
         style={{
@@ -94,7 +93,6 @@ const mapStateToProps = (state, { moduleId }) => {
 const mapDispatchToProps = {
   dispatchAndPersist,
   setModuleValue,
-  deleteModule,
   toggleDelete
 }
 
