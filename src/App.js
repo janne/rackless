@@ -121,10 +121,6 @@ const App = ({
       )
   }
 
-  const enableSound = () => {
-    Tone.context.resume()
-  }
-
   const renderModule = id => <Module key={id} id={id} />
 
   const titleize = text => text.replace(/([A-Z])/g, " $1")
