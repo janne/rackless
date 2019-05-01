@@ -2,25 +2,23 @@ import React, { Fragment, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
-import firebase from "firebase/app"
-import "firebase/auth"
-import "firebase/database"
 import Cable from "./components/Cable"
 import {
   setInstrument,
   fetchPatch,
-  setPatch,
   dispatchAndPersist,
   createModule,
   setLoggedIn,
   setLoading,
-  toggleDelete
+  toggleDelete,
+  signOut
 } from "./store/actions"
 import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import TopBar from "./components/TopBar"
 import Loader from "./components/Loader"
+import { initialize, setLoginHandler, currentUser, signIn } from "./firebase"
 
 const styles = {
   content: {
@@ -42,7 +40,7 @@ const styles = {
 
 const App = ({
   fetchPatch,
-  setPatch,
+  signOut,
   isLoggedIn,
   setLoggedIn,
   isLoading,
@@ -55,18 +53,11 @@ const App = ({
   deleting
 }) => {
   useEffect(() => {
-    // Initialize
-    firebase.initializeApp({
-      apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
-      authDomain: "www.rackless.cc",
-      projectId: "rackless-cc",
-      databaseURL: "https://rackless-cc.firebaseio.com",
-      storageBucket: "rackless-cc.appspot.com"
-    })
+    initialize()
 
     Tone.context.lookAhead = 0
 
-    firebase.auth().onAuthStateChanged(user => {
+    setLoginHandler(user => {
       if (user) {
         fetchPatch(user)
       }
@@ -74,41 +65,6 @@ const App = ({
       setLoggedIn(user && !user.isAnonymous)
     })
   }, [fetchPatch, setLoading, setLoggedIn])
-
-  const removePatch = async user =>
-    firebase
-      .database()
-      .ref(`/users/${user.uid}`)
-      .remove()
-
-  const signInHandler = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    const { currentUser } = firebase.auth()
-    if (R.isNil(currentUser)) {
-      return firebase.auth().signInWithPopup(provider)
-    }
-    return currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
-      if (code === "auth/credential-already-in-use") {
-        removePatch(currentUser)
-        currentUser.delete()
-        firebase.auth().signInAndRetrieveDataWithCredential(credential)
-      }
-    })
-  }
-
-  const signOutHandler = async () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() =>
-        setPatch({
-          isLoggedIn: false,
-          modules: null,
-          cables: null,
-          instruments: null
-        })
-      )
-  }
 
   const renderModule = id => <Module key={id} id={id} />
 
@@ -151,10 +107,8 @@ const App = ({
         handler: () => window.open("https://www.reddit.com/r/rackless")
       },
       {
-        title: isLoggedIn
-          ? `Log out ${firebase.auth().currentUser.displayName}`
-          : "Log in",
-        handler: isLoggedIn ? signOutHandler : signInHandler
+        title: isLoggedIn ? `Log out ${currentUser().displayName}` : "Log in",
+        handler: isLoggedIn ? signOut : signIn
       }
     ],
     add: R.map(
@@ -200,10 +154,10 @@ const mapDispatchToProps = {
   dispatchAndPersist,
   setInstrument,
   fetchPatch,
-  setPatch,
   setLoggedIn,
   setLoading,
-  toggleDelete
+  toggleDelete,
+  signOut
 }
 
 export default connect(

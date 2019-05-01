@@ -52,6 +52,18 @@ export const dispatchAndPersist = action => {
   }
 }
 
+export const signOut = () => dispatch => {
+  firebase.auth().signOut()
+  dispatch(
+    setPatch({
+      isLoggedIn: false,
+      modules: null,
+      cables: null,
+      instruments: null
+    })
+  )
+}
+
 export const setLoggedIn = isLoggedIn => ({
   type: SET_LOGGED_IN,
   payload: { isLoggedIn }
