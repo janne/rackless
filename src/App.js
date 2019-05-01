@@ -20,6 +20,7 @@ import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import TopBar from "./components/TopBar"
+import Loader from "./components/Loader"
 
 const styles = {
   content: {
@@ -36,18 +37,6 @@ const styles = {
   menuButton: {
     marginLeft: -12,
     marginRight: 20
-  },
-  loader: {
-    zIndex: 10,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    height: "100%",
-    top: 0,
-    left: 0,
-    right: 0,
-    background: "rgba(0, 0, 0, 0.9)"
   }
 }
 
@@ -185,11 +174,7 @@ const App = ({
         deleting={deleting}
       />
       <div style={styles.content}>
-        {isLoading && (
-          <div style={styles.loader}>
-            <img src="spinner.gif" alt="Spinner" width="200" height="200" />
-          </div>
-        )}
+        {isLoading && <Loader />}
         {R.map(id => renderModule(id), R.keys(modules))}
         {R.values(
           R.mapObjIndexed(
