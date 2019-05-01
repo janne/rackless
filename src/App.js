@@ -113,7 +113,7 @@ const App = ({
       },
       {
         title: isLoggedIn
-          ? `Log out ${getCurrentUser().displayName}`
+          ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
           : "Log in",
         handler: isLoggedIn ? signOut : signIn
       }
