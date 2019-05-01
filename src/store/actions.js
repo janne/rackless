@@ -16,6 +16,7 @@ import {
 } from "./actionTypes"
 import { getPatch } from "./selectors"
 import * as firebase from "../firebase"
+import debounce from "../debounce"
 
 export const fetchPatch = user => dispatch => {
   dispatch(setLoading(true))
@@ -25,18 +26,17 @@ export const fetchPatch = user => dispatch => {
   })
 }
 
-let debouncer
-export const dispatchAndPersist = action => {
-  return (dispatch, getState) => {
-    dispatch(action)
-    if (debouncer) return
-    debouncer = setTimeout(() => {
-      debouncer = null
-      firebase
-        .getCurrentOrAnonymousUser()
-        .then(user => firebase.setPatch(user, getPatch(getState())))
-    }, 1000)
-  }
+const persist = debounce(
+  getState =>
+    firebase
+      .getCurrentOrAnonymousUser()
+      .then(user => firebase.setPatch(user, getPatch(getState()))),
+  1000
+)
+
+export const dispatchAndPersist = action => (dispatch, getState) => {
+  dispatch(action)
+  persist(getState)
 }
 
 export const signOut = () => dispatch => {
