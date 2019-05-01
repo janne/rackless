@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import firebase from "firebase/app"
+import { getDbKey } from "../firebase"
 import { socketAtPos, findFreePos, availablePos, getModule } from "./selectors"
 import {
   SET_VALUE,
@@ -164,11 +164,9 @@ export default (state = initialState, action) => {
 
     case CREATE_MODULE: {
       const { type } = action.payload
-      const ref = firebase.database().ref()
-      const key = ref.child("modules").push().key
+      const key = getDbKey("modules")
       const pos = findFreePos(10, state)
       const values = {}
-
       return R.assocPath(["modules", key], { type, values, ...pos }, state)
     }
 

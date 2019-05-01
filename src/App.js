@@ -18,7 +18,7 @@ import * as moduleTypes from "./modules"
 import Module from "./components/Module"
 import TopBar from "./components/TopBar"
 import Loader from "./components/Loader"
-import { initialize, setLoginHandler, currentUser, signIn } from "./firebase"
+import { initialize, setLoginHandler, getCurrentUser, signIn } from "./firebase"
 
 const styles = {
   content: {
@@ -107,7 +107,9 @@ const App = ({
         handler: () => window.open("https://www.reddit.com/r/rackless")
       },
       {
-        title: isLoggedIn ? `Log out ${currentUser().displayName}` : "Log in",
+        title: isLoggedIn
+          ? `Log out ${getCurrentUser().displayName}`
+          : "Log in",
         handler: isLoggedIn ? signOut : signIn
       }
     ],

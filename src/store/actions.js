@@ -15,17 +15,14 @@ import {
   TOGGLE_DELETE
 } from "./actionTypes"
 import { getPatch } from "./selectors"
-import firebase from "firebase/app"
+import * as firebase from "../firebase"
 
 export const fetchPatch = user => dispatch => {
   dispatch(setLoading(true))
-  firebase
-    .database()
-    .ref(`/users/${user.uid}`)
-    .on("value", patch => {
-      dispatch(setLoading(false))
-      dispatch(setPatch(patch.val() || {}))
-    })
+  firebase.subscribeToPatch(user, patch => {
+    dispatch(setLoading(false))
+    dispatch(setPatch(patch.val() || {}))
+  })
 }
 
 let debouncer
@@ -35,32 +32,23 @@ export const dispatchAndPersist = action => {
     if (debouncer) return
     debouncer = setTimeout(() => {
       debouncer = null
-      new Promise(resolve => {
-        const user = firebase.auth().currentUser
-        if (user) return resolve(user)
-        firebase
-          .auth()
-          .signInAnonymously()
-          .then(({ user }) => resolve(user))
-      }).then(user => {
-        firebase
-          .database()
-          .ref(`/users/${user.uid}`)
-          .set(getPatch(getState()))
-      })
+      firebase
+        .getCurrentOrAnonymousUser()
+        .then(user => firebase.setPatch(user, getPatch(getState())))
     }, 1000)
   }
 }
 
 export const signOut = () => dispatch => {
-  firebase.auth().signOut()
-  dispatch(
-    setPatch({
-      isLoggedIn: false,
-      modules: null,
-      cables: null,
-      instruments: null
-    })
+  firebase.signOut().then(() =>
+    dispatch(
+      setPatch({
+        isLoggedIn: false,
+        modules: null,
+        cables: null,
+        instruments: null
+      })
+    )
   )
 }
 

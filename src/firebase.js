@@ -3,8 +3,6 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
 
-export const currentUser = () => firebase.auth().currentUser
-
 export const initialize = () =>
   firebase.initializeApp({
     apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
@@ -14,17 +12,31 @@ export const initialize = () =>
     storageBucket: "rackless-cc.appspot.com"
   })
 
+export const getCurrentUser = () => firebase.auth().currentUser
+
+export const getCurrentOrAnonymousUser = async () =>
+  new Promise(resolve => {
+    const currentUser = getCurrentUser()
+    if (currentUser) {
+      resolve(currentUser)
+    } else {
+      firebase
+        .auth()
+        .signInAnonymously()
+        .then(({ user }) => resolve(user))
+    }
+  })
+
 export const setLoginHandler = handler =>
   firebase.auth().onAuthStateChanged(handler)
 
-export const signIn = () => {
+export const signIn = async () => {
   const provider = new firebase.auth.GoogleAuthProvider()
   const { currentUser } = firebase.auth()
   if (R.isNil(currentUser)) {
-    firebase.auth().signInWithPopup(provider)
-    return
+    return firebase.auth().signInWithPopup(provider)
   }
-  currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
+  return currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
     if (code === "auth/credential-already-in-use") {
       firebase
         .database()
@@ -35,3 +47,22 @@ export const signIn = () => {
     }
   })
 }
+
+export const signOut = async () => firebase.auth().signOut()
+
+export const getDbKey = child => {
+  const ref = firebase.database().ref()
+  return ref.child(child).push().key
+}
+
+export const setPatch = async (user, patch) =>
+  firebase
+    .database()
+    .ref(`/users/${user.uid}`)
+    .set(patch)
+
+export const subscribeToPatch = (user, handler) =>
+  firebase
+    .database()
+    .ref(`/users/${user.uid}`)
+    .on("value", handler)
