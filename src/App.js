@@ -19,7 +19,7 @@ import {
 import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
 import Module from "./components/Module"
-import TopBar from "./TopBar"
+import TopBar from "./components/TopBar"
 
 const styles = {
   content: {

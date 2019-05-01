@@ -9,16 +9,17 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  Typography,
   Toolbar,
   AppBar,
   colors
 } from "@material-ui/core"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
+import logo from "./logo.svg"
 
 const styles = {
   menuTitle: {
-    flexGrow: 1
+    flexGrow: 1,
+    width: "100%"
   },
   menuButton: {
     marginLeft: -12,
@@ -81,9 +82,9 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" style={styles.menuTitle}>
-            Rackless
-          </Typography>
+          <span style={styles.menuTitle}>
+            <img src={logo} alt="Rackless" />
+          </span>
           <IconButton onClick={deleteHandler}>
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
