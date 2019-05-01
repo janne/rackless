@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import * as R from "ramda"
 import {
   Menu as MenuIcon,
@@ -27,18 +27,34 @@ const styles = {
 }
 
 const TopBar = ({ items, deleteHandler, deleting }) => {
+  const [topMenu, setTopMenu] = useState(null)
+  const [addMenu, setAddMenu] = useState(null)
+
+  const handleKeyPress = e => {
+    switch (e.key) {
+      case "Backspace":
+        deleteHandler()
+        break
+      default:
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress, false)
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress, false)
+    }
+  })
+
   const theme = createMuiTheme({
     palette: {
       primary: colors.grey,
-      type: "light"
+      secondary: colors.deepOrange
     },
     typography: {
       useNextVariants: true
     }
   })
-
-  const [topMenu, setTopMenu] = useState(null)
-  const [addMenu, setAddMenu] = useState(null)
 
   const renderMenuItem = close => ({ title, handler }) => {
     const handleAndClose = () => {
@@ -60,7 +76,6 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
       <AppBar position="static">
         <Toolbar variant="dense">
           <IconButton
-            id="topMenuButton"
             style={styles.menuButton}
             onClick={e => setTopMenu(e.currentTarget)}
           >
@@ -73,20 +88,27 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
 
-          <IconButton
-            id="addMenuButton"
-            onClick={e => setAddMenu(e.currentTarget)}
-          >
+          <IconButton onClick={e => setAddMenu(e.currentTarget)}>
             <AddIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Menu anchorEl={topMenu} open={Boolean(topMenu)} onClose={closeTopMenu}>
+      <Menu
+        anchorEl={topMenu}
+        open={Boolean(topMenu)}
+        onClose={closeTopMenu}
+        disableAutoFocusItem={true}
+      >
         {R.map(renderMenuItem(closeTopMenu), items.menu)}
       </Menu>
 
-      <Menu anchorEl={addMenu} open={Boolean(addMenu)} onClose={closeAddMenu}>
+      <Menu
+        anchorEl={addMenu}
+        open={Boolean(addMenu)}
+        onClose={closeAddMenu}
+        disableAutoFocusItem={true}
+      >
         {R.map(renderMenuItem(closeAddMenu), items.add)}
       </Menu>
     </MuiThemeProvider>
