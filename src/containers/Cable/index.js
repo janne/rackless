@@ -5,7 +5,7 @@ import Cable from "../../components/Cable"
 import {
   removeConnector,
   dragConnector,
-  dispatchAndPersist
+  moveConnector
 } from "../../store/actions"
 import { socketToPos } from "../../store/selectors"
 
@@ -24,7 +24,7 @@ const CableContainer = ({
   inputSocket,
   removeConnector,
   dragConnector,
-  dispatchAndPersist
+  moveConnector
 }) => {
   useEffect(() => {
     if (disabled || !from || !to) return
@@ -67,7 +67,7 @@ const CableContainer = ({
       disabled={disabled}
       removeConnector={removeConnector}
       dragConnector={dragConnector}
-      dispatchAndPersist={dispatchAndPersist}
+      moveConnector={moveConnector}
     />
   )
 }
@@ -78,7 +78,6 @@ const mapStateToProps = (
 ) => {
   const fromPos = socketToPos(outputModule, "outputs", outputSocket, state)
   const toPos = socketToPos(inputModule, "inputs", inputSocket, state)
-
   const from = R.path(["instruments", outputModule], state)
   const to = R.path(["instruments", inputModule], state)
   const drag = R.path(["cables", id, "drag"], state)
@@ -90,7 +89,7 @@ const mapStateToProps = (
 const mapDispatchToProps = {
   removeConnector,
   dragConnector,
-  dispatchAndPersist
+  moveConnector
 }
 
 export default connect(

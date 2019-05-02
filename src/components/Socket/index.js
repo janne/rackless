@@ -47,6 +47,7 @@ const Socket = ({
   socketId,
   direction,
   dragConnector,
+  moveConnector,
   dispatchAndPersist
 }) => {
   const key = useRef(nextKey)
@@ -87,7 +88,7 @@ const Socket = ({
             x: data.x + moduleX,
             y: data.y + moduleY
           }
-          dispatchAndPersist(moveConnector(key.current, toDirection, pos))
+          moveConnector(key.current, toDirection, pos)
         }}
       >
         <div className="draggable" style={styles.handle} />
@@ -107,7 +108,8 @@ const mapStateToProps = (state, { moduleId }) => {
 
 const mapDispatchToProps = {
   dispatchAndPersist,
-  dragConnector
+  dragConnector,
+  moveConnector
 }
 
 export default connect(

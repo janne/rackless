@@ -1,6 +1,5 @@
 import React, { Fragment } from "react"
 import * as R from "ramda"
-import { moveConnector } from "../../store/actions"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
 
@@ -17,7 +16,7 @@ const Cable = ({
   disabled,
   removeConnector,
   dragConnector,
-  dispatchAndPersist
+  moveConnector
 }) => {
   if (R.any(i => isNaN(i), [x1, y1, x2, y2])) return null
 
@@ -28,8 +27,7 @@ const Cable = ({
 
   const handleStart = connector => pos => removeConnector(id, connector, pos)
   const handleDrag = connector => pos => dragConnector(id, connector, pos)
-  const handleStop = connector => pos =>
-    dispatchAndPersist(moveConnector(id, connector, pos))
+  const handleStop = connector => pos => moveConnector(id, connector, pos)
 
   return (
     <Fragment>

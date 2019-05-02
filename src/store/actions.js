@@ -102,15 +102,17 @@ export const moveModule = (id, col, row) => ({
   payload: { id, col, row }
 })
 
-export const moveConnector = (id, connector, pos) => ({
-  type: MOVE_CONNECTOR,
-  payload: { id, connector, pos }
-})
+export const moveConnector = (id, connector, pos) =>
+  dispatchAndPersist({
+    type: MOVE_CONNECTOR,
+    payload: { id, connector, pos }
+  })
 
-export const removeConnector = id => ({
-  type: REMOVE_CONNECTOR,
-  payload: { id }
-})
+export const removeConnector = id =>
+  dispatchAndPersist({
+    type: REMOVE_CONNECTOR,
+    payload: { id }
+  })
 
 export const dragConnector = (id, connector, pos) => ({
   type: DRAG_CONNECTOR,
