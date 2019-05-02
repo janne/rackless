@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
-import Cable from "./components/Cable"
+import Cable from "./containers/Cable"
 import {
   setInstrument,
   fetchPatch,
