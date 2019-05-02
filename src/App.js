@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useRef } from "react"
+import React, { Fragment, useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Tone from "tone"
-import Cable from "./containers/Cable"
 import {
   setInstrument,
   fetchPatch,
@@ -14,7 +13,6 @@ import {
 } from "./store/actions"
 import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
-import Module from "./containers/Module"
 import TopBar from "./components/TopBar"
 import Loader from "./components/Loader"
 import {
@@ -23,6 +21,7 @@ import {
   getCurrentUser,
   signIn
 } from "./utils/firebase"
+import Rack from "./containers/Rack"
 
 const styles = {
   content: {
@@ -32,27 +31,17 @@ const styles = {
     bottom: 0,
     top: 48,
     overflow: "scroll"
-  },
-  menuTitle: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
   }
 }
 
 const App = ({
   fetchPatch,
+  createModule,
   signOut,
   isLoggedIn,
   setLoggedIn,
   isLoading,
-  createModule,
   setLoading,
-  instruments = [],
-  modules,
-  cables,
   toggleDelete,
   deleting
 }) => {
@@ -70,39 +59,7 @@ const App = ({
     })
   }, [fetchPatch, setLoading, setLoggedIn])
 
-  const renderModule = id => <Module key={id} id={id} />
-
   const titleize = text => text.replace(/([A-Z])/g, " $1")
-
-  const performAnimation = useRef()
-  const performLoop = useRef()
-
-  useEffect(() => {
-    performAnimation.current = () => {
-      requestAnimationFrame(performAnimation.current)
-      R.forEachObjIndexed((instrument, id) => {
-        if (instrument.animate) instrument.animate(id)
-      }, instruments)
-    }
-
-    performLoop.current = () => {
-      const instrumentsWithLoop = R.filter(
-        i => Boolean(R.prop("loop", i)),
-        instruments
-      )
-      R.forEachObjIndexed((instrument, id) => {
-        instrument.props = instrument.loop(
-          instrument.props || {},
-          modules[id].values || {}
-        )
-      }, instrumentsWithLoop)
-    }
-  }, [instruments, modules])
-
-  useEffect(() => {
-    setInterval(() => performLoop.current(), 10)
-    requestAnimationFrame(performAnimation.current)
-  }, [])
 
   const navItems = () => ({
     menu: [
@@ -135,13 +92,7 @@ const App = ({
       />
       <div style={styles.content}>
         {isLoading && <Loader />}
-        {R.map(id => renderModule(id), R.keys(modules))}
-        {R.values(
-          R.mapObjIndexed(
-            (props, id) => <Cable key={id} id={id} {...props} />,
-            cables
-          )
-        )}
+        <Rack />
       </div>
     </Fragment>
   )
@@ -150,9 +101,6 @@ const App = ({
 const mapStateToProps = state => ({
   isLoggedIn: getLoggedIn(state),
   isLoading: getLoading(state),
-  cables: R.propOr([], "cables", state),
-  modules: R.propOr([], "modules", state),
-  instruments: R.propOr([], "instruments", state),
   deleting: isDeleting(state)
 })
 
