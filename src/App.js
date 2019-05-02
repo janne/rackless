@@ -6,7 +6,6 @@ import Cable from "./containers/Cable"
 import {
   setInstrument,
   fetchPatch,
-  dispatchAndPersist,
   createModule,
   setLoggedIn,
   setLoading,
@@ -49,7 +48,7 @@ const App = ({
   isLoggedIn,
   setLoggedIn,
   isLoading,
-  dispatchAndPersist,
+  createModule,
   setLoading,
   instruments = [],
   modules,
@@ -121,7 +120,7 @@ const App = ({
     add: R.map(
       type => ({
         title: titleize(type),
-        handler: () => dispatchAndPersist(createModule(type))
+        handler: () => createModule(type)
       }),
       R.keys(moduleTypes)
     )
@@ -158,7 +157,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  dispatchAndPersist,
+  createModule,
   setInstrument,
   fetchPatch,
   setLoggedIn,

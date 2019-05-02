@@ -119,10 +119,11 @@ export const dragConnector = (id, connector, pos) => ({
   payload: { id, connector, pos }
 })
 
-export const createModule = type => ({
-  type: CREATE_MODULE,
-  payload: { type }
-})
+export const createModule = type =>
+  dispatchAndPersist({
+    type: CREATE_MODULE,
+    payload: { type }
+  })
 
 export const deleteModule = id => ({
   type: DELETE_MODULE,
