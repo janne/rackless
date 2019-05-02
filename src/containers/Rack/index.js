@@ -1,4 +1,5 @@
 import React, { Fragment, useRef, useEffect } from "react"
+import Tone from "tone"
 import { connect } from "react-redux"
 import * as R from "ramda"
 import Cable from "../Cable"
@@ -31,9 +32,11 @@ const Rack = ({ modules, cables, instruments }) => {
   }, [instruments, modules])
 
   useEffect(() => {
+    Tone.context.lookAhead = 0
     setInterval(() => performLoop.current(), 10)
     requestAnimationFrame(performAnimation.current)
   }, [])
+
   return (
     <Fragment>
       {R.map(

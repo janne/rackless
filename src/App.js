@@ -1,26 +1,10 @@
 import React, { Fragment, useEffect } from "react"
 import { connect } from "react-redux"
-import * as R from "ramda"
-import Tone from "tone"
-import {
-  setInstrument,
-  fetchPatch,
-  createModule,
-  setLoggedIn,
-  setLoading,
-  toggleDelete,
-  signOut
-} from "./store/actions"
-import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
-import * as moduleTypes from "./modules"
-import TopBar from "./components/TopBar"
+import { fetchPatch, setLoggedIn, setLoading } from "./store/actions"
+import { getLoading } from "./store/selectors"
 import Loader from "./components/Loader"
-import {
-  initialize,
-  setLoginHandler,
-  getCurrentUser,
-  signIn
-} from "./utils/firebase"
+import { initialize, setLoginHandler } from "./utils/firebase"
+import TopBar from "./containers/TopBar"
 import Rack from "./containers/Rack"
 
 const styles = {
@@ -34,21 +18,9 @@ const styles = {
   }
 }
 
-const App = ({
-  fetchPatch,
-  createModule,
-  signOut,
-  isLoggedIn,
-  setLoggedIn,
-  isLoading,
-  setLoading,
-  toggleDelete,
-  deleting
-}) => {
+const App = ({ fetchPatch, setLoggedIn, isLoading, setLoading }) => {
   useEffect(() => {
     initialize()
-
-    Tone.context.lookAhead = 0
 
     setLoginHandler(user => {
       if (user) {
@@ -59,37 +31,9 @@ const App = ({
     })
   }, [fetchPatch, setLoading, setLoggedIn])
 
-  const titleize = text => text.replace(/([A-Z])/g, " $1")
-
-  const navItems = () => ({
-    menu: [
-      {
-        title: "Open Reddit",
-        handler: () => window.open("https://www.reddit.com/r/rackless")
-      },
-      {
-        title: isLoggedIn
-          ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
-          : "Log in",
-        handler: isLoggedIn ? signOut : signIn
-      }
-    ],
-    add: R.map(
-      type => ({
-        title: titleize(type),
-        handler: () => createModule(type)
-      }),
-      R.keys(moduleTypes)
-    )
-  })
-
   return (
     <Fragment>
-      <TopBar
-        items={navItems()}
-        deleteHandler={toggleDelete}
-        deleting={deleting}
-      />
+      <TopBar />
       <div style={styles.content}>
         {isLoading && <Loader />}
         <Rack />
@@ -99,19 +43,13 @@ const App = ({
 }
 
 const mapStateToProps = state => ({
-  isLoggedIn: getLoggedIn(state),
-  isLoading: getLoading(state),
-  deleting: isDeleting(state)
+  isLoading: getLoading(state)
 })
 
 const mapDispatchToProps = {
-  createModule,
-  setInstrument,
   fetchPatch,
   setLoggedIn,
-  setLoading,
-  toggleDelete,
-  signOut
+  setLoading
 }
 
 export default connect(

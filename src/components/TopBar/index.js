@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import * as R from "ramda"
 import {
   Menu as MenuIcon,
@@ -30,22 +30,6 @@ const styles = {
 const TopBar = ({ items, deleteHandler, deleting }) => {
   const [topMenu, setTopMenu] = useState(null)
   const [addMenu, setAddMenu] = useState(null)
-
-  const handleKeyPress = e => {
-    switch (e.key) {
-      case "Backspace":
-        deleteHandler()
-        break
-      default:
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress, false)
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress, false)
-    }
-  })
 
   const theme = createMuiTheme({
     palette: {
