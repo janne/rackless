@@ -1,10 +1,9 @@
-import React, { useEffect } from "react"
+import React from "react"
 import * as R from "ramda"
 import Plate from "../../containers/Plate"
 import Socket from "../../containers/Socket"
 import Trimpot from "./Trimpot"
 import Switch from "./Switch"
-import Instrument from "./Instrument"
 import * as moduleTypes from "../../modules"
 
 const Wrapper = ({ x, y, children }) => (
@@ -19,45 +18,10 @@ const Wrapper = ({ x, y, children }) => (
   </div>
 )
 
-const Module = ({ id, instrument, setInstrument, data, setValue }) => {
+const Module = ({ id, instrument, data, setValue }) => {
   const { col, row, type, values = [] } = data
-  const {
-    background,
-    controls = [],
-    inputs = [],
-    outputs = [],
-    setup = () => {}
-  } = moduleTypes[type]
-
-  const [rangeControls, otherControls] = R.partition(
-    R.compose(
-      R.is(Array),
-      R.prop("range")
-    ),
-    controls
-  )
-
-  const getValue = R.flip(R.prop)(values)
-
-  useEffect(() => {
-    const instrument = new Instrument(controls, inputs, outputs, setup, values)
-    setInstrument(id, instrument)
-    setupValues(instrument, values)
-    return () => instrument.dispose()
-  }, R.keys(rangeControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    setupValues(instrument, values)
-  }, R.keys(otherControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const setupValues = (instrument, values) => {
-    if (R.isNil(instrument)) return
-    R.mapObjIndexed(({ range }, name) => {
-      const defaultValue = R.isNil(range) ? 0.5 : 0
-      const value = R.isNil(values[name]) ? defaultValue : values[name]
-      instrument.controls[name].value = value
-    }, controls)
-  }
+  const moduleType = moduleTypes[type]
+  const { background, controls = [], inputs = [], outputs = [] } = moduleType
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
