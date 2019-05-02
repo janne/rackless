@@ -34,7 +34,7 @@ const persist = debounce(
   1000
 )
 
-export const dispatchAndPersist = action => (dispatch, getState) => {
+const dispatchAndPersist = action => (dispatch, getState) => {
   dispatch(action)
   persist(getState)
 }
