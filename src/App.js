@@ -14,7 +14,7 @@ import {
 } from "./store/actions"
 import { getLoggedIn, getLoading, isDeleting } from "./store/selectors"
 import * as moduleTypes from "./modules"
-import Module from "./components/Module"
+import Module from "./containers/Module"
 import TopBar from "./components/TopBar"
 import Loader from "./components/Loader"
 import {

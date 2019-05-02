@@ -1,12 +1,10 @@
 import React, { useEffect } from "react"
-import { connect } from "react-redux"
 import * as R from "ramda"
 import Plate from "../../containers/Plate"
 import Socket from "../../containers/Socket"
 import Trimpot from "./Trimpot"
 import Switch from "./Switch"
 import Instrument from "./Instrument"
-import { setValue, setInstrument } from "../../store/actions"
 import * as moduleTypes from "../../modules"
 
 const Wrapper = ({ x, y, children }) => (
@@ -141,17 +139,4 @@ const Module = ({ id, instrument, setInstrument, data, setValue }) => {
   )
 }
 
-const mapStateToProps = (state, { id }) => ({
-  data: R.path(["modules", id], state),
-  instrument: R.path(["instruments", id], state)
-})
-
-const mapDispatchToProps = {
-  setInstrument,
-  setValue
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Module)
+export default Module
