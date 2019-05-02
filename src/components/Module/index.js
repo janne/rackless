@@ -6,11 +6,7 @@ import Socket from "../Socket"
 import Trimpot from "./Trimpot"
 import Switch from "./Switch"
 import Instrument from "./Instrument"
-import {
-  setValue,
-  setInstrument,
-  dispatchAndPersist
-} from "../../store/actions"
+import { setValue, setInstrument } from "../../store/actions"
 import * as moduleTypes from "../../modules"
 
 const Wrapper = ({ x, y, children }) => (
@@ -25,13 +21,7 @@ const Wrapper = ({ x, y, children }) => (
   </div>
 )
 
-const Module = ({
-  id,
-  instrument,
-  setInstrument,
-  data,
-  dispatchAndPersist
-}) => {
+const Module = ({ id, instrument, setInstrument, data, setValue }) => {
   const { col, row, type, values = [] } = data
   const {
     background,
@@ -71,9 +61,6 @@ const Module = ({
     }, controls)
   }
 
-  const dispatchedSetValue = (id, name, value) =>
-    dispatchAndPersist(setValue(id, name, value))
-
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
       {R.values(
@@ -87,7 +74,7 @@ const Module = ({
                   id={id}
                   name={name}
                   value={values[name]}
-                  setValue={dispatchedSetValue}
+                  setValue={setValue}
                   {...params}
                   {...props}
                 />
@@ -102,7 +89,7 @@ const Module = ({
                   id={id}
                   name={name}
                   value={values[name]}
-                  setValue={dispatchedSetValue}
+                  setValue={setValue}
                 />
               </Wrapper>
             )
@@ -114,7 +101,7 @@ const Module = ({
                 id={id}
                 name={name}
                 value={values[name]}
-                setValue={dispatchedSetValue}
+                setValue={setValue}
               />
             </Wrapper>
           )
@@ -161,7 +148,7 @@ const mapStateToProps = (state, { id }) => ({
 
 const mapDispatchToProps = {
   setInstrument,
-  dispatchAndPersist
+  setValue
 }
 
 export default connect(

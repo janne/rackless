@@ -87,10 +87,11 @@ export const createCable = (id, moduleId, socketId, direction, color) => {
   })
 }
 
-export const setValue = (id, name, value) => ({
-  type: SET_VALUE,
-  payload: { id, name, value }
-})
+export const setValue = (id, name, value) =>
+  dispatchAndPersist({
+    type: SET_VALUE,
+    payload: { id, name, value }
+  })
 
 export const setModuleValue = (id, name, value) => ({
   type: SET_MODULE_VALUE,
