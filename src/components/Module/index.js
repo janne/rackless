@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import * as R from "ramda"
-import Plate from "../Plate"
+import Plate from "../../containers/Plate"
 import Socket from "../Socket"
 import Trimpot from "./Trimpot"
 import Switch from "./Switch"

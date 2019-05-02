@@ -1,14 +1,5 @@
 import React, { useRef } from "react"
-import * as R from "ramda"
-import { connect } from "react-redux"
 import { DraggableCore } from "react-draggable"
-import {
-  moveModule,
-  deleteModule,
-  setModuleValue,
-  toggleDelete
-} from "../../store/actions"
-import { isDeleting } from "../../store/selectors"
 import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
 const Plate = ({
@@ -35,11 +26,11 @@ const Plate = ({
 
   const drag = useRef()
 
-  const dragStart = (e, data) => {
+  const dragStart = (_, data) => {
     drag.current = { x: data.x - moduleX, y: data.y - moduleY }
   }
 
-  const dragHandler = (e, data) => {
+  const dragHandler = (_, data) => {
     const { x, y } = drag.current
     const newCol = Math.round((data.x - x) / HP_PIX)
     const newRow = Math.round((data.y - y) / HEIGHT_PIX)
@@ -81,22 +72,4 @@ const Plate = ({
   )
 }
 
-const mapStateToProps = (state, { moduleId }) => {
-  const { row, col } = R.pathOr({}, ["modules", moduleId], state)
-  return {
-    moduleX: Math.round(col * HP_PIX),
-    moduleY: Math.round(row * HEIGHT_PIX),
-    deleting: isDeleting(state)
-  }
-}
-const mapDispatchToProps = {
-  moveModule,
-  deleteModule,
-  setModuleValue,
-  toggleDelete
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Plate)
+export default Plate
