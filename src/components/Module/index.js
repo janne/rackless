@@ -2,8 +2,8 @@ import React from "react"
 import * as R from "ramda"
 import Plate from "../../containers/Plate"
 import Socket from "../../containers/Socket"
-import Trimpot from "./Trimpot"
-import Switch from "./Switch"
+import Trimpot from "../Trimpot"
+import Switch from "../Switch"
 import * as moduleTypes from "../../modules"
 
 const Wrapper = ({ x, y, children }) => (
