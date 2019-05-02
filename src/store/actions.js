@@ -98,10 +98,11 @@ export const setModuleValue = (id, name, value) => ({
   payload: { id, name, value }
 })
 
-export const moveModule = (id, col, row) => ({
-  type: MOVE_MODULE,
-  payload: { id, col, row }
-})
+export const moveModule = (id, col, row) =>
+  dispatchAndPersist({
+    type: MOVE_MODULE,
+    payload: { id, col, row }
+  })
 
 export const moveConnector = (id, connector, pos) =>
   dispatchAndPersist({
@@ -126,9 +127,10 @@ export const createModule = type =>
     payload: { type }
   })
 
-export const deleteModule = id => ({
-  type: DELETE_MODULE,
-  payload: { id }
-})
+export const deleteModule = id =>
+  dispatchAndPersist({
+    type: DELETE_MODULE,
+    payload: { id }
+  })
 
 export const toggleDelete = () => ({ type: TOGGLE_DELETE })

@@ -3,10 +3,9 @@ import * as R from "ramda"
 import { connect } from "react-redux"
 import { DraggableCore } from "react-draggable"
 import {
-  dispatchAndPersist,
   moveModule,
-  setModuleValue,
   deleteModule,
+  setModuleValue,
   toggleDelete
 } from "../../store/actions"
 import { isDeleting } from "../../store/selectors"
@@ -22,7 +21,8 @@ const Plate = ({
   background,
   children,
   setModuleValue,
-  dispatchAndPersist,
+  moveModule,
+  deleteModule,
   toggleDelete
 }) => {
   const styles = {
@@ -43,8 +43,7 @@ const Plate = ({
     const { x, y } = drag.current
     const newCol = Math.round((data.x - x) / HP_PIX)
     const newRow = Math.round((data.y - y) / HEIGHT_PIX)
-    if (newCol !== col || newRow !== row)
-      dispatchAndPersist(moveModule(moduleId, newCol, newRow))
+    if (newCol !== col || newRow !== row) moveModule(moduleId, newCol, newRow)
   }
 
   return (
@@ -58,7 +57,7 @@ const Plate = ({
         onClick={() => {
           if (deleting) {
             toggleDelete()
-            dispatchAndPersist(deleteModule(moduleId))
+            deleteModule(moduleId)
           }
         }}
         style={{
@@ -91,7 +90,8 @@ const mapStateToProps = (state, { moduleId }) => {
   }
 }
 const mapDispatchToProps = {
-  dispatchAndPersist,
+  moveModule,
+  deleteModule,
   setModuleValue,
   toggleDelete
 }
