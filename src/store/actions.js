@@ -77,14 +77,14 @@ export const createCable = (id, moduleId, socketId, direction, color) => {
     direction === "outputs"
       ? { outputModule: moduleId, outputSocket: socketId }
       : { inputModule: moduleId, inputSocket: socketId }
-  return {
+  return dispatchAndPersist({
     type: CREATE_CABLE,
     payload: {
       id,
       color,
       ...socket
     }
-  }
+  })
 }
 
 export const setValue = (id, name, value) => ({

@@ -4,12 +4,7 @@ import { connect } from "react-redux"
 import { getDbKey } from "../../utils/firebase"
 import Draggable from "react-draggable"
 import background from "./background.svg"
-import {
-  dispatchAndPersist,
-  createCable,
-  dragConnector,
-  moveConnector
-} from "../../store/actions"
+import { createCable, dragConnector, moveConnector } from "../../store/actions"
 import { HP_PIX, HEIGHT_PIX } from "../../constants"
 
 const styles = {
@@ -48,7 +43,7 @@ const Socket = ({
   direction,
   dragConnector,
   moveConnector,
-  dispatchAndPersist
+  createCable
 }) => {
   const key = useRef(nextKey)
   const toDirection = direction === "outputs" ? "inputs" : "outputs"
@@ -65,16 +60,8 @@ const Socket = ({
       </div>
       <Draggable
         position={{ x, y }}
-        onStart={(e, data) => {
-          dispatchAndPersist(
-            createCable(
-              key.current,
-              moduleId,
-              socketId,
-              direction,
-              randomColor()
-            )
-          )
+        onStart={() => {
+          createCable(key.current, moduleId, socketId, direction, randomColor())
         }}
         onDrag={(e, data) => {
           const pos = {
@@ -107,7 +94,7 @@ const mapStateToProps = (state, { moduleId }) => {
 }
 
 const mapDispatchToProps = {
-  dispatchAndPersist,
+  createCable,
   dragConnector,
   moveConnector
 }
