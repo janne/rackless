@@ -1,7 +1,7 @@
 import React, { Fragment, useRef } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
-import { getDbKey } from "../../../utils/firebase"
+import { getDbKey } from "../../utils/firebase"
 import Draggable from "react-draggable"
 import background from "./background.svg"
 import {
@@ -9,8 +9,8 @@ import {
   createCable,
   dragConnector,
   moveConnector
-} from "../../../store/actions"
-import { HP_PIX, HEIGHT_PIX } from "../../../constants"
+} from "../../store/actions"
+import { HP_PIX, HEIGHT_PIX } from "../../constants"
 
 const styles = {
   content: { position: "absolute" },

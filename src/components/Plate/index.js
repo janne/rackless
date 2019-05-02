@@ -8,9 +8,9 @@ import {
   setModuleValue,
   deleteModule,
   toggleDelete
-} from "../../../store/actions"
-import { isDeleting } from "../../../store/selectors"
-import { HEIGHT_PIX, HP_PIX } from "../../../constants"
+} from "../../store/actions"
+import { isDeleting } from "../../store/selectors"
+import { HEIGHT_PIX, HP_PIX } from "../../constants"
 
 const Plate = ({
   moduleId,
