@@ -50,7 +50,7 @@ const TopBarContainer = ({
         title: titleize(type),
         handler: () => createModule(type)
       }),
-      R.keys(moduleTypes)
+      R.sortBy(R.identity, R.keys(moduleTypes))
     )
   })
 
