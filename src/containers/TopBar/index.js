@@ -32,27 +32,35 @@ const TopBarContainer = ({
     }
   })
 
-  const navItems = () => ({
-    menu: [
-      {
-        title: "Open Reddit",
-        handler: () => window.open("https://www.reddit.com/r/rackless")
-      },
-      {
-        title: isLoggedIn
-          ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
-          : "Log in",
-        handler: isLoggedIn ? signOut : signIn
-      }
-    ],
-    add: R.map(
-      type => ({
-        title: titleize(type),
-        handler: () => createModule(type)
-      }),
-      R.sortBy(R.identity, R.keys(moduleTypes))
-    )
-  })
+  const navItems = () => {
+    const patches = isLoggedIn
+      ? [{ title: "2019-05-04 12:00" }, { title: "2019-05-01 11:22" }]
+      : []
+    const loggedInActions = isLoggedIn ? [{ title: "New Patch" }] : []
+    return {
+      menu: [
+        {
+          title: isLoggedIn
+            ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
+            : "Log in",
+          handler: isLoggedIn ? signOut : signIn
+        },
+        {
+          title: "Open Reddit",
+          handler: () => window.open("https://www.reddit.com/r/rackless")
+        },
+        ...loggedInActions
+      ],
+      patches,
+      add: R.map(
+        type => ({
+          title: titleize(type),
+          handler: () => createModule(type)
+        }),
+        R.sortBy(R.identity, R.keys(moduleTypes))
+      )
+    }
+  }
 
   return (
     <TopBar

@@ -10,8 +10,10 @@ import {
   Toolbar,
   AppBar,
   Drawer,
+  Divider,
   List,
   ListItem,
+  ListItemSecondaryAction,
   ListItemText,
   colors
 } from "@material-ui/core"
@@ -20,8 +22,8 @@ import logo from "./logo.svg"
 
 const styles = {
   menuTitle: {
-    flexGrow: 1,
-    width: "100%"
+    display: "flex",
+    flexGrow: 1
   },
   menuButton: {
     marginLeft: -12,
@@ -30,8 +32,8 @@ const styles = {
 }
 
 const TopBar = ({ items, deleteHandler, deleting }) => {
-  const [topMenu, setTopMenu] = useState(false)
-  const [addMenu, setAddMenu] = useState(false)
+  const [leftMenu, setLeftMenu] = useState(false)
+  const [rightMenu, setRightMenu] = useState(false)
 
   const theme = createMuiTheme({
     palette: {
@@ -43,13 +45,22 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
     }
   })
 
-  const renderListItem = ({ title, handler }) => {
-    return (
-      <ListItem button key={title} onClick={handler}>
-        <ListItemText>{title}</ListItemText>
-      </ListItem>
-    )
-  }
+  const renderListItem = ({ title, handler }) => (
+    <ListItem button key={title} onClick={handler}>
+      <ListItemText>{title}</ListItemText>
+    </ListItem>
+  )
+
+  const renderPatchItem = ({ title, handler }, idx) => (
+    <ListItem button key={title} onClick={handler} selected={idx === 0}>
+      <ListItemText>{title}</ListItemText>
+      <ListItemSecondaryAction>
+        <IconButton>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -57,28 +68,33 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         <Toolbar variant="dense">
           <IconButton
             style={styles.menuButton}
-            onClick={() => setTopMenu(true)}
+            onClick={() => setLeftMenu(true)}
           >
             <MenuIcon />
           </IconButton>
-          <span style={styles.menuTitle}>
+          <div style={styles.menuTitle}>
             <img src={logo} alt="Rackless" />
-          </span>
+          </div>
           <IconButton onClick={deleteHandler}>
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
-
-          <IconButton onClick={e => setAddMenu(e.currentTarget)}>
+          <IconButton onClick={e => setRightMenu(e.currentTarget)}>
             <AddIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Drawer open={topMenu} onClick={() => setTopMenu(false)}>
+      <Drawer open={leftMenu} onClick={() => setLeftMenu(false)}>
         <List>{R.map(renderListItem, items.menu)}</List>
+        {R.isEmpty(items.patches) ? null : <Divider />}
+        <List>{R.addIndex(R.map)(renderPatchItem, items.patches)}</List>
       </Drawer>
 
-      <Drawer anchor="right" open={addMenu} onClick={() => setAddMenu(false)}>
+      <Drawer
+        anchor="right"
+        open={rightMenu}
+        onClick={() => setRightMenu(false)}
+      >
         <List>{R.map(renderListItem, items.add)}</List>
       </Drawer>
     </MuiThemeProvider>
