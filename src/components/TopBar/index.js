@@ -6,11 +6,13 @@ import {
   Delete as DeleteIcon
 } from "@material-ui/icons"
 import {
-  Menu,
-  MenuItem,
   IconButton,
   Toolbar,
   AppBar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
   colors
 } from "@material-ui/core"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
@@ -28,8 +30,8 @@ const styles = {
 }
 
 const TopBar = ({ items, deleteHandler, deleting }) => {
-  const [topMenu, setTopMenu] = useState(null)
-  const [addMenu, setAddMenu] = useState(null)
+  const [topMenu, setTopMenu] = useState(false)
+  const [addMenu, setAddMenu] = useState(false)
 
   const theme = createMuiTheme({
     palette: {
@@ -41,20 +43,13 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
     }
   })
 
-  const renderMenuItem = close => ({ title, handler }) => {
-    const handleAndClose = () => {
-      close()
-      handler()
-    }
+  const renderListItem = ({ title, handler }) => {
     return (
-      <MenuItem key={title} onClick={handleAndClose}>
-        {title}
-      </MenuItem>
+      <ListItem button key={title} onClick={handler}>
+        <ListItemText>{title}</ListItemText>
+      </ListItem>
     )
   }
-
-  const closeTopMenu = () => setTopMenu(null)
-  const closeAddMenu = () => setAddMenu(null)
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -62,7 +57,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         <Toolbar variant="dense">
           <IconButton
             style={styles.menuButton}
-            onClick={e => setTopMenu(e.currentTarget)}
+            onClick={() => setTopMenu(true)}
           >
             <MenuIcon />
           </IconButton>
@@ -79,23 +74,13 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         </Toolbar>
       </AppBar>
 
-      <Menu
-        anchorEl={topMenu}
-        open={Boolean(topMenu)}
-        onClose={closeTopMenu}
-        disableAutoFocusItem={true}
-      >
-        {R.map(renderMenuItem(closeTopMenu), items.menu)}
-      </Menu>
+      <Drawer open={topMenu} onClick={() => setTopMenu(false)}>
+        <List>{R.map(renderListItem, items.menu)}</List>
+      </Drawer>
 
-      <Menu
-        anchorEl={addMenu}
-        open={Boolean(addMenu)}
-        onClose={closeAddMenu}
-        disableAutoFocusItem={true}
-      >
-        {R.map(renderMenuItem(closeAddMenu), items.add)}
-      </Menu>
+      <Drawer anchor="right" open={addMenu} onClick={() => setAddMenu(false)}>
+        <List>{R.map(renderListItem, items.add)}</List>
+      </Drawer>
     </MuiThemeProvider>
   )
 }
