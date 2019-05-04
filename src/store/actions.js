@@ -18,11 +18,26 @@ import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
 import debounce from "../utils/debounce"
 
+const updatePatch = data => {
+  const patchKey = firebase.getDbKey("patches")
+  return {
+    current: patchKey,
+    patches: {
+      [patchKey]: {
+        modules: data.modules,
+        cables: data.cables,
+        createdAt: new Date().toISOString()
+      }
+    }
+  }
+}
+
 export const fetchData = user => dispatch => {
   dispatch(setLoading(true))
-  firebase.subscribeToData(user, data => {
+  firebase.subscribeToData(user, d => {
     dispatch(setLoading(false))
-    dispatch(setData(data.val() || {}))
+    const data = d.val().modules ? updatePatch(d.val()) : d.val()
+    dispatch(setData(data || {}))
   })
 }
 
