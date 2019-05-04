@@ -3,6 +3,7 @@ import * as R from "ramda"
 import Instrument from "./Instrument"
 import { connect } from "react-redux"
 import { setValue, setInstrument } from "../../store/actions"
+import { getModule, getInstrument } from "../../store/selectors"
 import Module from "../../components/Module"
 import * as moduleTypes from "../../modules"
 
@@ -58,8 +59,8 @@ const ModuleContainer = ({ id, data, instrument, setInstrument, setValue }) => {
 }
 
 const mapStateToProps = (state, { id }) => ({
-  data: R.path(["modules", id], state),
-  instrument: R.path(["instruments", id], state)
+  data: getModule(id, state),
+  instrument: getInstrument(id, state)
 })
 
 const mapDispatchToProps = {

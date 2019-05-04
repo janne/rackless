@@ -55,13 +55,13 @@ export const getDbKey = child => {
   return ref.child(child).push().key
 }
 
-export const setPatch = async (user, patch) =>
+export const setData = async (user, data) =>
   firebase
     .database()
     .ref(`/users/${user.uid}`)
-    .set(patch)
+    .set(data)
 
-export const subscribeToPatch = (user, handler) =>
+export const subscribeToData = (user, handler) =>
   firebase
     .database()
     .ref(`/users/${user.uid}`)

@@ -5,23 +5,32 @@ import * as moduleTypes from "../modules"
 
 const WIDTH = 15
 
-export const getPatch = R.pick(["modules", "cables"])
+export const getData = R.propOr({}, "data")
+
+export const getModules = R.pathOr({}, ["data", "modules"])
+export const getModule = (moduleId, state) =>
+  R.pathOr({}, ["data", "modules", moduleId], state)
+
+export const getCables = R.pathOr({}, ["data", "cables"])
+export const getCable = (cableId, state) =>
+  R.pathOr({}, ["data", "cables", cableId], state)
+
+export const getInstruments = R.propOr({}, "instruments")
+export const getInstrument = (moduleId, state) =>
+  R.path(["instruments", moduleId], state)
 
 export const getLoggedIn = R.prop("isLoggedIn")
 
 export const getLoading = R.prop("isLoading")
 
-export const getModule = (moduleId, state) =>
-  R.path(["modules", moduleId], state)
-
 export const getSockets = (moduleId, direction, state) => {
-  const type = R.path(["modules", moduleId, "type"], state)
+  const type = getModule(moduleId, state).type
   return R.pathOr([], [type, direction], moduleTypes)
 }
 
 export const socketToPos = (moduleId, direction, socketId, state) => {
   if (R.isNil(moduleId) || R.isNil(socketId)) return {}
-  const { row, col } = R.pathOr({}, ["modules", moduleId], state)
+  const { row, col } = getModule(moduleId, state)
   const socket = getSockets(moduleId, direction, state)[socketId]
   if (R.isNil(socket)) return {}
   return {
@@ -31,8 +40,8 @@ export const socketToPos = (moduleId, direction, socketId, state) => {
 }
 
 export const socketAtPos = ({ x, y }, direction, state) => {
-  for (let moduleId of R.keys(state.modules)) {
-    const { col, row } = state.modules[moduleId]
+  for (let moduleId of R.keys(getModules(state))) {
+    const { col, row } = getModule(moduleId, state)
     const sockets = getSockets(moduleId, direction, state)
     const socketId = R.find(
       socket =>
@@ -58,9 +67,7 @@ const hpPerRow = () => Math.floor(window.innerWidth / HP_PIX)
 export const availablePos = (col, row, width, excludeId, state) => {
   const modules = R.filter(
     R.propEq("row", row),
-    R.values(
-      R.mapObjIndexed((m, id) => ({ ...m, id }), R.prop("modules", state))
-    )
+    R.values(R.mapObjIndexed((m, id) => ({ ...m, id }), getModules(state)))
   )
 
   const modulesExcludingSelf = R.reject(R.propEq("id", excludeId), modules)
@@ -84,7 +91,7 @@ export const findFreePos = (neededSpace = 10, state) => {
       pos: Math.round(m.row * hpPerRow() + m.col),
       width: m.hp
     }),
-    R.values(R.prop("modules", state))
+    R.values(getModules(state))
   )
 
   const tree = intervalTree(linearModules)

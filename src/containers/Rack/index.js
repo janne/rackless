@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import * as R from "ramda"
 import Cable from "../Cable"
 import Module from "../Module"
+import { getModules, getCables, getInstruments } from "../../store/selectors"
 
 const Rack = ({ modules, cables, instruments }) => {
   const performAnimation = useRef()
@@ -37,28 +38,21 @@ const Rack = ({ modules, cables, instruments }) => {
     requestAnimationFrame(performAnimation.current)
   }, [])
 
+  const renderCable = id => <Cable key={id} id={id} />
+  const renderModule = id => <Module key={id} id={id} />
+
   return (
     <Fragment>
-      {R.map(
-        id => (
-          <Module key={id} id={id} />
-        ),
-        R.keys(modules)
-      )}
-      {R.values(
-        R.mapObjIndexed(
-          (props, id) => <Cable key={id} id={id} {...props} />,
-          cables
-        )
-      )}
+      {R.map(renderModule, R.keys(modules))}
+      {R.map(renderCable, R.keys(cables))}
     </Fragment>
   )
 }
 
 const mapStateToProps = state => ({
-  cables: R.propOr([], "cables", state),
-  modules: R.propOr([], "modules", state),
-  instruments: R.propOr([], "instruments", state)
+  modules: getModules(state),
+  cables: getCables(state),
+  instruments: getInstruments(state)
 })
 
 export default connect(mapStateToProps)(Rack)

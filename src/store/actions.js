@@ -1,5 +1,5 @@
 import {
-  SET_PATCH,
+  SET_DATA,
   SET_VALUE,
   SET_MODULE_VALUE,
   SET_INSTRUMENT,
@@ -14,15 +14,15 @@ import {
   SET_LOADING,
   TOGGLE_DELETE
 } from "./actionTypes"
-import { getPatch } from "./selectors"
+import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
 import debounce from "../utils/debounce"
 
 export const fetchPatch = user => dispatch => {
   dispatch(setLoading(true))
-  firebase.subscribeToPatch(user, patch => {
+  firebase.subscribeToData(user, data => {
     dispatch(setLoading(false))
-    dispatch(setPatch(patch.val() || {}))
+    dispatch(setData(data.val() || {}))
   })
 }
 
@@ -30,7 +30,7 @@ const persist = debounce(
   getState =>
     firebase
       .getCurrentOrAnonymousUser()
-      .then(user => firebase.setPatch(user, getPatch(getState()))),
+      .then(user => firebase.setData(user, getData(getState()))),
   1000
 )
 
@@ -40,16 +40,7 @@ const dispatchAndPersist = action => (dispatch, getState) => {
 }
 
 export const signOut = () => dispatch => {
-  firebase.signOut().then(() =>
-    dispatch(
-      setPatch({
-        isLoggedIn: false,
-        modules: null,
-        cables: null,
-        instruments: null
-      })
-    )
-  )
+  firebase.signOut().then(() => dispatch(setData({})))
 }
 
 export const setLoggedIn = isLoggedIn => ({
@@ -62,9 +53,9 @@ export const setLoading = isLoading => ({
   payload: { isLoading }
 })
 
-export const setPatch = payload => ({
-  type: SET_PATCH,
-  payload
+export const setData = data => ({
+  type: SET_DATA,
+  payload: { data }
 })
 
 export const setInstrument = (id, instrument) => ({

@@ -1,6 +1,15 @@
 import * as R from "ramda"
 import { getDbKey } from "../utils/firebase"
-import { socketAtPos, findFreePos, availablePos, getModule } from "./selectors"
+import {
+  socketAtPos,
+  findFreePos,
+  availablePos,
+  getModule,
+  getModules,
+  getInstruments,
+  getCables,
+  getCable
+} from "./selectors"
 import {
   SET_VALUE,
   SET_MODULE_VALUE,
@@ -12,16 +21,13 @@ import {
   MOVE_CONNECTOR,
   DRAG_CONNECTOR,
   REMOVE_CONNECTOR,
-  SET_PATCH,
+  SET_DATA,
   SET_LOGGED_IN,
   SET_LOADING,
   TOGGLE_DELETE
 } from "./actionTypes"
 
 const initialState = {
-  modules: null,
-  cables: null,
-  instruments: null,
   isLoading: true,
   isLoggedIn: false,
   deleting: false
@@ -29,24 +35,32 @@ const initialState = {
 
 export default (state = initialState, action) => {
   const setCableDisabled = value =>
-    R.set(R.lensPath(["cables", action.payload.id, "disabled"]), value, state)
+    R.set(
+      R.lensPath(["data", "cables", action.payload.id, "disabled"]),
+      value,
+      state
+    )
 
   switch (action.type) {
     case TOGGLE_DELETE: {
       return { ...state, deleting: !state.deleting }
     }
-    case SET_PATCH: {
-      return { ...state, ...action.payload }
+    case SET_DATA: {
+      return { ...state, data: action.payload.data }
     }
 
     case SET_VALUE: {
       const { id, name, value } = action.payload
-      return R.set(R.lensPath(["modules", id, "values", name]), value, state)
+      return R.set(
+        R.lensPath(["data", "modules", id, "values", name]),
+        value,
+        state
+      )
     }
 
     case SET_MODULE_VALUE: {
       const { id, name, value } = action.payload
-      return R.set(R.lensPath(["modules", id, name]), value, state)
+      return R.set(R.lensPath(["data", "modules", id, name]), value, state)
     }
 
     case SET_LOGGED_IN: {
@@ -71,8 +85,8 @@ export default (state = initialState, action) => {
         if (newCol < 0 || row < 0) return null
         if (availablePos(newCol, row, hp, id, state)) {
           return R.compose(
-            R.set(R.lensPath(["modules", id, "col"]), newCol),
-            R.set(R.lensPath(["modules", id, "row"]), row)
+            R.set(R.lensPath(["data", "modules", id, "col"]), newCol),
+            R.set(R.lensPath(["data", "modules", id, "row"]), row)
           )(state)
         }
         return null
@@ -95,29 +109,27 @@ export default (state = initialState, action) => {
         inputSocket = null,
         color
       } = action.payload
-      return {
-        ...state,
-        cables: {
-          ...state.cables,
-          [id]: {
-            outputModule,
-            outputSocket,
-            inputModule,
-            inputSocket,
-            color,
-            disabled: true
-          }
-        }
-      }
+      return R.assocPath(
+        ["data", "cables", id],
+        {
+          outputModule,
+          outputSocket,
+          inputModule,
+          inputSocket,
+          color,
+          disabled: true
+        },
+        state
+      )
     }
     case MOVE_CONNECTOR: {
       const { id, connector, pos } = action.payload
       const state = setCableDisabled(false)
-      const movedCable = state.cables[id]
-      const cables = R.dissoc(id, state.cables)
+      const movedCable = getCable(id, state)
+      const cables = R.dissoc(id, getCables(state))
       const target = socketAtPos(pos, connector, state)
 
-      if (!target) return { ...state, cables }
+      if (!target) return R.assocPath(["data", "cables"], cables, state)
 
       const existingCables = R.filter(
         ({ inputModule, inputSocket, outputModule, outputSocket }) =>
@@ -130,7 +142,8 @@ export default (state = initialState, action) => {
         cables
       )
 
-      if (!R.isEmpty(existingCables)) return { ...state, cables }
+      if (!R.isEmpty(existingCables))
+        return R.assocPath(["data", "cables"], cables, state)
 
       const updatedCable =
         connector === "outputs"
@@ -146,7 +159,7 @@ export default (state = initialState, action) => {
               inputModule: target.moduleId,
               inputSocket: target.socketId
             }
-      return { ...state, cables: { ...cables, [id]: updatedCable } }
+      return R.assocPath(["data", "cables", id], updatedCable, state)
     }
 
     case REMOVE_CONNECTOR: {
@@ -156,7 +169,7 @@ export default (state = initialState, action) => {
     case DRAG_CONNECTOR: {
       const { id, connector, pos } = action.payload
       return R.set(
-        R.lensPath(["cables", id, "drag"]),
+        R.lensPath(["data", "cables", id, "drag"]),
         { pos, connector },
         state
       )
@@ -167,19 +180,25 @@ export default (state = initialState, action) => {
       const key = getDbKey("modules")
       const pos = findFreePos(10, state)
       const values = {}
-      return R.assocPath(["modules", key], { type, values, ...pos }, state)
+      return R.assocPath(
+        ["data", "modules", key],
+        { type, values, ...pos },
+        state
+      )
     }
 
     case DELETE_MODULE: {
       const { id } = action.payload
       return {
         ...state,
-        modules: R.dissoc(id, state.modules),
-        instruments: R.dissoc(id, state.instruments),
-        cables: R.reject(
-          cable => cable.outputModule === id || cable.inputModule === id,
-          R.propOr([], "cables", state)
-        )
+        data: {
+          modules: R.dissoc(id, getModules(state)),
+          cables: R.reject(
+            cable => cable.outputModule === id || cable.inputModule === id,
+            getCables(state)
+          )
+        },
+        instruments: R.dissoc(id, getInstruments(state))
       }
     }
 
