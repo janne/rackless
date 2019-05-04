@@ -83,7 +83,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
           <IconButton onClick={deleteHandler}>
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
-          <IconButton onClick={e => setRightMenu(e.currentTarget)}>
+          <IconButton onClick={e => setRightMenu(true)}>
             <AddIcon />
           </IconButton>
         </Toolbar>
