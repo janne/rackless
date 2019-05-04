@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react"
 import { connect } from "react-redux"
-import { fetchPatch, setLoggedIn, setLoading } from "./store/actions"
+import { fetchData, setLoggedIn, setLoading } from "./store/actions"
 import { getLoading } from "./store/selectors"
 import Loader from "./components/Loader"
 import { initialize, setLoginHandler } from "./utils/firebase"
@@ -18,18 +18,18 @@ const styles = {
   }
 }
 
-const App = ({ fetchPatch, setLoggedIn, isLoading, setLoading }) => {
+const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
   useEffect(() => {
     initialize()
 
     setLoginHandler(user => {
       if (user) {
-        fetchPatch(user)
+        fetchData(user)
       }
       setLoading(false)
       setLoggedIn(user && !user.isAnonymous)
     })
-  }, [fetchPatch, setLoading, setLoggedIn])
+  }, [fetchData, setLoading, setLoggedIn])
 
   return (
     <Fragment>
@@ -47,7 +47,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  fetchPatch,
+  fetchData,
   setLoggedIn,
   setLoading
 }

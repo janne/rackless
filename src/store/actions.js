@@ -18,7 +18,7 @@ import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
 import debounce from "../utils/debounce"
 
-export const fetchPatch = user => dispatch => {
+export const fetchData = user => dispatch => {
   dispatch(setLoading(true))
   firebase.subscribeToData(user, data => {
     dispatch(setLoading(false))
