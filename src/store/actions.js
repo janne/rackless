@@ -1,3 +1,4 @@
+import * as R from "ramda"
 import {
   SET_DATA,
   SET_VALUE,
@@ -12,12 +13,15 @@ import {
   DELETE_MODULE,
   SET_LOGGED_IN,
   SET_LOADING,
-  TOGGLE_DELETE
+  TOGGLE_DELETE,
+  RESET_STATE
 } from "./actionTypes"
 import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
 import debounce from "../utils/debounce"
 
+// Upgrade legacy structure with patch in root data
+// Can be deleted once no more such users
 const updatePatch = data => {
   const patchKey = firebase.getDbKey("patches")
   return {
@@ -36,8 +40,9 @@ export const fetchData = user => dispatch => {
   dispatch(setLoading(true))
   firebase.subscribeToData(user, d => {
     dispatch(setLoading(false))
-    const data = d.val().modules ? updatePatch(d.val()) : d.val()
-    dispatch(setData(data || {}))
+    if (R.prop("modules", d.val()))
+      return dispatch(setData(updatePatch(d.val())))
+    return dispatch(setData(d.val()))
   })
 }
 
@@ -55,8 +60,13 @@ const dispatchAndPersist = action => (dispatch, getState) => {
 }
 
 export const signOut = () => dispatch => {
-  firebase.signOut().then(() => dispatch(setData({})))
+  dispatch(resetState())
+  firebase.signOut()
 }
+
+export const resetState = () => ({
+  type: RESET_STATE
+})
 
 export const setLoggedIn = isLoggedIn => ({
   type: SET_LOGGED_IN,

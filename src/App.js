@@ -27,7 +27,7 @@ const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
         fetchData(user)
       }
       setLoading(false)
-      setLoggedIn(user && !user.isAnonymous)
+      setLoggedIn(Boolean(user && !user.isAnonymous))
     })
   }, [fetchData, setLoading, setLoggedIn])
 

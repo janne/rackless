@@ -7,13 +7,21 @@ const WIDTH = 15
 
 export const getData = R.propOr({}, "data")
 
-export const getModules = R.pathOr({}, ["data", "modules"])
-export const getModule = (moduleId, state) =>
-  R.pathOr({}, ["data", "modules", moduleId], state)
+export const getCurrent = R.pathOr({}, ["data", "current"])
 
-export const getCables = R.pathOr({}, ["data", "cables"])
+export const getModules = state =>
+  R.pathOr({}, ["data", "patches", getCurrent(state), "modules"], state)
+export const getModule = (moduleId, state) =>
+  R.pathOr(
+    {},
+    ["data", "patches", getCurrent(state), "modules", moduleId],
+    state
+  )
+
+export const getCables = state =>
+  R.pathOr({}, ["data", "patches", getCurrent(state), "cables"], state)
 export const getCable = (cableId, state) =>
-  R.pathOr({}, ["data", "cables", cableId], state)
+  R.pathOr({}, ["data", "patches", getCurrent(state), "cables", cableId], state)
 
 export const getInstruments = R.propOr({}, "instruments")
 export const getInstrument = (moduleId, state) =>

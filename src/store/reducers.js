@@ -8,7 +8,8 @@ import {
   getModules,
   getInstruments,
   getCables,
-  getCable
+  getCable,
+  getCurrent
 } from "./selectors"
 import {
   SET_VALUE,
@@ -24,7 +25,8 @@ import {
   SET_DATA,
   SET_LOGGED_IN,
   SET_LOADING,
-  TOGGLE_DELETE
+  TOGGLE_DELETE,
+  RESET_STATE
 } from "./actionTypes"
 
 const initialState = {
@@ -34,9 +36,18 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+  const current = getCurrent(state)
+
   const setCableDisabled = value =>
     R.set(
-      R.lensPath(["data", "cables", action.payload.id, "disabled"]),
+      R.lensPath([
+        "data",
+        "patches",
+        current,
+        "cables",
+        action.payload.id,
+        "disabled"
+      ]),
       value,
       state
     )
@@ -52,7 +63,7 @@ export default (state = initialState, action) => {
     case SET_VALUE: {
       const { id, name, value } = action.payload
       return R.set(
-        R.lensPath(["data", "modules", id, "values", name]),
+        R.lensPath(["data", "patches", current, "modules", id, "values", name]),
         value,
         state
       )
@@ -60,7 +71,11 @@ export default (state = initialState, action) => {
 
     case SET_MODULE_VALUE: {
       const { id, name, value } = action.payload
-      return R.set(R.lensPath(["data", "modules", id, name]), value, state)
+      return R.set(
+        R.lensPath(["data", "patches", current, "modules", id, name]),
+        value,
+        state
+      )
     }
 
     case SET_LOGGED_IN: {
@@ -85,8 +100,14 @@ export default (state = initialState, action) => {
         if (newCol < 0 || row < 0) return null
         if (availablePos(newCol, row, hp, id, state)) {
           return R.compose(
-            R.set(R.lensPath(["data", "modules", id, "col"]), newCol),
-            R.set(R.lensPath(["data", "modules", id, "row"]), row)
+            R.set(
+              R.lensPath(["data", "patches", current, "modules", id, "col"]),
+              newCol
+            ),
+            R.set(
+              R.lensPath(["data", "patches", current, "modules", id, "row"]),
+              row
+            )
           )(state)
         }
         return null
@@ -110,7 +131,7 @@ export default (state = initialState, action) => {
         color
       } = action.payload
       return R.assocPath(
-        ["data", "cables", id],
+        ["data", "patches", current, "cables", id],
         {
           outputModule,
           outputSocket,
@@ -129,7 +150,12 @@ export default (state = initialState, action) => {
       const cables = R.dissoc(id, getCables(state))
       const target = socketAtPos(pos, connector, state)
 
-      if (!target) return R.assocPath(["data", "cables"], cables, state)
+      if (!target)
+        return R.assocPath(
+          ["data", "patches", current, "cables"],
+          cables,
+          state
+        )
 
       const existingCables = R.filter(
         ({ inputModule, inputSocket, outputModule, outputSocket }) =>
@@ -143,7 +169,11 @@ export default (state = initialState, action) => {
       )
 
       if (!R.isEmpty(existingCables))
-        return R.assocPath(["data", "cables"], cables, state)
+        return R.assocPath(
+          ["data", "patches", current, "cables"],
+          cables,
+          state
+        )
 
       const updatedCable =
         connector === "outputs"
@@ -159,7 +189,11 @@ export default (state = initialState, action) => {
               inputModule: target.moduleId,
               inputSocket: target.socketId
             }
-      return R.assocPath(["data", "cables", id], updatedCable, state)
+      return R.assocPath(
+        ["data", "patches", current, "cables", id],
+        updatedCable,
+        state
+      )
     }
 
     case REMOVE_CONNECTOR: {
@@ -169,7 +203,7 @@ export default (state = initialState, action) => {
     case DRAG_CONNECTOR: {
       const { id, connector, pos } = action.payload
       return R.set(
-        R.lensPath(["data", "cables", id, "drag"]),
+        R.lensPath(["data", "patches", current, "cables", id, "drag"]),
         { pos, connector },
         state
       )
@@ -181,7 +215,7 @@ export default (state = initialState, action) => {
       const pos = findFreePos(10, state)
       const values = {}
       return R.assocPath(
-        ["data", "modules", key],
+        ["data", "patches", current, "modules", key],
         { type, values, ...pos },
         state
       )
@@ -200,6 +234,10 @@ export default (state = initialState, action) => {
         },
         instruments: R.dissoc(id, getInstruments(state))
       }
+    }
+
+    case RESET_STATE: {
+      return initialState
     }
 
     default:
