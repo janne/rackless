@@ -236,17 +236,20 @@ export default (state = initialState, action) => {
 
     case DELETE_MODULE: {
       const { id } = action.payload
-      return {
-        ...state,
-        data: {
-          modules: R.dissoc(id, getModules(state)),
-          cables: R.reject(
+      return R.compose(
+        R.set(
+          R.lensPath(["data", "patches", current, "modules"]),
+          R.dissoc(id, getModules(state))
+        ),
+        R.set(
+          R.lensPath(["data", "patches", current, "cables"]),
+          R.reject(
             cable => cable.outputModule === id || cable.inputModule === id,
             getCables(state)
           )
-        },
-        instruments: R.dissoc(id, getInstruments(state))
-      }
+        ),
+        R.set(R.lensPath(["instruments"]), R.dissoc(id, getInstruments(state)))
+      )(state)
     }
 
     case RESET_STATE: {
