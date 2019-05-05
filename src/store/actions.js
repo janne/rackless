@@ -41,11 +41,11 @@ const updatePatch = data => {
 
 export const fetchData = user => dispatch => {
   dispatch(setLoading(true))
-  firebase.subscribeToData(user, d => {
+  firebase.subscribeToData(user, dataSnapshot => {
+    const data = dataSnapshot.val()
     dispatch(setLoading(false))
-    if (R.prop("modules", d.val()))
-      return dispatch(setData(updatePatch(d.val())))
-    return dispatch(setData(d.val()))
+    if (R.prop("modules", data)) return dispatch(setData(updatePatch(data)))
+    return dispatch(setData(data))
   })
 }
 
