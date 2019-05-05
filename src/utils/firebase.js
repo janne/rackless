@@ -38,12 +38,25 @@ export const signIn = async () => {
   }
   return currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
     if (code === "auth/credential-already-in-use") {
-      firebase
-        .database()
-        .ref(`/users/${currentUser.uid}`)
-        .remove()
-      currentUser.delete()
-      firebase.auth().signInAndRetrieveDataWithCredential(credential)
+      const ref = firebase.database().ref(`/users/${currentUser.uid}`)
+      ref.once("value").then(anonDataSnapshot => {
+        const anonData = anonDataSnapshot.val()
+        ref.remove()
+        currentUser.delete()
+        return firebase
+          .auth()
+          .signInAndRetrieveDataWithCredential(credential)
+          .then(({ user }) => {
+            const ref = firebase.database().ref(`/users/${user.uid}`)
+            ref.once("value").then(dataSnapshot => {
+              const data = dataSnapshot.val()
+              setData(user, {
+                ...data,
+                patches: { ...data.patches, ...anonData.patches }
+              })
+            })
+          })
+      })
     }
   })
 }
