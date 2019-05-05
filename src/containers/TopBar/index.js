@@ -9,7 +9,14 @@ import {
   getPatches,
   getCurrent
 } from "../../store/selectors"
-import { createModule, toggleDelete, signOut } from "../../store/actions"
+import {
+  createModule,
+  createPatch,
+  toggleDelete,
+  deletePatch,
+  signOut,
+  setCurrent
+} from "../../store/actions"
 import { getCurrentUser, signIn } from "../../utils/firebase"
 
 const TopBarContainer = ({
@@ -18,6 +25,9 @@ const TopBarContainer = ({
   isLoggedIn,
   signOut,
   createModule,
+  createPatch,
+  deletePatch,
+  setCurrent,
   patches = {},
   current
 }) => {
@@ -39,8 +49,19 @@ const TopBarContainer = ({
     }
   })
 
+  const formatTime = time =>
+    new Date(time).toLocaleString([], {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+
   const navItems = () => {
-    const loggedInActions = isLoggedIn ? [{ title: "New Patch" }] : []
+    const loggedInActions = isLoggedIn
+      ? [{ title: "New Patch", handler: createPatch }]
+      : []
     return {
       menu: [
         {
@@ -56,7 +77,13 @@ const TopBarContainer = ({
         ...loggedInActions
       ],
       patches: R.map(
-        id => ({ id, selected: id === current, title: patches[id].createdAt }),
+        id => ({
+          id,
+          selected: id === current,
+          title: formatTime(patches[id].createdAt),
+          handler: id === current ? null : () => setCurrent(id),
+          secondaryHandler: id === current ? null : () => deletePatch(id)
+        }),
         R.keys(patches)
       ),
       add: R.map(
@@ -88,6 +115,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   createModule,
   toggleDelete,
+  createPatch,
+  deletePatch,
+  setCurrent,
   signOut
 }
 

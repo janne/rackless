@@ -14,7 +14,10 @@ import {
   SET_LOGGED_IN,
   SET_LOADING,
   TOGGLE_DELETE,
-  RESET_STATE
+  RESET_STATE,
+  CREATE_PATCH,
+  SET_CURRENT,
+  DELETE_PATCH
 } from "./actionTypes"
 import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
@@ -149,4 +152,15 @@ export const deleteModule = id =>
     payload: { id }
   })
 
+export const setCurrent = id =>
+  dispatchAndPersist({
+    type: SET_CURRENT,
+    payload: { id }
+  })
+
+export const deletePatch = id =>
+  dispatchAndPersist({ type: DELETE_PATCH, payload: { id } })
+
 export const toggleDelete = () => ({ type: TOGGLE_DELETE })
+
+export const createPatch = () => dispatchAndPersist({ type: CREATE_PATCH })

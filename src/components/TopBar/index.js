@@ -51,12 +51,12 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
     </ListItem>
   )
 
-  const renderPatchItem = ({ title, handler, selected }) => (
+  const renderPatchItem = ({ title, handler, secondaryHandler, selected }) => (
     <ListItem button key={title} onClick={handler} selected={selected}>
       <ListItemText>{title}</ListItemText>
-      {!selected && (
+      {secondaryHandler && (
         <ListItemSecondaryAction>
-          <IconButton>
+          <IconButton onClick={secondaryHandler}>
             <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>

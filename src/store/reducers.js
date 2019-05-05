@@ -9,7 +9,8 @@ import {
   getInstruments,
   getCables,
   getCable,
-  getCurrent
+  getCurrent,
+  getPatches
 } from "./selectors"
 import {
   SET_VALUE,
@@ -26,7 +27,10 @@ import {
   SET_LOGGED_IN,
   SET_LOADING,
   TOGGLE_DELETE,
-  RESET_STATE
+  RESET_STATE,
+  CREATE_PATCH,
+  SET_CURRENT,
+  DELETE_PATCH
 } from "./actionTypes"
 
 const initialState = {
@@ -238,6 +242,17 @@ export default (state = initialState, action) => {
       )
     }
 
+    case CREATE_PATCH: {
+      const patchKey = getDbKey("patches")
+      return R.compose(
+        R.set(R.lensPath(["data", "patches", patchKey]), {
+          createdAt: new Date().toISOString()
+        }),
+        R.set(R.lensPath(["data", "current"]), patchKey),
+        R.set(R.lensPath(["instruments"]), {})
+      )(state)
+    }
+
     case DELETE_MODULE: {
       const { id } = action.payload
       return R.compose(
@@ -254,6 +269,23 @@ export default (state = initialState, action) => {
         ),
         R.set(R.lensPath(["instruments"]), R.dissoc(id, getInstruments(state)))
       )(state)
+    }
+
+    case SET_CURRENT: {
+      const { id } = action.payload
+      return R.compose(
+        R.set(R.lensPath(["data", "current"]), id),
+        R.set(R.lensPath(["instruments"]), {})
+      )(state)
+    }
+
+    case DELETE_PATCH: {
+      const { id } = action.payload
+      return R.set(
+        R.lensPath(["data", "patches"]),
+        R.dissoc(id, getPatches(state)),
+        state
+      )
     }
 
     case RESET_STATE: {
