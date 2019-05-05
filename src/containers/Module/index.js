@@ -2,12 +2,19 @@ import React, { useEffect } from "react"
 import * as R from "ramda"
 import Instrument from "./Instrument"
 import { connect } from "react-redux"
-import { setValue, setInstrument } from "../../store/actions"
+import { setValue, setInstrument, deleteInstrument } from "../../store/actions"
 import { getModule, getInstrument } from "../../store/selectors"
 import Module from "../../components/Module"
 import * as moduleTypes from "../../modules"
 
-const ModuleContainer = ({ id, data, instrument, setInstrument, setValue }) => {
+const ModuleContainer = ({
+  id,
+  data,
+  instrument,
+  setInstrument,
+  deleteInstrument,
+  setValue
+}) => {
   const { type, values = [] } = data
 
   const {
@@ -31,7 +38,10 @@ const ModuleContainer = ({ id, data, instrument, setInstrument, setValue }) => {
     const instrument = new Instrument(controls, inputs, outputs, setup, values)
     setInstrument(id, instrument)
     setupValues(instrument, values)
-    return () => instrument.dispose()
+    return () => {
+      instrument.dispose()
+      deleteInstrument(id)
+    }
   }, R.keys(rangeControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -65,6 +75,7 @@ const mapStateToProps = (state, { id }) => ({
 
 const mapDispatchToProps = {
   setInstrument,
+  deleteInstrument,
   setValue
 }
 

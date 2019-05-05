@@ -17,7 +17,8 @@ import {
   RESET_STATE,
   CREATE_PATCH,
   SET_CURRENT,
-  DELETE_PATCH
+  DELETE_PATCH,
+  DELETE_INSTRUMENT
 } from "./actionTypes"
 import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
@@ -164,3 +165,8 @@ export const deletePatch = id =>
 export const toggleDelete = () => ({ type: TOGGLE_DELETE })
 
 export const createPatch = () => dispatchAndPersist({ type: CREATE_PATCH })
+
+export const deleteInstrument = id => ({
+  type: DELETE_INSTRUMENT,
+  payload: { id }
+})

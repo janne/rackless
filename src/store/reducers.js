@@ -30,7 +30,8 @@ import {
   RESET_STATE,
   CREATE_PATCH,
   SET_CURRENT,
-  DELETE_PATCH
+  DELETE_PATCH,
+  DELETE_INSTRUMENT
 } from "./actionTypes"
 
 const initialState = {
@@ -108,6 +109,11 @@ export default (state = initialState, action) => {
     case SET_INSTRUMENT: {
       const { id, instrument } = action.payload
       return R.set(R.lensPath(["instruments", id]), instrument, state)
+    }
+
+    case DELETE_INSTRUMENT: {
+      const { id } = action.payload
+      return R.dissocPath(["instruments", id], state)
     }
 
     case MOVE_MODULE: {
@@ -273,10 +279,7 @@ export default (state = initialState, action) => {
 
     case SET_CURRENT: {
       const { id } = action.payload
-      return R.compose(
-        R.set(R.lensPath(["data", "current"]), id),
-        R.set(R.lensPath(["instruments"]), {})
-      )(state)
+      return R.set(R.lensPath(["data", "current"]), id, state)
     }
 
     case DELETE_PATCH: {
