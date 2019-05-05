@@ -7,7 +7,7 @@ const WIDTH = 15
 
 export const getData = R.propOr({}, "data")
 
-export const getCurrent = R.pathOr({}, ["data", "current"])
+export const getCurrent = R.path(["data", "current"])
 
 export const getModules = state =>
   R.pathOr({}, ["data", "patches", getCurrent(state), "modules"], state)
