@@ -52,6 +52,7 @@ export const signIn = async () => {
               const data = dataSnapshot.val()
               setData(user, {
                 ...data,
+                current: anonData.current || data.current,
                 patches: { ...data.patches, ...anonData.patches }
               })
             })
