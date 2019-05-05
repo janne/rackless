@@ -51,21 +51,18 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
     </ListItem>
   )
 
-  const renderPatchItem = ({ title, handler }, idx) => {
-    const selected = idx === 0
-    return (
-      <ListItem button key={title} onClick={handler} selected={selected}>
-        <ListItemText>{title}</ListItemText>
-        {!selected && (
-          <ListItemSecondaryAction>
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        )}
-      </ListItem>
-    )
-  }
+  const renderPatchItem = ({ title, handler, selected }) => (
+    <ListItem button key={title} onClick={handler} selected={selected}>
+      <ListItemText>{title}</ListItemText>
+      {!selected && (
+        <ListItemSecondaryAction>
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      )}
+    </ListItem>
+  )
 
   return (
     <MuiThemeProvider theme={theme}>

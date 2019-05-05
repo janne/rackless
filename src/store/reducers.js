@@ -43,7 +43,11 @@ export default (state = initialState, action) => {
     const patchKey = getDbKey("patches")
     return {
       ...state,
-      data: { ...state.data, current: patchKey, patches: { [patchKey]: {} } }
+      data: {
+        ...state.data,
+        current: patchKey,
+        patches: { [patchKey]: { createdAt: new Date().toISOString() } }
+      }
     }
   }
 

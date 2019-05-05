@@ -9,6 +9,8 @@ export const getData = R.propOr({}, "data")
 
 export const getCurrent = R.path(["data", "current"])
 
+export const getPatches = R.path(["data", "patches"])
+
 export const getModules = state =>
   R.pathOr({}, ["data", "patches", getCurrent(state), "modules"], state)
 export const getModule = (moduleId, state) =>

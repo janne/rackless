@@ -3,7 +3,12 @@ import * as R from "ramda"
 import { connect } from "react-redux"
 import TopBar from "../../components/TopBar"
 import * as moduleTypes from "../../modules"
-import { getLoggedIn, isDeleting } from "../../store/selectors"
+import {
+  getLoggedIn,
+  isDeleting,
+  getPatches,
+  getCurrent
+} from "../../store/selectors"
 import { createModule, toggleDelete, signOut } from "../../store/actions"
 import { getCurrentUser, signIn } from "../../utils/firebase"
 
@@ -12,7 +17,9 @@ const TopBarContainer = ({
   toggleDelete,
   isLoggedIn,
   signOut,
-  createModule
+  createModule,
+  patches = {},
+  current
 }) => {
   const titleize = text => text.replace(/([A-Z])/g, " $1")
 
@@ -33,9 +40,6 @@ const TopBarContainer = ({
   })
 
   const navItems = () => {
-    const patches = isLoggedIn
-      ? [{ title: "2019-05-04 12:00" }, { title: "2019-05-01 11:22" }]
-      : []
     const loggedInActions = isLoggedIn ? [{ title: "New Patch" }] : []
     return {
       menu: [
@@ -51,7 +55,10 @@ const TopBarContainer = ({
         },
         ...loggedInActions
       ],
-      patches,
+      patches: R.map(
+        id => ({ id, selected: id === current, title: patches[id].createdAt }),
+        R.keys(patches)
+      ),
       add: R.map(
         type => ({
           title: titleize(type),
@@ -73,7 +80,9 @@ const TopBarContainer = ({
 
 const mapStateToProps = state => ({
   isLoggedIn: getLoggedIn(state),
-  deleting: isDeleting(state)
+  deleting: isDeleting(state),
+  patches: getPatches(state),
+  current: getCurrent(state)
 })
 
 const mapDispatchToProps = {
