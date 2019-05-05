@@ -38,6 +38,15 @@ const initialState = {
 export default (state = initialState, action) => {
   const current = getCurrent(state)
 
+  const getCurrentState = () => {
+    if (current) return state
+    const patchKey = getDbKey("patches")
+    return {
+      ...state,
+      data: { ...state.data, current: patchKey, patches: { [patchKey]: {} } }
+    }
+  }
+
   const setCableDisabled = value =>
     R.set(
       R.lensPath([
@@ -214,10 +223,14 @@ export default (state = initialState, action) => {
       const key = getDbKey("modules")
       const pos = findFreePos(10, state)
       const values = {}
+
+      const currentState = getCurrentState()
+      const current = getCurrent(currentState)
+
       return R.assocPath(
         ["data", "patches", current, "modules", key],
         { type, values, ...pos },
-        state
+        currentState
       )
     }
 
