@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import * as R from "ramda"
 import { connect } from "react-redux"
+import * as firebase from "../../utils/firebase"
 import TopBar from "../../components/TopBar"
 import * as moduleTypes from "../../modules"
 import {
@@ -12,6 +13,7 @@ import {
 import {
   createModule,
   createPatch,
+  sharePatch,
   toggleDelete,
   deletePatch,
   signOut,
@@ -26,6 +28,7 @@ const TopBarContainer = ({
   signOut,
   createModule,
   createPatch,
+  sharePatch,
   deletePatch,
   setCurrent,
   patches = {},
@@ -60,7 +63,17 @@ const TopBarContainer = ({
 
   const navItems = () => {
     const loggedInActions = isLoggedIn
-      ? [{ title: "New Patch", handler: createPatch }]
+      ? [
+          { title: "New Patch", handler: createPatch },
+          {
+            title: "Share Patch",
+            handler: () => {
+              const uid = firebase.getCurrentUser().uid
+              const pid = current.slice()
+              sharePatch(uid, pid)
+            }
+          }
+        ]
       : []
     return {
       menu: [
@@ -116,6 +129,7 @@ const mapDispatchToProps = {
   createModule,
   toggleDelete,
   createPatch,
+  sharePatch,
   deletePatch,
   setCurrent,
   signOut

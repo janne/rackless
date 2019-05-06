@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route } from "react-router-dom"
 import { connect } from "react-redux"
 import { fetchData, setLoggedIn, setLoading } from "./store/actions"
 import { getLoading } from "./store/selectors"
@@ -39,7 +39,7 @@ const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
       <div style={styles.content}>
         {isLoading && <Loader />}
         <Route exact path="/" component={Rack} />
-        <Route path="/:uid(\w{19})/:pid(\w{19})" component={RackView} />
+        <Route path="/:uid(\w{28}):pid(-\w{19})" component={RackView} />
       </div>
     </Router>
   )

@@ -170,3 +170,7 @@ export const deleteInstrument = id => ({
   type: DELETE_INSTRUMENT,
   payload: { id }
 })
+
+export const sharePatch = (uid, pid) => dispatch => {
+  console.log(`/${uid}${pid}`)
+}
