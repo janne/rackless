@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect } from "react"
+import React, { useEffect } from "react"
+import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { fetchData, setLoggedIn, setLoading } from "./store/actions"
 import { getLoading } from "./store/selectors"
@@ -6,6 +7,7 @@ import Loader from "./components/Loader"
 import { initialize, setLoginHandler } from "./utils/firebase"
 import TopBar from "./containers/TopBar"
 import Rack from "./containers/Rack"
+import RackView from "./containers/RackView"
 
 const styles = {
   content: {
@@ -32,13 +34,14 @@ const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
   }, [fetchData, setLoading, setLoggedIn])
 
   return (
-    <Fragment>
+    <Router>
       <TopBar />
       <div style={styles.content}>
         {isLoading && <Loader />}
-        <Rack />
+        <Route exact path="/" component={Rack} />
+        <Route path="/:uid(\w{19})/:pid(\w{19})" component={RackView} />
       </div>
-    </Fragment>
+    </Router>
   )
 }
 
