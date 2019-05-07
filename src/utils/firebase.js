@@ -52,7 +52,7 @@ export const signIn = async () => {
               const data = dataSnapshot.val()
               setData(user, {
                 ...data,
-                current: anonData.current || data.current,
+                current: R.prop("current", anonData) || R.prop("current", data),
                 patches: { ...data.patches, ...anonData.patches }
               })
             })
