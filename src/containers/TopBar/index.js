@@ -69,8 +69,7 @@ const TopBarContainer = ({
             title: "Share Patch",
             handler: () => {
               const uid = firebase.getCurrentUser().uid
-              const pid = current.slice()
-              sharePatch(uid, pid)
+              sharePatch(uid, current)
             }
           }
         ]

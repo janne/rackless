@@ -39,7 +39,7 @@ const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
       <div style={styles.content}>
         {isLoading && <Loader />}
         <Route exact path="/" component={Rack} />
-        <Route path="/:uid(\w{28}):pid(-\w{19})" component={RackView} />
+        <Route path="/:uid(\w{28}):patchId(-\w{19})" component={RackView} />
       </div>
     </Router>
   )

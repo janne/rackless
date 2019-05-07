@@ -7,12 +7,12 @@ const styles = {
 }
 
 const RackView = ({ match }) => {
-  const { uid, pid } = match.params
+  const { uid, patchId } = match.params
   return (
     <div style={styles.container}>
       User: {uid}
       <br />
-      Patch: {pid}
+      Patch: {patchId}
     </div>
   )
 }
