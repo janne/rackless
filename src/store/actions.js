@@ -42,7 +42,7 @@ const updatePatch = data => {
 
 export const fetchData = user => dispatch => {
   dispatch(setLoading(true))
-  firebase.subscribeToData(user, dataSnapshot => {
+  firebase.subscribeToUser(user, dataSnapshot => {
     const data = dataSnapshot.val()
     dispatch(setLoading(false))
     if (R.prop("modules", data)) return dispatch(setData(updatePatch(data)))

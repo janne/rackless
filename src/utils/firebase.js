@@ -75,7 +75,7 @@ export const setData = async (user, data) =>
     .ref(`/users/${user.uid}`)
     .set(data)
 
-export const subscribeToData = (user, handler) =>
+export const subscribeToUser = (user, handler) =>
   firebase
     .database()
     .ref(`/users/${user.uid}`)
