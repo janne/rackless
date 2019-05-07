@@ -84,15 +84,13 @@ const TopBarContainer = ({
         ...loggedInActions,
         {
           title: "Open Reddit",
-          handler: createHandler(() =>
-            window.open("https://www.reddit.com/r/rackless")
-          )
+          handler: () => window.open("https://www.reddit.com/r/rackless")
         },
         {
           title: isLoggedIn
             ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
             : "Log in",
-          handler: isLoggedIn ? signOut : signIn
+          handler: createHandler(isLoggedIn ? signOut : signIn)
         }
       ],
       patches: R.map(
