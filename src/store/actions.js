@@ -172,5 +172,5 @@ export const deleteInstrument = id => ({
 })
 
 export const sharePatch = (uid, patchId) => () => {
-  window.open(`/${uid}${patchId}`)
+  window.location = `/${uid}${patchId}`
 }
