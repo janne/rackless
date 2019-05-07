@@ -1,12 +1,14 @@
-import React, { useState } from "react"
+import React, { Fragment, useState } from "react"
 import * as R from "ramda"
 import {
   Menu as MenuIcon,
   AddCircle as AddIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  Share as ShareIcon
 } from "@material-ui/icons"
 import {
   IconButton,
+  Button,
   Toolbar,
   AppBar,
   Drawer,
@@ -31,7 +33,7 @@ const styles = {
   }
 }
 
-const TopBar = ({ items, deleteHandler, deleting }) => {
+const TopBar = ({ items, deleteHandler, shareHandler, deleting, readOnly }) => {
   const [leftMenu, setLeftMenu] = useState(false)
   const [rightMenu, setRightMenu] = useState(false)
 
@@ -77,12 +79,22 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
           <div style={styles.menuTitle}>
             <img src={logo} alt="Rackless" />
           </div>
-          <IconButton onClick={deleteHandler}>
-            <DeleteIcon color={deleting ? "secondary" : "inherit"} />
+
+          <IconButton onClick={shareHandler}>
+            <ShareIcon />
           </IconButton>
-          <IconButton onClick={e => setRightMenu(true)}>
-            <AddIcon />
-          </IconButton>
+          {readOnly ? (
+            <Button>Clone</Button>
+          ) : (
+            <Fragment>
+              <IconButton onClick={deleteHandler}>
+                <DeleteIcon color={deleting ? "secondary" : "inherit"} />
+              </IconButton>
+              <IconButton onClick={e => setRightMenu(true)}>
+                <AddIcon />
+              </IconButton>
+            </Fragment>
+          )}
         </Toolbar>
       </AppBar>
 
@@ -92,13 +104,15 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         <List>{R.addIndex(R.map)(renderPatchItem, items.patches)}</List>
       </Drawer>
 
-      <Drawer
-        anchor="right"
-        open={rightMenu}
-        onClick={() => setRightMenu(false)}
-      >
-        <List>{R.map(renderListItem, items.add)}</List>
-      </Drawer>
+      {readOnly ? null : (
+        <Drawer
+          anchor="right"
+          open={rightMenu}
+          onClick={() => setRightMenu(false)}
+        >
+          <List>{R.map(renderListItem, items.add)}</List>
+        </Drawer>
+      )}
     </MuiThemeProvider>
   )
 }

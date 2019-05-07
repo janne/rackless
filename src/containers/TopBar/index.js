@@ -20,6 +20,7 @@ import {
   setCurrent
 } from "../../store/actions"
 import { getCurrentUser, signIn } from "../../utils/firebase"
+import { withRouter } from "react-router-dom"
 
 const TopBarContainer = ({
   deleting,
@@ -32,9 +33,12 @@ const TopBarContainer = ({
   deletePatch,
   setCurrent,
   patches = {},
-  current
+  current,
+  history
 }) => {
   const titleize = text => text.replace(/([A-Z])/g, " $1")
+
+  const isRoot = R.pathOr("/", ["location", "pathname"], history) === "/"
 
   const handleKeyPress = e => {
     switch (e.key) {
@@ -61,50 +65,56 @@ const TopBarContainer = ({
       minute: "2-digit"
     })
 
+  const createHandler = handler => () => {
+    if (!isRoot) history.replace("/")
+    handler()
+  }
+
+  const shareHandler = () => {
+    const uid = firebase.getCurrentUser().uid
+    sharePatch(uid, current)
+  }
+
   const navItems = () => {
     const loggedInActions = isLoggedIn
-      ? [
-          { title: "New Patch", handler: createPatch },
-          {
-            title: "Share Patch",
-            handler: () => {
-              const uid = firebase.getCurrentUser().uid
-              sharePatch(uid, current)
-            }
-          }
-        ]
+      ? [{ title: "New Patch", handler: createHandler(createPatch) }]
       : []
     return {
       menu: [
+        ...loggedInActions,
+        {
+          title: "Open Reddit",
+          handler: createHandler(() =>
+            window.open("https://www.reddit.com/r/rackless")
+          )
+        },
         {
           title: isLoggedIn
             ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
             : "Log in",
           handler: isLoggedIn ? signOut : signIn
-        },
-        {
-          title: "Open Reddit",
-          handler: () => window.open("https://www.reddit.com/r/rackless")
-        },
-        ...loggedInActions
+        }
       ],
       patches: R.map(
         id => ({
           id,
           selected: id === current,
           title: formatTime(patches[id].createdAt),
-          handler: id === current ? null : () => setCurrent(id),
-          secondaryHandler: id === current ? null : () => deletePatch(id)
+          handler: id === current ? null : createHandler(() => setCurrent(id)),
+          secondaryHandler:
+            id === current ? null : createHandler(() => deletePatch(id))
         }),
         R.keys(patches)
       ),
-      add: R.map(
-        type => ({
-          title: titleize(type),
-          handler: () => createModule(type)
-        }),
-        R.sortBy(R.identity, R.keys(moduleTypes))
-      )
+      add: isRoot
+        ? R.map(
+            type => ({
+              title: titleize(type),
+              handler: () => createModule(type)
+            }),
+            R.sortBy(R.identity, R.keys(moduleTypes))
+          )
+        : null
     }
   }
 
@@ -112,7 +122,9 @@ const TopBarContainer = ({
     <TopBar
       items={navItems()}
       deleteHandler={toggleDelete}
+      shareHandler={shareHandler}
       deleting={deleting}
+      readOnly={!isRoot}
     />
   )
 }
@@ -134,7 +146,9 @@ const mapDispatchToProps = {
   signOut
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopBarContainer)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(TopBarContainer)
+)
