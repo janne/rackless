@@ -171,6 +171,6 @@ export const deleteInstrument = id => ({
   payload: { id }
 })
 
-export const sharePatch = (uid, pid) => dispatch => {
-  console.log(`/${uid}${pid}`)
+export const sharePatch = (uid, patchId) => () => {
+  window.open(`/${uid}${patchId}`)
 }
