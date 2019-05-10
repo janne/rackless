@@ -31,7 +31,9 @@ import {
   CREATE_PATCH,
   SET_CURRENT,
   DELETE_PATCH,
-  DELETE_INSTRUMENT
+  DELETE_INSTRUMENT,
+  SET_VIEW,
+  CLEAR_VIEW
 } from "./actionTypes"
 
 const initialState = {
@@ -109,6 +111,15 @@ export default (state = initialState, action) => {
     case SET_INSTRUMENT: {
       const { id, instrument } = action.payload
       return R.set(R.lensPath(["instruments", id]), instrument, state)
+    }
+
+    case SET_VIEW: {
+      const { view } = action.payload
+      return { ...state, view }
+    }
+
+    case CLEAR_VIEW: {
+      return R.dissoc("view", state)
     }
 
     case DELETE_INSTRUMENT: {

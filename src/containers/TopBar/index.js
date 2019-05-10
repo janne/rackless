@@ -17,7 +17,8 @@ import {
   toggleDelete,
   deletePatch,
   signOut,
-  setCurrent
+  setCurrent,
+  clearView
 } from "../../store/actions"
 import { getCurrentUser, signIn } from "../../utils/firebase"
 import { withRouter } from "react-router-dom"
@@ -34,7 +35,8 @@ const TopBarContainer = ({
   setCurrent,
   patches = {},
   current,
-  history
+  history,
+  clearView
 }) => {
   const titleize = text => text.replace(/([A-Z])/g, " $1")
 
@@ -67,6 +69,7 @@ const TopBarContainer = ({
 
   const createHandler = handler => () => {
     if (!isRoot) history.replace("/")
+    clearView()
     handler()
   }
 
@@ -141,7 +144,8 @@ const mapDispatchToProps = {
   sharePatch,
   deletePatch,
   setCurrent,
-  signOut
+  signOut,
+  clearView
 }
 
 export default withRouter(

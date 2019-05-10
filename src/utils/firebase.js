@@ -80,3 +80,9 @@ export const subscribeToUser = (user, handler) =>
     .database()
     .ref(`/users/${user.uid}`)
     .on("value", handler)
+
+export const subscribeToUserPatch = (uid, patchId, handler) =>
+  firebase
+    .database()
+    .ref(`/users/${uid}/patches/${patchId}`)
+    .on("value", handler)

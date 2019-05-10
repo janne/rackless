@@ -5,10 +5,44 @@ import * as R from "ramda"
 import Cable from "../Cable"
 import Module from "../Module"
 import { getModules, getCables, getInstruments } from "../../store/selectors"
+import {
+  fetchView,
+  fetchData,
+  setLoggedIn,
+  setLoading
+} from "../../store/actions"
+import { setLoginHandler } from "../../utils/firebase"
 
-const Rack = ({ modules, cables, instruments }) => {
+const Rack = ({
+  modules,
+  cables,
+  instruments,
+  fetchView,
+  match,
+  fetchData,
+  setLoggedIn,
+  setLoading
+}) => {
   const performAnimation = useRef()
   const performLoop = useRef()
+
+  useEffect(() => {
+    setLoginHandler(user => {
+      if (user) {
+        fetchData(user)
+      }
+      setLoading(false)
+      setLoggedIn(Boolean(user && !user.isAnonymous))
+    })
+  }, [fetchData, setLoading, setLoggedIn])
+
+  useEffect(() => {
+    const params = R.prop("params", match)
+    if (!R.isEmpty(params)) {
+      const { uid, patchId } = params
+      fetchView(uid, patchId)
+    }
+  }, [fetchView, match])
 
   useEffect(() => {
     performAnimation.current = () => {
@@ -55,4 +89,9 @@ const mapStateToProps = state => ({
   instruments: getInstruments(state)
 })
 
-export default connect(mapStateToProps)(Rack)
+const mapDispatchToProps = { fetchView, fetchData, setLoggedIn, setLoading }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Rack)

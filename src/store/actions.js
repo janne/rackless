@@ -18,7 +18,9 @@ import {
   CREATE_PATCH,
   SET_CURRENT,
   DELETE_PATCH,
-  DELETE_INSTRUMENT
+  DELETE_INSTRUMENT,
+  SET_VIEW,
+  CLEAR_VIEW
 } from "./actionTypes"
 import { getData } from "./selectors"
 import * as firebase from "../utils/firebase"
@@ -91,6 +93,21 @@ export const setInstrument = (id, instrument) => ({
   type: SET_INSTRUMENT,
   payload: { id, instrument }
 })
+
+export const setView = view => ({
+  type: SET_VIEW,
+  payload: { view }
+})
+
+export const clearView = () => ({
+  type: CLEAR_VIEW
+})
+
+export const fetchView = (uid, patchId) => dispatch => {
+  firebase.subscribeToUserPatch(uid, patchId, viewSnapshot =>
+    dispatch(setView(viewSnapshot.val()))
+  )
+}
 
 export const createCable = (id, moduleId, socketId, direction, color) => {
   const socket =
