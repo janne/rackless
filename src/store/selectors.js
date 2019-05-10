@@ -11,19 +11,18 @@ export const getCurrent = R.path(["data", "current"])
 
 export const getPatches = R.path(["data", "patches"])
 
+const currentPatch = state =>
+  R.isNil(state.view) ? ["data", "patches", getCurrent(state)] : ["view"]
+
 export const getModules = state =>
-  R.pathOr({}, ["data", "patches", getCurrent(state), "modules"], state)
+  R.pathOr({}, [...currentPatch(state), "modules"], state)
 export const getModule = (moduleId, state) =>
-  R.pathOr(
-    {},
-    ["data", "patches", getCurrent(state), "modules", moduleId],
-    state
-  )
+  R.pathOr({}, [...currentPatch(state), "modules", moduleId], state)
 
 export const getCables = state =>
-  R.pathOr({}, ["data", "patches", getCurrent(state), "cables"], state)
+  R.pathOr({}, [...currentPatch(state), "cables"], state)
 export const getCable = (cableId, state) =>
-  R.pathOr({}, ["data", "patches", getCurrent(state), "cables", cableId], state)
+  R.pathOr({}, [...currentPatch(state), "cables", cableId], state)
 
 export const getInstruments = R.propOr({}, "instruments")
 export const getInstrument = (moduleId, state) =>
