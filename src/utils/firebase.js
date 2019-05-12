@@ -3,6 +3,12 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
 
+const makeRef = (uid, patchId) => {
+  const userPath = `/users/${uid}`
+  const path = patchId ? `${userPath}/patches/${patchId}` : userPath
+  return firebase.database().ref(path)
+}
+
 export const initialize = () =>
   firebase.initializeApp({
     apiKey: "AIzaSyAUfjY5qEoCA49XnOS9bCZ2tAoaDD5L1rQ",
@@ -38,7 +44,7 @@ export const signIn = async () => {
   }
   return currentUser.linkWithPopup(provider).catch(({ code, credential }) => {
     if (code === "auth/credential-already-in-use") {
-      const ref = firebase.database().ref(`/users/${currentUser.uid}`)
+      const ref = makeRef(currentUser.uid)
       ref.once("value").then(anonDataSnapshot => {
         const anonData = anonDataSnapshot.val()
         ref.remove()
@@ -47,7 +53,7 @@ export const signIn = async () => {
           .auth()
           .signInAndRetrieveDataWithCredential(credential)
           .then(({ user }) => {
-            const ref = firebase.database().ref(`/users/${user.uid}`)
+            const ref = makeRef(user.uid)
             ref.once("value").then(dataSnapshot => {
               const data = dataSnapshot.val()
               setData(user, {
@@ -69,20 +75,15 @@ export const getDbKey = child => {
   return ref.child(child).push().key
 }
 
-export const setData = async (user, data) =>
-  firebase
-    .database()
-    .ref(`/users/${user.uid}`)
-    .set(data)
+export const setData = async (user, data) => makeRef(user.uid).set(data)
 
 export const subscribeToUser = (uid, handler) =>
-  firebase
-    .database()
-    .ref(`/users/${uid}`)
-    .on("value", handler)
+  makeRef(uid).on("value", handler)
+
+export const unsubscribeToUser = uid => makeRef(uid).off()
 
 export const subscribeToUserPatch = (uid, patchId, handler) =>
-  firebase
-    .database()
-    .ref(`/users/${uid}/patches/${patchId}`)
-    .on("value", handler)
+  makeRef(uid, patchId).on("value", handler)
+
+export const unsubscribeToUserPatch = (uid, patchId) =>
+  makeRef(uid, patchId).off()
