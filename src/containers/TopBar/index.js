@@ -68,14 +68,24 @@ const TopBarContainer = ({
     })
 
   const createHandler = handler => () => {
-    if (!isRoot) history.replace("/")
-    clearView()
+    if (!isRoot) {
+      const uid = firebase.getCurrentUser().uid
+      firebase.unsubscribeToUserPatch(uid, current)
+      clearView()
+      history.replace("/")
+    }
     handler()
   }
 
   const shareHandler = () => {
     const uid = firebase.getCurrentUser().uid
     sharePatch(uid, current)
+  }
+
+  const signOutHandler = () => {
+    const uid = firebase.getCurrentUser().uid
+    firebase.unsubscribeToUser(uid)
+    signOut()
   }
 
   const navItems = () => {
@@ -93,7 +103,7 @@ const TopBarContainer = ({
           title: isLoggedIn
             ? `Log out ${R.propOr("", "displayName", getCurrentUser())}`
             : "Log in",
-          handler: createHandler(isLoggedIn ? signOut : signIn)
+          handler: createHandler(isLoggedIn ? signOutHandler : signIn)
         }
       ],
       patches: R.map(
