@@ -106,17 +106,18 @@ const TopBarContainer = ({
           handler: createHandler(isLoggedIn ? signOutHandler : signIn)
         }
       ],
-      patches: R.map(
-        id => ({
+      patches: R.map(id => {
+        const selected = isRoot && id === current
+        return {
           id,
-          selected: id === current,
+          selected,
           title: formatTime(patches[id].createdAt),
-          handler: id === current ? null : createHandler(() => setCurrent(id)),
-          secondaryHandler:
-            id === current ? null : createHandler(() => deletePatch(id))
-        }),
-        R.keys(patches)
-      ),
+          handler: selected ? null : createHandler(() => setCurrent(id)),
+          secondaryHandler: selected
+            ? null
+            : createHandler(() => deletePatch(id))
+        }
+      }, R.keys(patches)),
       add: isRoot
         ? R.map(
             type => ({
