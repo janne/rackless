@@ -75,10 +75,10 @@ export const setData = async (user, data) =>
     .ref(`/users/${user.uid}`)
     .set(data)
 
-export const subscribeToUser = (user, handler) =>
+export const subscribeToUser = (uid, handler) =>
   firebase
     .database()
-    .ref(`/users/${user.uid}`)
+    .ref(`/users/${uid}`)
     .on("value", handler)
 
 export const subscribeToUserPatch = (uid, patchId, handler) =>

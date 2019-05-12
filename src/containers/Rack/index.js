@@ -29,7 +29,7 @@ const Rack = ({
   useEffect(() => {
     setLoginHandler(user => {
       if (user) {
-        fetchData(user)
+        fetchData(user.uid)
       }
       setLoading(false)
       setLoggedIn(Boolean(user && !user.isAnonymous))
