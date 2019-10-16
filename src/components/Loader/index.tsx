@@ -1,4 +1,4 @@
-import React from "react"
+import React, { SFC } from "react"
 import spinner from "./spinner.gif"
 
 const styles = {
@@ -7,7 +7,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    position: "absolute",
+    position: "absolute" as "absolute",
     height: "100%",
     top: 0,
     left: 0,
@@ -16,7 +16,7 @@ const styles = {
   }
 }
 
-const Loader = () => (
+const Loader: SFC = () => (
   <div style={styles.loader}>
     <img src={spinner} alt="Spinner" width="200" height="200" />
   </div>
