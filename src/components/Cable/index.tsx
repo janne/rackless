@@ -1,11 +1,37 @@
-import React, { Fragment } from "react"
+import React, { SFC } from "react"
 import * as R from "ramda"
 import Connector from "./Connector"
 import Bezier from "./Bezier"
 
 const CENTER = 10
 
-const Cable = ({
+export interface Pos {
+  x: number
+  y: number
+}
+
+export type Connector = "outputs" | "inputs"
+
+export interface Drag {
+  connector: Connector
+  pos: Pos
+}
+
+interface CableProps {
+  id: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  color: string
+  disabled: boolean
+  drag: Drag
+  removeConnector: (id: string) => void
+  dragConnector: (id: string, connector: Connector, pos: Pos) => void
+  moveConnector: (id: string, connector: Connector, pos: Pos) => void
+}
+
+const Cable: SFC<CableProps> = ({
   id,
   x1,
   y1,
@@ -25,16 +51,18 @@ const Cable = ({
   const inX = R.prop("connector", drag) === "inputs" ? drag.pos.x : x2
   const inY = R.prop("connector", drag) === "inputs" ? drag.pos.y : y2
 
-  const handleStart = connector => pos => removeConnector(id, connector, pos)
-  const handleDrag = connector => pos => dragConnector(id, connector, pos)
-  const handleStop = connector => pos => moveConnector(id, connector, pos)
+  const handleStart = () => removeConnector(id)
+  const handleDrag = (connector: Connector) => (pos: Pos) =>
+    dragConnector(id, connector, pos)
+  const handleStop = (connector: Connector) => (pos: Pos) =>
+    moveConnector(id, connector, pos)
 
   return (
-    <Fragment>
+    <>
       <Connector
         x={outX}
         y={outY}
-        onStart={handleStart("outputs")}
+        onStart={handleStart}
         onDrag={handleDrag("outputs")}
         onStop={handleStop("outputs")}
         disabled={disabled}
@@ -42,7 +70,7 @@ const Cable = ({
       <Connector
         x={inX}
         y={inY}
-        onStart={handleStart("inputs")}
+        onStart={handleStart}
         onDrag={handleDrag("inputs")}
         onStop={handleStop("inputs")}
         disabled={disabled}
@@ -54,7 +82,7 @@ const Cable = ({
         y2={inY + CENTER}
         color={color}
       />
-    </Fragment>
+    </>
   )
 }
 

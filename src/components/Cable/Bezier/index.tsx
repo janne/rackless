@@ -1,7 +1,15 @@
-import React from "react"
+import React, { SFC } from "react"
 import { CABLE_SLACK } from "../../../constants"
 
-const Cable = ({ x1, y1, x2, y2, color }) => {
+interface CableProps {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  color: string
+}
+
+const Cable: SFC<CableProps> = ({ x1, y1, x2, y2, color }) => {
   const hang = Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK
   const strokeWidth = 9
   const left = Math.min(x1, x2) - strokeWidth
