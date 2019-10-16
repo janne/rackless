@@ -1,6 +1,6 @@
-const debounce = (handler, wait) => {
-  let timeout
-  return (...args) => {
+const debounce = (handler: (...args: any[]) => void, wait: number) => {
+  let timeout: NodeJS.Timeout | null
+  return (...args: any[]) => {
     if (timeout) return
     const later = () => {
       timeout = null
