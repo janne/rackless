@@ -1,22 +1,22 @@
 import Tone from "tone"
 import * as R from "ramda"
-
 import background from "./background.svg"
+import { Ios, Setup, AudioNode, Loop, Dispose } from ".."
 
-const outputs = {
+const outputs: Ios = {
   white: { x: 4, y: 43, range: "audio" },
   brown: { x: 4, y: 93, range: "audio" },
   pink: { x: 4, y: 143, range: "audio" },
   out: { x: 4, y: 303, range: "audio" }
 }
 
-const inputs = {
+const inputs: Ios = {
   sample: { x: 5, y: 200, range: "audio" },
   hold: { x: 5, y: 250 }
 }
 
-const setup = ({ inputs, outputs }) => {
-  const tones = {
+const setup: Setup = ({ inputs, outputs }) => {
+  const tones: { [k: string]: AudioNode } = {
     pink: new Tone.Noise("pink"),
     brown: new Tone.Noise("brown"),
     white: new Tone.Noise("white"),
@@ -37,15 +37,15 @@ const setup = ({ inputs, outputs }) => {
     outputs[type].stop = () => noise.stop()
   })
 
-  const dispose = () => Object.values(tones).forEach(t => t.dispose())
+  const dispose: Dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const gateFlip = (gate, values) => {
+  const gateFlip = (gate: boolean, values: number[]) => {
     if (!gate && R.any(R.gt(0.8), values)) return true
     if (gate && R.any(R.lt(0.2), values)) return false
     return gate
   }
 
-  const loop = props => {
+  const loop: Loop = props => {
     const { hold: previousHold } = props
 
     const holdValues = tones.holdAnalyser.getValue()

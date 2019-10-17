@@ -1,11 +1,12 @@
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-export const inputs = {
+export const inputs: Ios = {
   in1: { x: 5, y: 40 },
   in2: { x: 5, y: 208 }
 }
 
-export const outputs = {
+export const outputs: Ios = {
   out1a: { x: 5, y: 93 },
   out1b: { x: 5, y: 129 },
   out1c: { x: 5, y: 165 },
@@ -14,7 +15,7 @@ export const outputs = {
   out2c: { x: 5, y: 333 }
 }
 
-const setup = ({ inputs, outputs }) => {
+const setup: Setup = ({ inputs, outputs }) => {
   inputs.in1.connect(outputs.out1a)
   inputs.in1.connect(outputs.out1b)
   inputs.in1.connect(outputs.out1c)

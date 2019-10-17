@@ -40,15 +40,17 @@ export interface Dispose {
 }
 
 export interface Loop {
-  (props: Ios, values: { [k: string]: any }): void
+  (props: { [k: string]: any }, values: { [k: string]: any }): {
+    [k: string]: any
+  }
 }
 
 export interface Setup {
   (
     inputs: { [k: string]: AudioNode },
     outputs: { [k: string]: AudioNode },
-    controls: { [k: string]: AudioNode }
-  ): { dispose: Dispose; loop?: Loop }
+    controls?: { [k: string]: AudioNode }
+  ): { dispose: Dispose; loop?: Loop } | void
 }
 
 export type ModuleType =

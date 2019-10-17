@@ -1,7 +1,8 @@
 import Tone from "tone"
 import background from "./background.svg"
+import { Ios, Setup, AudioNode } from ".."
 
-const controls = {
+const controls: Ios = {
   freq: { x: 58, y: 54, range: "audio" },
   fine: { x: 105, y: 54, range: "audio" },
   fmcv: { x: 58, y: 135 },
@@ -10,22 +11,22 @@ const controls = {
   oscType: { x: 107, y: 144, range: ["vco", "lfo"] }
 }
 
-const inputs = {
+const inputs: Ios = {
   voct: { x: 13, y: 62 },
   fm: { x: 14, y: 143, range: "audio" },
   pwm: { x: 13, y: 226 }
 }
 
-const outputs = {
+const outputs: Ios = {
   sine: { x: 14, y: 317, range: "audio" },
   triangle: { x: 48, y: 317, range: "audio" },
   sawtooth: { x: 82, y: 317, range: "audio" },
   square: { x: 115, y: 317, range: "audio" }
 }
 
-const setup = ({ controls, inputs, outputs }) => {
+const setup: Setup = ({ controls, inputs, outputs }) => {
   const types = ["sine", "triangle", "sawtooth", "square"]
-  const tones = {}
+  const tones: { [k: string]: AudioNode } = {}
 
   types.forEach(type => {
     tones[type] =
@@ -66,7 +67,7 @@ const setup = ({ controls, inputs, outputs }) => {
       controls.oscType.value === "vco" ? 220 : 220 * Math.pow(2, -10)
 
     tones.audioToFrequency = new Tone.WaveShaper(
-      x => baseFreq * Math.pow(2, x * 5)
+      (x: number) => baseFreq * Math.pow(2, x * 5)
     )
     plusFm.chain(tones.audioToFrequency, tones[type].frequency)
 
