@@ -28,12 +28,14 @@ export interface AudioNode {
   [k: string]: any
 }
 
+type Range = "audio" | "normal" | (number | string)[]
+
 export interface Io {
   x: number
   y: number
   width?: number
   Component?: SFC<any>
-  range?: "audio" | "normal" | (number | string)[]
+  range?: Range
 }
 
 export interface Ios {

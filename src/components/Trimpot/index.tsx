@@ -1,19 +1,31 @@
-import React from "react"
+import React, { SFC, Ref } from "react"
 import * as R from "ramda"
-import { DraggableCore } from "react-draggable"
+import { DraggableCore, DraggableEventHandler } from "react-draggable"
 import background from "./background.svg"
 
 const CONTROL_DEGREES = 270
 
-const Trimpot = React.forwardRef(
-  ({ id, width = 36, range, name, value, setValue }, ref) => {
+interface TrimpotProps {
+  id: string
+  width: number
+  range: Range
+  name: string
+  value: number
+  setValue: (id: string, name: string, value: number) => void
+}
+
+const Trimpot: SFC<TrimpotProps> = React.forwardRef(
+  (
+    { id, width = 36, range, name, value, setValue },
+    ref: Ref<HTMLDivElement>
+  ) => {
     const currentValue = R.isNil(value) ? (R.isNil(range) ? 0.5 : 0) : value
 
     const styles = {
       content: { cursor: "pointer" }
     }
 
-    const dragHandler = (e, data) => {
+    const dragHandler: DraggableEventHandler = (e, data) => {
       setValue(
         id,
         name,
@@ -26,7 +38,7 @@ const Trimpot = React.forwardRef(
       e.preventDefault()
     }
 
-    const dblClickHandler = e => setValue(id, name, R.isNil(range) ? 0.5 : 0)
+    const dblClickHandler = () => setValue(id, name, R.isNil(range) ? 0.5 : 0)
 
     return (
       <div
@@ -40,7 +52,6 @@ const Trimpot = React.forwardRef(
             draggable={false}
             src={background}
             style={{
-              ...styles.img,
               width,
               transform: `rotate(${
                 R.isNil(range)
