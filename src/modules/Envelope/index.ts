@@ -1,7 +1,7 @@
 import Tone from "tone"
 import * as R from "ramda"
 import background from "./background.svg"
-import { Ios, AudioNode, Loop, Setup } from ".."
+import { Ios, Loop, Setup, Dispose } from ".."
 
 const inputs: Ios = {
   gate: { x: 5, y: 272 },
@@ -39,7 +39,7 @@ const setup: Setup = ({ inputs, outputs, controls }) => {
   tones.envelope.connect(outputs.out)
   tones.envelope.chain(tones.inverter, outputs.inv)
 
-  const dispose = () => Object.values(tones).forEach(t => t.dispose())
+  const dispose: Dispose = () => Object.values(tones).forEach(t => t.dispose())
 
   const gateFlip = (gate: any, values: any) => {
     if (!gate && R.any(R.flip(R.gt)(0.8), values)) return true

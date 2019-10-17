@@ -2,7 +2,7 @@ import Tone from "tone"
 import * as R from "ramda"
 import webmidi, { Input } from "webmidi"
 import background from "./background.svg"
-import { Ios, Setup } from ".."
+import { Ios, Setup, Dispose } from ".."
 
 const outputs: Ios = {
   voct: { x: 5, y: 313, range: "audio" },
@@ -100,7 +100,7 @@ const setup: Setup = ({ outputs }) => {
     })
   })
 
-  const dispose = () => {
+  const dispose: Dispose = () => {
     if (midi) {
       midi.removeListener()
     }

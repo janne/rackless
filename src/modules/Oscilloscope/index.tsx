@@ -2,7 +2,7 @@ import React, { createRef, SFC, RefObject } from "react"
 import * as R from "ramda"
 import Tone from "tone"
 import background from "./background.svg"
-import { Ios, Setup, AudioNode } from ".."
+import { Ios, Setup, AudioNode, Dispose } from ".."
 
 const resolution = 512
 const width = 144
@@ -53,7 +53,7 @@ const setup: Setup = ({ inputs, outputs, controls }) => {
     outputs[analyser].stop = () => route(analyser)
   })
 
-  const dispose = () => Object.values(tones).forEach(t => t.dispose())
+  const dispose: Dispose = () => Object.values(tones).forEach(t => t.dispose())
 
   const scale = (
     value: number,
