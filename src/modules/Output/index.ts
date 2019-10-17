@@ -1,7 +1,8 @@
 import Tone from "tone"
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-const controls = {
+const controls: Ios = {
   gain: { x: 58, y: 41 },
   level1: { x: 58, y: 106 },
   pan1: { x: 106, y: 106, range: "audio" },
@@ -10,7 +11,7 @@ const controls = {
   level3: { x: 58, y: 282 }
 }
 
-const inputs = {
+const inputs: Ios = {
   input1: { x: 13, y: 114, range: "audio" },
   input2: { x: 13, y: 184, range: "audio" },
   input3left: { x: 13, y: 259, range: "audio" },
@@ -18,11 +19,11 @@ const inputs = {
   pancv: { x: 114, y: 243, range: "audio" }
 }
 
-const outputs = {
+const outputs: Ios = {
   out: { x: 116, y: 314, range: "audio" }
 }
 
-const setup = ({ controls, inputs, outputs }) => {
+const setup: Setup = ({ controls, inputs, outputs }) => {
   const tones = {
     masterGain: new Tone.Gain(),
     gain1: new Tone.Gain(),

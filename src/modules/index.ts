@@ -1,3 +1,5 @@
+import { SFC } from "react"
+
 export { default as Amplifier } from "./Amplifier"
 export { default as Envelope } from "./Envelope"
 export { default as Feedback } from "./Feedback"
@@ -22,13 +24,16 @@ export interface Module {
 export interface AudioNode {
   connect: (unit: AudioNode, outputNum?: number, inputNum?: number) => AudioNode
   chain: (...units: AudioNode[]) => AudioNode
+  dispose: () => void
   [k: string]: any
 }
 
 export interface Io {
   x: number
   y: number
-  range?: "audio" | (number | string)[]
+  width?: number
+  Component?: SFC<any>
+  range?: "audio" | "normal" | (number | string)[]
 }
 
 export interface Ios {
