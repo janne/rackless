@@ -1,30 +1,31 @@
 import Tone from "tone"
 import * as R from "ramda"
 import background from "./background.svg"
+import { Ios, AudioNode, Loop, Setup } from ".."
 
-const inputs = {
+const inputs: Ios = {
   gate: { x: 5, y: 272 },
   retrig: { x: 36, y: 272 }
 }
 
-const outputs = {
+const outputs: Ios = {
   out: { range: "audio", x: 36, y: 323 },
   inv: { range: "audio", x: 5, y: 323 }
 }
 
-const controls = {
+const controls: Ios = {
   attack: { x: 12, y: 37 },
   decay: { x: 12, y: 96 },
   sustain: { x: 12, y: 154 },
   release: { x: 12, y: 213 }
 }
 
-const setup = ({ inputs, outputs, controls }) => {
+const setup: Setup = ({ inputs, outputs, controls }) => {
   const tones = {
     envelope: new Tone.Envelope(),
     gateAnalyser: new Tone.Analyser("waveform", 64),
     retrigAnalyser: new Tone.Analyser("waveform", 64),
-    inverter: new Tone.WaveShaper(x => 1 - x)
+    inverter: new Tone.WaveShaper((x: number) => 1 - x)
   }
 
   tones.envelope.attack = controls.attack.value || 0.01
@@ -40,13 +41,13 @@ const setup = ({ inputs, outputs, controls }) => {
 
   const dispose = () => Object.values(tones).forEach(t => t.dispose())
 
-  const gateFlip = (gate, values) => {
+  const gateFlip = (gate: any, values: any) => {
     if (!gate && R.any(R.flip(R.gt)(0.8), values)) return true
     if (gate && R.any(R.flip(R.lt)(0.2), values)) return false
     return gate
   }
 
-  const loop = (props, values) => {
+  const loop: Loop = (props, values) => {
     const { gate: previousGate, retrig: previousRetrig } = props
     Object.keys(values).forEach(key => {
       const multiplier = key === "sustain" ? 1 : 10

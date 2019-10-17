@@ -1,23 +1,23 @@
 import Tone from "tone"
-
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-const inputs = {
+const inputs: Ios = {
   feedback: { x: 20, y: 83 },
   time: { x: 20, y: 176 },
   wet: { x: 20, y: 269 },
   in: { x: 5, y: 323 }
 }
 
-const outputs = { out: { x: 36, y: 323 } }
+const outputs: Ios = { out: { x: 36, y: 323 } }
 
-const controls = {
+const controls: Ios = {
   feedback: { x: 12, y: 42 },
   time: { x: 12, y: 135 },
   wet: { x: 12, y: 228 }
 }
 
-const setup = ({ inputs, outputs, controls }) => {
+const setup: Setup = ({ inputs, outputs, controls }) => {
   const tones = {
     feedback: new Tone.FeedbackDelay(),
     mulFeedack: new Tone.Pow(2),
