@@ -1,10 +1,10 @@
 import Tone from "tone"
 import * as R from "ramda"
-import webmidi from "webmidi"
-
+import webmidi, { Input } from "webmidi"
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-const outputs = {
+const outputs: Ios = {
   voct: { x: 5, y: 313, range: "audio" },
   gate: { x: 36, y: 313 },
   velocity: { x: 5, y: 253 },
@@ -19,7 +19,7 @@ const outputs = {
   cc8: { x: 36, y: 193 }
 }
 
-const initializeMidi = async () =>
+const initializeMidi = async (): Promise<Input> =>
   new Promise((resolve, reject) => {
     webmidi.enable(err => {
       if (err) {
@@ -36,7 +36,7 @@ const initializeMidi = async () =>
     })
   })
 
-const setup = ({ outputs }) => {
+const setup: Setup = ({ outputs }) => {
   const tones = {
     voct: new Tone.Signal(0, Tone.Type.Audio),
     gate: new Tone.Signal(0, Tone.Type.Normal),
@@ -65,22 +65,25 @@ const setup = ({ outputs }) => {
   tones.cc7.connect(outputs.cc7)
   tones.cc8.connect(outputs.cc8)
 
-  let midi = null
-  let keys = []
+  let midi: Input | null = null
+  let keys: number[] = []
 
   initializeMidi().then(input => {
     midi = input
 
-    const midiToVoct = midi => R.clamp(0, 1, (keys[0] - 57) / (12 * 5) + 0.5)
+    const midiToVoct = R.clamp(0, 1, (keys[0] - 57) / (12 * 5) + 0.5)
+
+    const get = <T, K extends keyof T>(obj: T, key: string): T[K] =>
+      obj[key as K]
 
     input.addListener("controlchange", "all", e => {
       const cc = e.controller.number
       if (cc < 1 || cc > 8) return
-      tones[`cc${cc}`].value = e.value / 127
+      get(tones, `cc${cc}`).value = e.value / 127
     })
     input.addListener("noteon", "all", e => {
       keys = [e.note.number, ...keys]
-      tones.voct.value = midiToVoct(keys[0])
+      tones.voct.value = midiToVoct
       tones.velocity.value = e.velocity
       tones.gate.value = 1
     })
@@ -90,7 +93,7 @@ const setup = ({ outputs }) => {
         tones.gate.value = 0
         return
       }
-      tones.voct.value = midiToVoct(keys[0])
+      tones.voct.value = midiToVoct
     })
     input.addListener("pitchbend", "all", e => {
       tones.pitch.value = e.value * (1 / 5)
@@ -98,7 +101,7 @@ const setup = ({ outputs }) => {
   })
 
   const dispose = () => {
-    if (null) {
+    if (midi) {
       midi.removeListener()
     }
   }

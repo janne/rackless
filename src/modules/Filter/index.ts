@@ -1,30 +1,32 @@
 import Tone from "tone"
-
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-const inputs = {
+const inputs: Ios = {
   cutoff: { x: 10, y: 175, range: "audio" },
   quality: { x: 10, y: 232 },
   in: { x: 10, y: 296, range: "audio" }
 }
 
-const outputs = {
+const outputs: Ios = {
   out: { x: 57, y: 296, range: "audio" }
 }
 
-const controls = {
+const controls: Ios = {
   cutoff: { x: 48, y: 166, range: "audio" },
   quality: { x: 48, y: 223 },
   filterType: { x: 30, y: 60, range: ["lowpass", "highpass"] },
   slope: { x: 30, y: 116, range: [-12, -24] }
 }
 
-const setup = ({ inputs, outputs, controls }) => {
+const setup: Setup = ({ inputs, outputs, controls }) => {
   const tones = {
     filter: new Tone.Filter(controls.cutoff.value, controls.filterType.value),
     plusCutoff: new Tone.Add(),
     plusQuality: new Tone.Add(),
-    audioToFrequency: new Tone.WaveShaper(x => 220 * Math.pow(2, x * 5)),
+    audioToFrequency: new Tone.WaveShaper(
+      (x: number) => 220 * Math.pow(2, x * 5)
+    ),
     multiply: new Tone.Multiply(20)
   }
 

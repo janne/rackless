@@ -28,7 +28,7 @@ export interface AudioNode {
 export interface Io {
   x: number
   y: number
-  range?: "audio"
+  range?: "audio" | (number | string)[]
 }
 
 export interface Ios {

@@ -1,18 +1,19 @@
 import Tone from "tone"
 import background from "./background.svg"
+import { Ios, Setup } from ".."
 
-const inputs = {
+const inputs: Ios = {
   addX: { x: 5, y: 44 },
   addY: { x: 5, y: 92 },
   mulX: { x: 5, y: 215 },
   mulY: { x: 5, y: 263 }
 }
-const outputs = {
+const outputs: Ios = {
   add: { x: 5, y: 143 },
   mul: { x: 5, y: 314 }
 }
 
-const setup = ({ inputs, outputs }) => {
+const setup: Setup = ({ inputs, outputs }) => {
   const tones = {
     add: new Tone.Add(),
     mul: new Tone.Multiply()
