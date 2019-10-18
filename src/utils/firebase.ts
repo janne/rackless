@@ -1,5 +1,5 @@
 import * as R from "ramda"
-import firebase from "firebase/app"
+import firebase, { User } from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
 
@@ -12,7 +12,7 @@ export const initialize = () =>
     storageBucket: "rackless-cc.appspot.com"
   })
 
-export const getCurrentUser = () => firebase.auth().currentUser
+export const getCurrentUser = (): User | null => firebase.auth().currentUser
 
 export const getCurrentOrAnonymousUser = async () =>
   new Promise(resolve => {
@@ -27,7 +27,7 @@ export const getCurrentOrAnonymousUser = async () =>
     }
   })
 
-export const setLoginHandler = handler =>
+export const setLoginHandler = (handler: (u: User | null) => void) =>
   firebase.auth().onAuthStateChanged(handler)
 
 export const signIn = async () => {
@@ -46,7 +46,9 @@ export const signIn = async () => {
         return firebase
           .auth()
           .signInAndRetrieveDataWithCredential(credential)
-          .then(({ user }) => {
+          .then(credentials => {
+            const { user } = credentials
+            if (!user) return
             const ref = firebase.database().ref(`/users/${user.uid}`)
             ref.once("value").then(dataSnapshot => {
               const data = dataSnapshot.val()
@@ -64,18 +66,21 @@ export const signIn = async () => {
 
 export const signOut = async () => firebase.auth().signOut()
 
-export const getDbKey = child => {
+export const getDbKey = (child: string) => {
   const ref = firebase.database().ref()
   return ref.child(child).push().key
 }
 
-export const setData = async (user, data) =>
+export const setData = async (user: User, data: any) =>
   firebase
     .database()
     .ref(`/users/${user.uid}`)
     .set(data)
 
-export const subscribeToData = (user, handler) =>
+export const subscribeToData = (
+  user: User,
+  handler: (snapshot: firebase.database.DataSnapshot | null) => void
+) =>
   firebase
     .database()
     .ref(`/users/${user.uid}`)
