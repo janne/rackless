@@ -1,14 +1,14 @@
-import React, { useEffect } from "react"
-import * as R from "ramda"
-import { connect } from "react-redux"
-import TopBar from "../../components/TopBar"
-import * as moduleTypes from "../../modules"
+import React, { useEffect } from "react";
+import * as R from "ramda";
+import { connect } from "react-redux";
+import TopBar from "../../components/TopBar";
+import * as moduleTypes from "../../modules";
 import {
   getLoggedIn,
   isDeleting,
   getPatches,
   getCurrent
-} from "../../store/selectors"
+} from "../../store/selectors";
 import {
   createModule,
   createPatch,
@@ -16,8 +16,8 @@ import {
   deletePatch,
   signOut,
   setCurrent
-} from "../../store/actions"
-import { getCurrentUser, signIn } from "../../utils/firebase"
+} from "../../store/actions";
+import { getCurrentUser, signIn } from "../../utils/firebase";
 
 const TopBarContainer = ({
   deleting,
@@ -31,37 +31,37 @@ const TopBarContainer = ({
   patches = {},
   current
 }) => {
-  const titleize = text => text.replace(/([A-Z])/g, " $1")
+  const titleize = (text) => text.replace(/([A-Z])/g, " $1");
 
-  const handleKeyPress = e => {
+  const handleKeyPress = (e) => {
     switch (e.key) {
       case "Backspace":
-        toggleDelete()
-        break
+        toggleDelete();
+        break;
       default:
     }
-  }
+  };
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress, false)
+    document.addEventListener("keydown", handleKeyPress, false);
     return () => {
-      document.removeEventListener("keydown", handleKeyPress, false)
-    }
-  })
+      document.removeEventListener("keydown", handleKeyPress, false);
+    };
+  });
 
-  const formatTime = time =>
+  const formatTime = (time) =>
     new Date(time).toLocaleString([], {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit"
-    })
+    });
 
   const navItems = () => {
     const loggedInActions = isLoggedIn
       ? [{ title: "New Patch", handler: createPatch }]
-      : []
+      : [];
     return {
       menu: [
         {
@@ -77,7 +77,7 @@ const TopBarContainer = ({
         ...loggedInActions
       ],
       patches: R.map(
-        id => ({
+        (id) => ({
           id,
           selected: id === current,
           title: formatTime(patches[id].createdAt),
@@ -87,14 +87,14 @@ const TopBarContainer = ({
         R.keys(patches)
       ),
       add: R.map(
-        type => ({
+        (type) => ({
           title: titleize(type),
           handler: () => createModule(type)
         }),
         R.sortBy(R.identity, R.keys(moduleTypes))
       )
-    }
-  }
+    };
+  };
 
   return (
     <TopBar
@@ -102,15 +102,15 @@ const TopBarContainer = ({
       deleteHandler={toggleDelete}
       deleting={deleting}
     />
-  )
-}
+  );
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isLoggedIn: getLoggedIn(state),
   deleting: isDeleting(state),
   patches: getPatches(state),
   current: getCurrent(state)
-})
+});
 
 const mapDispatchToProps = {
   createModule,
@@ -119,9 +119,6 @@ const mapDispatchToProps = {
   deletePatch,
   setCurrent,
   signOut
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopBarContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(TopBarContainer);

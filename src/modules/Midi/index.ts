@@ -1,4 +1,4 @@
-import Tone from "tone";
+import * as Tone from "tone";
 import * as R from "ramda";
 import webmidi, { Input } from "webmidi";
 import background from "./background.svg";

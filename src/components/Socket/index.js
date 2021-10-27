@@ -1,6 +1,6 @@
-import React, { Fragment, useRef } from "react"
-import Draggable from "react-draggable"
-import background from "./background.svg"
+import React, { Fragment, useRef } from "react";
+import Draggable from "react-draggable";
+import background from "./background.svg";
 
 const styles = {
   content: { position: "absolute" },
@@ -13,7 +13,7 @@ const styles = {
     height: 21,
     cursor: "pointer"
   }
-}
+};
 const COLORS = [
   "red",
   "green",
@@ -24,8 +24,8 @@ const COLORS = [
   "maroon",
   "navy",
   "orangered"
-]
-const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
+];
+const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
 const Socket = ({
   nextKey,
@@ -40,8 +40,8 @@ const Socket = ({
   moveConnector,
   createCable
 }) => {
-  const key = useRef(nextKey)
-  const toDirection = direction === "outputs" ? "inputs" : "outputs"
+  const key = useRef(nextKey);
+  const toDirection = direction === "outputs" ? "inputs" : "outputs";
 
   return (
     <Fragment>
@@ -56,27 +56,33 @@ const Socket = ({
       <Draggable
         position={{ x, y }}
         onStart={() => {
-          createCable(key.current, moduleId, socketId, direction, randomColor())
+          createCable(
+            key.current,
+            moduleId,
+            socketId,
+            direction,
+            randomColor()
+          );
         }}
         onDrag={(e, data) => {
           const pos = {
             x: data.x + moduleX,
             y: data.y + moduleY
-          }
-          dragConnector(key.current, toDirection, pos)
+          };
+          dragConnector(key.current, toDirection, pos);
         }}
         onStop={(e, data) => {
           const pos = {
             x: data.x + moduleX,
             y: data.y + moduleY
-          }
-          moveConnector(key.current, toDirection, pos)
+          };
+          moveConnector(key.current, toDirection, pos);
         }}
       >
         <div className="draggable" style={styles.handle} />
       </Draggable>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Socket
+export default Socket;

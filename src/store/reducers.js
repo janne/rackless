@@ -1,5 +1,5 @@
-import * as R from "ramda"
-import { getDbKey } from "../utils/firebase"
+import * as R from "ramda";
+import { getDbKey } from "../utils/firebase";
 import {
   socketAtPos,
   findFreePos,
@@ -11,7 +11,7 @@ import {
   getCable,
   getCurrent,
   getPatches
-} from "./selectors"
+} from "./selectors";
 import {
   SET_VALUE,
   SET_MODULE_VALUE,
@@ -32,20 +32,20 @@ import {
   SET_CURRENT,
   DELETE_PATCH,
   DELETE_INSTRUMENT
-} from "./actionTypes"
+} from "./actionTypes";
 
 const initialState = {
   isLoading: true,
   isLoggedIn: false,
   deleting: false
-}
+};
 
 export default (state = initialState, action) => {
-  const current = getCurrent(state)
+  const current = getCurrent(state);
 
   const getCurrentState = () => {
-    if (current) return state
-    const patchKey = getDbKey("patches")
+    if (current) return state;
+    const patchKey = getDbKey("patches");
     return {
       ...state,
       data: {
@@ -53,10 +53,10 @@ export default (state = initialState, action) => {
         current: patchKey,
         patches: { [patchKey]: { createdAt: new Date().toISOString() } }
       }
-    }
-  }
+    };
+  };
 
-  const setCableDisabled = value =>
+  const setCableDisabled = (value) =>
     R.set(
       R.lensPath([
         "data",
@@ -68,59 +68,59 @@ export default (state = initialState, action) => {
       ]),
       value,
       state
-    )
+    );
 
   switch (action.type) {
     case TOGGLE_DELETE: {
-      return { ...state, deleting: !state.deleting }
+      return { ...state, deleting: !state.deleting };
     }
     case SET_DATA: {
-      return { ...state, data: action.payload.data }
+      return { ...state, data: action.payload.data };
     }
 
     case SET_VALUE: {
-      const { id, name, value } = action.payload
+      const { id, name, value } = action.payload;
       return R.set(
         R.lensPath(["data", "patches", current, "modules", id, "values", name]),
         value,
         state
-      )
+      );
     }
 
     case SET_MODULE_VALUE: {
-      const { id, name, value } = action.payload
+      const { id, name, value } = action.payload;
       return R.set(
         R.lensPath(["data", "patches", current, "modules", id, name]),
         value,
         state
-      )
+      );
     }
 
     case SET_LOGGED_IN: {
-      const { isLoggedIn } = action.payload
-      return { ...state, isLoggedIn }
+      const { isLoggedIn } = action.payload;
+      return { ...state, isLoggedIn };
     }
 
     case SET_LOADING: {
-      const { isLoading } = action.payload
-      return { ...state, isLoading }
+      const { isLoading } = action.payload;
+      return { ...state, isLoading };
     }
 
     case SET_INSTRUMENT: {
-      const { id, instrument } = action.payload
-      return R.set(R.lensPath(["instruments", id]), instrument, state)
+      const { id, instrument } = action.payload;
+      return R.set(R.lensPath(["instruments", id]), instrument, state);
     }
 
     case DELETE_INSTRUMENT: {
-      const { id } = action.payload
-      return R.dissocPath(["instruments", id], state)
+      const { id } = action.payload;
+      return R.dissocPath(["instruments", id], state);
     }
 
     case MOVE_MODULE: {
-      const { id, col, row } = action.payload
-      const { hp, col: oldCol, row: oldRow } = getModule(id, state)
+      const { id, col, row } = action.payload;
+      const { hp, col: oldCol, row: oldRow } = getModule(id, state);
       const moveIfPossible = (newCol = col) => {
-        if (newCol < 0 || row < 0) return null
+        if (newCol < 0 || row < 0) return null;
         if (availablePos(newCol, row, hp, id, state)) {
           return R.compose(
             R.set(
@@ -131,17 +131,17 @@ export default (state = initialState, action) => {
               R.lensPath(["data", "patches", current, "modules", id, "row"]),
               row
             )
-          )(state)
+          )(state);
         }
-        return null
-      }
-      if (row !== oldRow) return moveIfPossible() || state
-      const diff = Math.sign(col - oldCol)
+        return null;
+      };
+      if (row !== oldRow) return moveIfPossible() || state;
+      const diff = Math.sign(col - oldCol);
       for (const n of R.range(0, Math.abs(col - oldCol))) {
-        const newState = moveIfPossible(col - n * diff)
-        if (newState) return newState
+        const newState = moveIfPossible(col - n * diff);
+        if (newState) return newState;
       }
-      return state
+      return state;
     }
 
     case CREATE_CABLE: {
@@ -152,7 +152,7 @@ export default (state = initialState, action) => {
         inputModule = null,
         inputSocket = null,
         color
-      } = action.payload
+      } = action.payload;
       return R.assocPath(
         ["data", "patches", current, "cables", id],
         {
@@ -164,21 +164,21 @@ export default (state = initialState, action) => {
           disabled: true
         },
         state
-      )
+      );
     }
     case MOVE_CONNECTOR: {
-      const { id, connector, pos } = action.payload
-      const state = setCableDisabled(false)
-      const movedCable = getCable(id, state)
-      const cables = R.dissoc(id, getCables(state))
-      const target = socketAtPos(pos, connector, state)
+      const { id, connector, pos } = action.payload;
+      const state = setCableDisabled(false);
+      const movedCable = getCable(id, state);
+      const cables = R.dissoc(id, getCables(state));
+      const target = socketAtPos(pos, connector, state);
 
       if (!target)
         return R.assocPath(
           ["data", "patches", current, "cables"],
           cables,
           state
-        )
+        );
 
       const existingCables = R.filter(
         ({ inputModule, inputSocket, outputModule, outputSocket }) =>
@@ -189,14 +189,14 @@ export default (state = initialState, action) => {
             outputModule === target.moduleId &&
             outputSocket === target.socketId),
         cables
-      )
+      );
 
       if (!R.isEmpty(existingCables))
         return R.assocPath(
           ["data", "patches", current, "cables"],
           cables,
           state
-        )
+        );
 
       const updatedCable =
         connector === "outputs"
@@ -211,56 +211,56 @@ export default (state = initialState, action) => {
               drag: null,
               inputModule: target.moduleId,
               inputSocket: target.socketId
-            }
+            };
       return R.assocPath(
         ["data", "patches", current, "cables", id],
         updatedCable,
         state
-      )
+      );
     }
 
     case REMOVE_CONNECTOR: {
-      return setCableDisabled(true)
+      return setCableDisabled(true);
     }
 
     case DRAG_CONNECTOR: {
-      const { id, connector, pos } = action.payload
+      const { id, connector, pos } = action.payload;
       return R.set(
         R.lensPath(["data", "patches", current, "cables", id, "drag"]),
         { pos, connector },
         state
-      )
+      );
     }
 
     case CREATE_MODULE: {
-      const { type } = action.payload
-      const key = getDbKey("modules")
-      const pos = findFreePos(10, state)
-      const values = {}
+      const { type } = action.payload;
+      const key = getDbKey("modules");
+      const pos = findFreePos(10, state);
+      const values = {};
 
-      const currentState = getCurrentState()
-      const current = getCurrent(currentState)
+      const currentState = getCurrentState();
+      const current = getCurrent(currentState);
 
       return R.assocPath(
         ["data", "patches", current, "modules", key],
         { type, values, ...pos },
         currentState
-      )
+      );
     }
 
     case CREATE_PATCH: {
-      const patchKey = getDbKey("patches")
+      const patchKey = getDbKey("patches");
       return R.compose(
         R.set(R.lensPath(["data", "patches", patchKey]), {
           createdAt: new Date().toISOString()
         }),
         R.set(R.lensPath(["data", "current"]), patchKey),
         R.set(R.lensPath(["instruments"]), {})
-      )(state)
+      )(state);
     }
 
     case DELETE_MODULE: {
-      const { id } = action.payload
+      const { id } = action.payload;
       return R.compose(
         R.set(
           R.lensPath(["data", "patches", current, "modules"]),
@@ -269,33 +269,33 @@ export default (state = initialState, action) => {
         R.set(
           R.lensPath(["data", "patches", current, "cables"]),
           R.reject(
-            cable => cable.outputModule === id || cable.inputModule === id,
+            (cable) => cable.outputModule === id || cable.inputModule === id,
             getCables(state)
           )
         ),
         R.set(R.lensPath(["instruments"]), R.dissoc(id, getInstruments(state)))
-      )(state)
+      )(state);
     }
 
     case SET_CURRENT: {
-      const { id } = action.payload
-      return R.set(R.lensPath(["data", "current"]), id, state)
+      const { id } = action.payload;
+      return R.set(R.lensPath(["data", "current"]), id, state);
     }
 
     case DELETE_PATCH: {
-      const { id } = action.payload
+      const { id } = action.payload;
       return R.set(
         R.lensPath(["data", "patches"]),
         R.dissoc(id, getPatches(state)),
         state
-      )
+      );
     }
 
     case RESET_STATE: {
-      return initialState
+      return initialState;
     }
 
     default:
-      return state
+      return state;
   }
-}
+};

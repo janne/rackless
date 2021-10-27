@@ -1,4 +1,4 @@
-import Tone from "tone";
+import * as Tone from "tone";
 import background from "./background.svg";
 import { Ios, Setup, Loop, Dispose } from "..";
 

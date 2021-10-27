@@ -1,11 +1,11 @@
-import React, { useEffect } from "react"
-import * as R from "ramda"
-import Instrument from "./Instrument"
-import { connect } from "react-redux"
-import { setValue, setInstrument, deleteInstrument } from "../../store/actions"
-import { getModule, getInstrument } from "../../store/selectors"
-import Module from "../../components/Module"
-import * as moduleTypes from "../../modules"
+import React, { useEffect } from "react";
+import * as R from "ramda";
+import Instrument from "./Instrument";
+import { connect } from "react-redux";
+import { setValue, setInstrument, deleteInstrument } from "../../store/actions";
+import { getModule, getInstrument } from "../../store/selectors";
+import Module from "../../components/Module";
+import * as moduleTypes from "../../modules";
 
 const ModuleContainer = ({
   id,
@@ -15,47 +15,44 @@ const ModuleContainer = ({
   deleteInstrument,
   setValue
 }) => {
-  const { type, values = [] } = data
+  const { type, values = [] } = data;
 
   const {
     controls = [],
     inputs = [],
     outputs = [],
     setup = () => {}
-  } = moduleTypes[type]
+  } = moduleTypes[type];
 
   const [rangeControls, otherControls] = R.partition(
-    R.compose(
-      R.is(Array),
-      R.prop("range")
-    ),
+    R.compose(R.is(Array), R.prop("range")),
     controls
-  )
+  );
 
-  const getValue = R.flip(R.prop)(values)
+  const getValue = R.flip(R.prop)(values);
 
   useEffect(() => {
-    const instrument = new Instrument(controls, inputs, outputs, setup, values)
-    setInstrument(id, instrument)
-    setupValues(instrument, values)
+    const instrument = new Instrument(controls, inputs, outputs, setup, values);
+    setInstrument(id, instrument);
+    setupValues(instrument, values);
     return () => {
-      instrument.dispose()
-      deleteInstrument(id)
-    }
-  }, R.keys(rangeControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
+      instrument.dispose();
+      deleteInstrument(id);
+    };
+  }, R.keys(rangeControls).map(getValue));
 
   useEffect(() => {
-    setupValues(instrument, values)
-  }, R.keys(otherControls).map(getValue)) // eslint-disable-line react-hooks/exhaustive-deps
+    setupValues(instrument, values);
+  }, R.keys(otherControls).map(getValue));
 
   const setupValues = (instrument, values) => {
-    if (R.isNil(instrument)) return
+    if (R.isNil(instrument)) return;
     R.mapObjIndexed(({ range }, name) => {
-      const defaultValue = R.isNil(range) ? 0.5 : 0
-      const value = R.isNil(values[name]) ? defaultValue : values[name]
-      instrument.controls[name].value = value
-    }, controls)
-  }
+      const defaultValue = R.isNil(range) ? 0.5 : 0;
+      const value = R.isNil(values[name]) ? defaultValue : values[name];
+      instrument.controls[name].value = value;
+    }, controls);
+  };
 
   return (
     <Module
@@ -65,21 +62,18 @@ const ModuleContainer = ({
       setInstrument={setInstrument}
       setValue={setValue}
     />
-  )
-}
+  );
+};
 
 const mapStateToProps = (state, { id }) => ({
   data: getModule(id, state),
   instrument: getInstrument(id, state)
-})
+});
 
 const mapDispatchToProps = {
   setInstrument,
   deleteInstrument,
   setValue
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModuleContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(ModuleContainer);

@@ -1,6 +1,6 @@
 import React, { createRef, FC, RefObject } from "react";
 import * as R from "ramda";
-import Tone from "tone";
+import * as Tone from "tone";
 import background from "./background.svg";
 import { Ios, Setup, Dispose } from "..";
 

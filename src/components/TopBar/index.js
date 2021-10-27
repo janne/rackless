@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import * as R from "ramda"
+import React, { useState } from "react";
+import * as R from "ramda";
 import {
   Menu as MenuIcon,
   AddCircle as AddIcon,
   Delete as DeleteIcon
-} from "@material-ui/icons"
+} from "@material-ui/icons";
 import {
   IconButton,
   Toolbar,
@@ -16,9 +16,9 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   colors
-} from "@material-ui/core"
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import logo from "./logo.svg"
+} from "@material-ui/core";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import logo from "./logo.svg";
 
 const styles = {
   menuTitle: {
@@ -29,11 +29,11 @@ const styles = {
     marginLeft: -12,
     marginRight: 20
   }
-}
+};
 
 const TopBar = ({ items, deleteHandler, deleting }) => {
-  const [leftMenu, setLeftMenu] = useState(false)
-  const [rightMenu, setRightMenu] = useState(false)
+  const [leftMenu, setLeftMenu] = useState(false);
+  const [rightMenu, setRightMenu] = useState(false);
 
   const theme = createMuiTheme({
     palette: {
@@ -43,13 +43,13 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
     typography: {
       useNextVariants: true
     }
-  })
+  });
 
   const renderListItem = ({ title, handler }) => (
     <ListItem button key={title} onClick={handler}>
       <ListItemText>{title}</ListItemText>
     </ListItem>
-  )
+  );
 
   const renderPatchItem = ({ title, handler, secondaryHandler, selected }) => (
     <ListItem button key={title} onClick={handler} selected={selected}>
@@ -62,7 +62,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         </ListItemSecondaryAction>
       )}
     </ListItem>
-  )
+  );
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -80,7 +80,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
           <IconButton onClick={deleteHandler}>
             <DeleteIcon color={deleting ? "secondary" : "inherit"} />
           </IconButton>
-          <IconButton onClick={e => setRightMenu(true)}>
+          <IconButton onClick={(e) => setRightMenu(true)}>
             <AddIcon />
           </IconButton>
         </Toolbar>
@@ -100,7 +100,7 @@ const TopBar = ({ items, deleteHandler, deleting }) => {
         <List>{R.map(renderListItem, items.add)}</List>
       </Drawer>
     </MuiThemeProvider>
-  )
-}
+  );
+};
 
-export default TopBar
+export default TopBar;

@@ -1,4 +1,4 @@
-import Tone from "tone";
+import * as Tone from "tone";
 import * as R from "ramda";
 import background from "./background.svg";
 import { Ios, Loop, Setup, Dispose } from "..";

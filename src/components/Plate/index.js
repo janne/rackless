@@ -1,6 +1,6 @@
-import React, { useRef } from "react"
-import { DraggableCore } from "react-draggable"
-import { HEIGHT_PIX, HP_PIX } from "../../constants"
+import React, { useRef } from "react";
+import { DraggableCore } from "react-draggable";
+import { HEIGHT_PIX, HP_PIX } from "../../constants";
 
 const Plate = ({
   moduleId,
@@ -22,20 +22,20 @@ const Plate = ({
       height: Math.round(HEIGHT_PIX),
       opacity: deleting ? 0.5 : 1
     }
-  }
+  };
 
-  const drag = useRef()
+  const drag = useRef();
 
   const dragStart = (_, data) => {
-    drag.current = { x: data.x - moduleX, y: data.y - moduleY }
-  }
+    drag.current = { x: data.x - moduleX, y: data.y - moduleY };
+  };
 
   const dragHandler = (_, data) => {
-    const { x, y } = drag.current
-    const newCol = Math.round((data.x - x) / HP_PIX)
-    const newRow = Math.round((data.y - y) / HEIGHT_PIX)
-    if (newCol !== col || newRow !== row) moveModule(moduleId, newCol, newRow)
-  }
+    const { x, y } = drag.current;
+    const newCol = Math.round((data.x - x) / HP_PIX);
+    const newRow = Math.round((data.y - y) / HEIGHT_PIX);
+    if (newCol !== col || newRow !== row) moveModule(moduleId, newCol, newRow);
+  };
 
   return (
     <DraggableCore
@@ -47,8 +47,8 @@ const Plate = ({
       <div
         onClick={() => {
           if (deleting) {
-            toggleDelete()
-            deleteModule(moduleId)
+            toggleDelete();
+            deleteModule(moduleId);
           }
         }}
         style={{
@@ -61,7 +61,7 @@ const Plate = ({
           draggable={false}
           src={background}
           style={styles.background}
-          onLoad={e =>
+          onLoad={(e) =>
             setModuleValue(moduleId, "hp", Math.round(e.target.width / HP_PIX))
           }
           alt=""
@@ -69,7 +69,7 @@ const Plate = ({
         {children}
       </div>
     </DraggableCore>
-  )
-}
+  );
+};
 
-export default Plate
+export default Plate;

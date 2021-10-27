@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect } from "react"
-import { connect } from "react-redux"
-import { fetchData, setLoggedIn, setLoading } from "./store/actions"
-import { getLoading } from "./store/selectors"
-import Loader from "./components/Loader"
-import { initialize, setLoginHandler } from "./utils/firebase"
-import TopBar from "./containers/TopBar"
-import Rack from "./containers/Rack"
+import React, { Fragment, useEffect } from "react";
+import { connect } from "react-redux";
+import { fetchData, setLoggedIn, setLoading } from "./store/actions";
+import { getLoading } from "./store/selectors";
+import Loader from "./components/Loader";
+import { initialize, setLoginHandler } from "./utils/firebase";
+import TopBar from "./containers/TopBar";
+import Rack from "./containers/Rack";
 
 const styles = {
   content: {
@@ -16,20 +16,20 @@ const styles = {
     top: 48,
     overflow: "scroll"
   }
-}
+};
 
 const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
   useEffect(() => {
-    initialize()
+    initialize();
 
-    setLoginHandler(user => {
+    setLoginHandler((user) => {
       if (user) {
-        fetchData(user)
+        fetchData(user);
       }
-      setLoading(false)
-      setLoggedIn(Boolean(user && !user.isAnonymous))
-    })
-  }, [fetchData, setLoading, setLoggedIn])
+      setLoading(false);
+      setLoggedIn(Boolean(user && !user.isAnonymous));
+    });
+  }, [fetchData, setLoading, setLoggedIn]);
 
   return (
     <Fragment>
@@ -39,20 +39,17 @@ const App = ({ fetchData, setLoggedIn, isLoading, setLoading }) => {
         <Rack />
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isLoading: getLoading(state)
-})
+});
 
 const mapDispatchToProps = {
   fetchData,
   setLoggedIn,
   setLoading
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App);

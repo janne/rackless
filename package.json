@@ -27,8 +27,8 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build && firebase deploy",
     "lint": "concurrently 'yarn lint:prettier' 'yarn lint:typescript' 'yarn lint:eslint'",
-    "lint:eslint": "eslint --max-warnings=0 'src/**/*.{ts,tsx}'",
-    "lint:prettier": "prettier --check 'src/**/*.{ts,tsx}'",
+    "lint:eslint": "eslint --max-warnings=0 'src/**/*.{ts,tsx,js,jsx}'",
+    "lint:prettier": "prettier --check 'src/**/*.{ts,tsx,js,jsx}'",
     "lint:typescript": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

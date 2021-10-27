@@ -1,10 +1,10 @@
-import React from "react"
-import * as R from "ramda"
-import Plate from "../../containers/Plate"
-import Socket from "../../containers/Socket"
-import Trimpot from "../Trimpot"
-import Switch from "../Switch"
-import * as moduleTypes from "../../modules"
+import React from "react";
+import * as R from "ramda";
+import Plate from "../../containers/Plate";
+import Socket from "../../containers/Socket";
+import Trimpot from "../Trimpot";
+import Switch from "../Switch";
+import * as moduleTypes from "../../modules";
 
 const Wrapper = ({ x, y, children }) => (
   <div
@@ -16,20 +16,20 @@ const Wrapper = ({ x, y, children }) => (
   >
     {children}
   </div>
-)
+);
 
 const Module = ({ id, instrument, data, setValue }) => {
-  const { col, row, type, values = [] } = data
-  const moduleType = moduleTypes[type]
-  const { background, controls = [], inputs = [], outputs = [] } = moduleType
+  const { col, row, type, values = [] } = data;
+  const moduleType = moduleTypes[type];
+  const { background, controls = [], inputs = [], outputs = [] } = moduleType;
 
   return (
     <Plate col={col} row={row} moduleId={id} background={background}>
       {R.values(
         R.mapObjIndexed((params, name) => {
-          const { Component, x, y } = params
+          const { Component, x, y } = params;
           if (Component) {
-            const props = R.propOr({}, "props", instrument)
+            const props = R.propOr({}, "props", instrument);
             return (
               <Wrapper x={x} y={y} key={`control-${name}`}>
                 <Component
@@ -41,7 +41,7 @@ const Module = ({ id, instrument, data, setValue }) => {
                   {...props}
                 />
               </Wrapper>
-            )
+            );
           }
           if (R.is(Array, params.range)) {
             return (
@@ -54,7 +54,7 @@ const Module = ({ id, instrument, data, setValue }) => {
                   setValue={setValue}
                 />
               </Wrapper>
-            )
+            );
           }
           return (
             <Wrapper x={x} y={y} key={`control-${name}`}>
@@ -66,7 +66,7 @@ const Module = ({ id, instrument, data, setValue }) => {
                 setValue={setValue}
               />
             </Wrapper>
-          )
+          );
         }, controls)
       )}
 
@@ -100,7 +100,7 @@ const Module = ({ id, instrument, data, setValue }) => {
         )
       )}
     </Plate>
-  )
-}
+  );
+};
 
-export default Module
+export default Module;
