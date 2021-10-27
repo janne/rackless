@@ -52,7 +52,21 @@ const setup: Setup = ({ inputs, outputs, controls }) => {
     const { gate: previousGate, retrig: previousRetrig } = props;
     Object.keys(values).forEach((key) => {
       const multiplier = key === "sustain" ? 1 : 10;
-      tones.envelope[key] = values[key] * values[key] * multiplier || 0.01;
+      const value = values[key] * values[key] * multiplier || 0.01;
+      switch (key) {
+        case "attack":
+          tones.envelope.attack = value;
+          break;
+        case "decay":
+          tones.envelope.decay = value;
+          break;
+        case "sustain":
+          tones.envelope.sustain = value;
+          break;
+        case "release":
+          tones.envelope.release = value;
+          break;
+      }
     });
 
     const gateValues = tones.gateAnalyser.getValue();

@@ -38,18 +38,18 @@ const initializeMidi = async (): Promise<Input> =>
 
 const setup: Setup = ({ outputs }) => {
   const tones = {
-    voct: new Tone.Signal(0, Tone.Type.Audio),
-    gate: new Tone.Signal(0, Tone.Type.Normal),
-    velocity: new Tone.Signal(0, Tone.Type.Normal),
-    pitch: new Tone.Signal(0, Tone.Type.Audio),
-    cc1: new Tone.Signal(0, Tone.Type.Normal),
-    cc2: new Tone.Signal(0, Tone.Type.Normal),
-    cc3: new Tone.Signal(0, Tone.Type.Normal),
-    cc4: new Tone.Signal(0, Tone.Type.Normal),
-    cc5: new Tone.Signal(0, Tone.Type.Normal),
-    cc6: new Tone.Signal(0, Tone.Type.Normal),
-    cc7: new Tone.Signal(0, Tone.Type.Normal),
-    cc8: new Tone.Signal(0, Tone.Type.Normal)
+    voct: new Tone.Signal(0, "audioRange"),
+    gate: new Tone.Signal(0, "normalRange"),
+    velocity: new Tone.Signal(0, "normalRange"),
+    pitch: new Tone.Signal(0, "audioRange"),
+    cc1: new Tone.Signal(0, "normalRange"),
+    cc2: new Tone.Signal(0, "normalRange"),
+    cc3: new Tone.Signal(0, "normalRange"),
+    cc4: new Tone.Signal(0, "normalRange"),
+    cc5: new Tone.Signal(0, "normalRange"),
+    cc6: new Tone.Signal(0, "normalRange"),
+    cc7: new Tone.Signal(0, "normalRange"),
+    cc8: new Tone.Signal(0, "normalRange")
   };
 
   tones.voct.connect(outputs.voct);

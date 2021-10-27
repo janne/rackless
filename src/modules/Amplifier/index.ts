@@ -1,6 +1,6 @@
 import Tone from "tone";
 import background from "./background.svg";
-import { Ios, AudioNode, Setup } from "..";
+import { Ios, Setup } from "..";
 
 const controls: Ios = {
   level1: { x: 5, y: 37 },
@@ -23,7 +23,7 @@ const outputs: Ios = {
 };
 
 const setup: Setup = ({ inputs, outputs, controls }) => {
-  const tones: { [k: string]: AudioNode } = {
+  const tones = {
     gain1: new Tone.Gain(),
     add1: new Tone.Add(),
     level1: new Tone.Gain(),

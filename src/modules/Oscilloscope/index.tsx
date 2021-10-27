@@ -2,7 +2,7 @@ import React, { createRef, FC, RefObject } from "react";
 import * as R from "ramda";
 import Tone from "tone";
 import background from "./background.svg";
-import { Ios, Setup, AudioNode, Dispose } from "..";
+import { Ios, Setup, Dispose } from "..";
 
 const resolution = 512;
 const width = 144;
@@ -38,7 +38,7 @@ const outputs: Ios = {
 };
 
 const setup: Setup = ({ inputs, outputs, controls }) => {
-  const tones: { [k: string]: AudioNode } = {};
+  const tones: { [k: string]: Tone.Analyser } = {};
   const analysers = { a: "#C4C4C4", b: "red", c: "green" };
 
   const route = (analyser: keyof typeof analysers) => {
@@ -70,7 +70,7 @@ const setup: Setup = ({ inputs, outputs, controls }) => {
     context.clearRect(0, 0, width, height);
 
     R.keys(analysers).forEach((analyser) => {
-      const value = tones[analyser].getValue();
+      const value = tones[analyser].getValue() as Float32Array;
       context.beginPath();
       const lineWidth = 2;
       context.lineWidth = lineWidth;

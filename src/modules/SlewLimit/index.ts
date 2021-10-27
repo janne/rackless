@@ -35,11 +35,11 @@ const setup: Setup = ({ inputs, outputs }) => {
     Object.values(tones).forEach((t) => t.dispose());
 
   const loop: Loop = ({ sig }, values) => {
-    const newSig = tones.analyser.getValue()[0];
+    const newSig = tones.analyser.getValue()[0] as number;
     if (newSig === sig) return { sig };
     const slope = newSig > sig ? "attack" : "decay";
     const controlTime = Math.pow(values[slope] || 0.5, 2) * 10;
-    const signalTime = tones[slope].getValue()[0];
+    const signalTime = tones[slope].getValue()[0] as number;
     const time = controlTime + signalTime;
 
     if (time === 0) {

@@ -17,7 +17,7 @@
     "redux": "^4.0.3",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "tone": "^13.4.9",
+    "tone": "^14.7.77",
     "webmidi": "^2.3.3"
   },
   "scripts": {
