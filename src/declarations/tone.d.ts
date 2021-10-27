@@ -1,1 +1,1 @@
-declare module "tone"
+declare module "tone";

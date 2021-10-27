@@ -1,26 +1,26 @@
-import React, { SFC } from "react"
-import * as R from "ramda"
-import Draggable from "react-draggable"
-import background from "./background.svg"
-import { Pos } from ".."
+import React, { FC } from "react";
+import * as R from "ramda";
+import Draggable from "react-draggable";
+import background from "./background.svg";
+import { Pos } from "..";
 
 const styles = {
-  container: { position: "absolute" as "absolute" },
+  container: { position: "absolute" as const },
   background: { width: 21 }
-}
+};
 
-const noop = () => {}
+const noop = () => {};
 
 interface ConnectorProps {
-  x: number
-  y: number
-  onDrag: (pos: Pos) => void
-  onStart: (pos: Pos) => void
-  onStop: (pos: Pos) => void
-  disabled: boolean
+  x: number;
+  y: number;
+  onDrag: (pos: Pos) => void;
+  onStart: (pos: Pos) => void;
+  onStop: (pos: Pos) => void;
+  disabled: boolean;
 }
 
-const Connector: SFC<ConnectorProps> = ({
+const Connector: FC<ConnectorProps> = ({
   x,
   y,
   onDrag = noop,
@@ -45,6 +45,6 @@ const Connector: SFC<ConnectorProps> = ({
       />
     </div>
   </Draggable>
-)
+);
 
-export default Connector
+export default Connector;

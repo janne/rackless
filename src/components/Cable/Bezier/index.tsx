@@ -1,21 +1,21 @@
-import React, { SFC } from "react"
-import { CABLE_SLACK } from "../../../constants"
+import React, { FC } from "react";
+import { CABLE_SLACK } from "../../../constants";
 
 interface CableProps {
-  x1: number
-  y1: number
-  x2: number
-  y2: number
-  color: string
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  color: string;
 }
 
-const Cable: SFC<CableProps> = ({ x1, y1, x2, y2, color }) => {
-  const hang = Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK
-  const strokeWidth = 9
-  const left = Math.min(x1, x2) - strokeWidth
-  const top = Math.min(y1, y2) - strokeWidth
-  const width = Math.abs(x2 - x1) + 2 * strokeWidth
-  const height = Math.abs(y2 - y1) + 2 * strokeWidth + hang
+const Cable: FC<CableProps> = ({ x1, y1, x2, y2, color }) => {
+  const hang = Math.cbrt(Math.abs(x2 - x1)) * CABLE_SLACK;
+  const strokeWidth = 9;
+  const left = Math.min(x1, x2) - strokeWidth;
+  const top = Math.min(y1, y2) - strokeWidth;
+  const width = Math.abs(x2 - x1) + 2 * strokeWidth;
+  const height = Math.abs(y2 - y1) + 2 * strokeWidth + hang;
   return (
     <div
       style={{
@@ -27,9 +27,9 @@ const Cable: SFC<CableProps> = ({ x1, y1, x2, y2, color }) => {
     >
       <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg">
         <path
-          d={`M${x1 - left} ${y1 - top} C ${x1 - left} ${y1 -
-            top +
-            hang}, ${x2 - left} ${y2 - top + hang}, ${x2 - left} ${y2 - top}`}
+          d={`M${x1 - left} ${y1 - top} C ${x1 - left} ${y1 - top + hang}, ${
+            x2 - left
+          } ${y2 - top + hang}, ${x2 - left} ${y2 - top}`}
           stroke={color}
           strokeWidth={strokeWidth}
           opacity={0.8}
@@ -38,7 +38,7 @@ const Cable: SFC<CableProps> = ({ x1, y1, x2, y2, color }) => {
         />
       </svg>
     </div>
-  )
-}
+  );
+};
 
-export default Cable
+export default Cable;
